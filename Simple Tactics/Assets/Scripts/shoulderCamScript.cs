@@ -24,6 +24,16 @@ public class shoulderCamScript : MonoBehaviour
     // Quaternion for rotation storage
     Quaternion lookAt;
 
+    // Magic Numbers
+    float shoulderOffset = 3.0f; // multiply against object forward to place the camera 'behind' it
+    float camTransLerpRate = 10.0f; // rate at which the camera moves when changing targets
+    float camRotLerpRate = 0.1f; // rate at which the camera rotates when changing targets
+    float camZoomRate = 100.0f; // zoom rate
+    float camZoomMin = 2.0f; // minimum distance from player object
+    float camZoomMax = 5.0f; // max distance from player object
+    float camRotViewRate = 100.0f; // rate at which player can rotate the camera
+
+    Vector3 camPosOffset = new Vector3(0, 1, 0); // add to camera position to place it at shoulder level rather than waist level
 
 
     // Use this for initialization
@@ -48,13 +58,18 @@ public class shoulderCamScript : MonoBehaviour
 
         if (shoulderCamActive)
         {
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
+                Debug.Log(dist);
+            }
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 AttachToTarget(tempTarget.transform);
                 currTarget = tempTarget;
                 switchMode = true;
             }
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 AttachToTarget(tempTarget2eb.transform);
                 currTarget = tempTarget2eb;
@@ -75,10 +90,8 @@ public class shoulderCamScript : MonoBehaviour
 
     void AttachToTarget(Transform _trans)
     {
-        newCamPosition = _trans.position - (cam.transform.forward * 3.0f) + new Vector3(0, 1, 0);
-        //cam.transform.position = newCamPosition;
+        newCamPosition = (_trans.position - (_trans.forward * shoulderOffset)) + camPosOffset;
         lookAt = Quaternion.LookRotation(_trans.forward);
-        //cam.transform.rotation = lookAt;
         targetPos = _trans.position;
     }
 
@@ -89,15 +102,13 @@ public class shoulderCamScript : MonoBehaviour
 
             if (Input.GetAxisRaw("Mouse X") > 0)
             {
-                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * 100.0f);
-                //cam.transform.Rotate(cam.transform.up * (-Time.deltaTime * 100.0f));
+                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * camRotViewRate);
                 lookAt = cam.transform.rotation;
             }
 
             else if (Input.GetAxisRaw("Mouse X") < 0)
             {
-                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * -100.0f);
-                //cam.transform.Rotate(cam.transform.up * (Time.deltaTime * 100.0f));
+                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * camRotViewRate);
                 lookAt = cam.transform.rotation;
             }
         }
@@ -108,9 +119,9 @@ public class shoulderCamScript : MonoBehaviour
     void LerpFocus()
     {
         if (cam.transform.position != newCamPosition)
-            cam.transform.position += (newCamPosition - cam.transform.position) * (Time.deltaTime * 10.0f);
+            cam.transform.position += (newCamPosition - cam.transform.position) * (Time.deltaTime * camTransLerpRate);
         if (cam.transform.rotation != lookAt)
-            cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, lookAt, Time.time * 0.1f);
+            cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, lookAt, Time.time * camRotLerpRate);
 
         if (cam.transform.position == newCamPosition && cam.transform.rotation == lookAt)
             switchMode = false;
@@ -118,15 +129,25 @@ public class shoulderCamScript : MonoBehaviour
 
     void ZoomTarget()
     {
-        if(Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+        float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
+
+        // Zoom Out
+        if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
         {
-            newCamPosition -= currTarget.transform.forward * (Time.deltaTime * 100.0f);
-            cam.transform.position = newCamPosition;
+            if (dist <= camZoomMax)
+            {
+                newCamPosition -= currTarget.transform.forward * (Time.deltaTime * camZoomRate);
+                cam.transform.position = newCamPosition;
+            }
         }
+        // Zoom In
         else if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
         {
-            newCamPosition += currTarget.transform.forward * (Time.deltaTime * 100.0f);
-            cam.transform.position = newCamPosition;
+            if (dist >= camZoomMin)
+            {
+                newCamPosition += currTarget.transform.forward * (Time.deltaTime * camZoomRate);
+                cam.transform.position = newCamPosition;
+            }
         }
     }
 }

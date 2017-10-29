@@ -14,6 +14,7 @@ public class godCamScript : MonoBehaviour
     // Temporary target objects. These will be passed in from the list of characters in the map.
     public GameObject tempTarget;
     public GameObject tempTarget2eb;
+    Transform currTarget;
 
     // Vectors
     Vector3 newCamPos;
@@ -22,7 +23,8 @@ public class godCamScript : MonoBehaviour
     Vector3 camOffset = new Vector3(0, 10, -10);
     Vector3 camRotation = new Vector3(45, 0, 0);
 
-    float camSpeed = 3.0f;
+    float camLerpSpeed = 3.0f;
+    float camZoomRate = 50.0f;
 
     // Use this for initialization
     void Start()
@@ -36,19 +38,25 @@ public class godCamScript : MonoBehaviour
 
         // temp default starting spot
         TeleportFocus(cam.transform);
+        currTarget = tempTarget.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Mirrors the code in shoulderCamScript, switches camera mode
-        if(Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             godCamActive = !godCamActive;
         }
 
         if (godCamActive)
         {
+            if(Input.GetKeyDown(KeyCode.Q))
+            {
+                float dist = Vector3.Distance(currTarget.position, cam.transform.position);
+                Debug.Log(dist);
+            }
             // ensure the camera is at the correct rotation
             cam.transform.rotation = Quaternion.Euler(camRotation);
 
@@ -57,25 +65,46 @@ public class godCamScript : MonoBehaviour
             DetectScroll();
 
             // Debug code
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.A))
+            {
                 SetNewCamPosition(tempTarget.transform);
-            if (Input.GetKey(KeyCode.D))
+                currTarget = tempTarget.transform;
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
                 SetNewCamPosition(tempTarget2eb.transform);
+                currTarget = tempTarget2eb.transform;
+            }
         }
     }
 
     void DetectScroll()
     {
+        float dist = Vector3.Distance(currTarget.position, cam.transform.position);
 
+        // Zoom In
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
         {
-            camOffset -= new Vector3(0, 1, -1) * Time.deltaTime * 100.0f;
-            newCamPos -= new Vector3(0, 1, -1) * Time.deltaTime * 100.0f;
+            if (dist >= 5.0f)
+            {
+                Debug.Log("Distance is " + dist + ", zooming IN.");
+                camOffset -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                newCamPos -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+            }
+            else
+                Debug.Log("Distance is " + dist + ", cannot zoom IN.");
         }
+        // Zoom Out
         else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
         {
-            camOffset += new Vector3(0, 1, -1) * Time.deltaTime * 100.0f;
-            newCamPos += new Vector3(0, 1, -1) * Time.deltaTime * 100.0f;
+            if (dist <= 15.0f)
+            {
+                Debug.Log("Distance is " + dist + ", zooming OUT.");
+                camOffset += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                newCamPos += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+            }
+            else
+                Debug.Log("Distance is " + dist + ", cannot zoom OUT.");
         }
     }
 
@@ -92,6 +121,6 @@ public class godCamScript : MonoBehaviour
     void LerpFocus()
     {
         if (cam.transform.position != newCamPos)
-            cam.transform.position += (newCamPos - cam.transform.position) * (Time.deltaTime * camSpeed);
+            cam.transform.position += (newCamPos - cam.transform.position) * (Time.deltaTime * camLerpSpeed);
     }
 }
