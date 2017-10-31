@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class Equipment : Item
 {
@@ -14,15 +15,30 @@ public class Equipment : Item
     // equipment status effects?
 
 
-    // Debug testing
+    // ----------- Debug testing ------------ //
     string element, eqType;
     public int playerLevel;
     public int enemyDifficulty;
+    public int difficultyMod;
     int numCommon = 0;
     int numUncommon = 0;
     int numRare = 0;
     int numLegendary = 0;
     string output;
+    public class Enemy
+    {
+        public int gearScore, enemyDifficulty;
+        public string armor, weapon, boots;
+    }
+    public class Room
+    {
+        public int roomDifficulty;
+        public int numEnemies;
+        public List<Enemy> enemies;
+    }
+    List<Room> roomList = new List<Room>();
+
+    // --------------------------------------//
 
     // Use this for initialization
     void Start()
@@ -51,6 +67,23 @@ public class Equipment : Item
                 Debug.Log(output);
             }
             Debug.Log("Spread: Common: " + numCommon + " Uncommon: " + numUncommon + " Rare: " + numRare + " Legendary: " + numLegendary);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            string path = "Assets/Resources/output.txt";
+            StreamWriter writer = new StreamWriter(path, true);
+            roomGen(playerLevel, difficultyMod);
+            writer.WriteLine("Rooms in Floor: " + roomList.Count);
+            foreach (Room room in roomList)
+            {
+                writer.WriteLine("Room Difficulty: " + room.roomDifficulty + ", " + room.numEnemies + " Enemies.");
+                foreach (Enemy enemy in room.enemies)
+                {
+                    writer.WriteLine("\t Enemy Difficulty: " + enemy.enemyDifficulty + ", Gear Score: " + enemy.gearScore + ".");
+                    writer.WriteLine("\t\t Gear: \r\n\t\t\t" + enemy.armor + "\r\n\t\t\t " + enemy.boots + "\r\n\t\t\t " + enemy.weapon + ". ");
+                }
+            }
+           // Debug.Log("Dump complete.");
         }
     }
 
@@ -260,8 +293,55 @@ public class Equipment : Item
             rollStats(0, stat, stat);
         }
     }
-}
+    private void roomGen(int _playerLevel, int _difficultyMod)
+    {
+        int floorDifficulty = _playerLevel * _difficultyMod * 4;
+        int numRooms = Random.Range(4, _difficultyMod + _playerLevel);
+        for (int i = 0; i < numRooms; i++)
+        {
+            Room room = new Room();
+            if (floorDifficulty <= _playerLevel + _difficultyMod)
+                room.roomDifficulty = floorDifficulty;
+            else
+            {
+                room.roomDifficulty = Random.Range(_playerLevel + _difficultyMod, floorDifficulty / 2);
+                floorDifficulty -= room.roomDifficulty;
+            }
+            roomList.Add(room);
+        }
+        for (int i = 0; i < roomList.Count; i++)
+        {
+            roomList[i].numEnemies = Random.Range(0, roomList[i].roomDifficulty / 2);
+            if (roomList[i].numEnemies > 8)
+                roomList[i].numEnemies = 8;
+            roomList[i].enemies = new List<Enemy>();
+            for (int j = 0; j < roomList[i].numEnemies; j++)
+            {
+                Enemy enemy = new Enemy();
+                enemy.enemyDifficulty = Random.Range(1, roomList[i].roomDifficulty / 2);
+                roomList[i].roomDifficulty -= enemyDifficulty;
+                enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
+                equipGen();
+                statGen(enemy.gearScore, roomList[i].roomDifficulty);
+                enemy.armor = element + " Armor -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
 
+                enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
+                equipGen();
+                statGen(enemy.gearScore, roomList[i].roomDifficulty);
+                enemy.boots = element + " Boots -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+
+                enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
+                equipGen();
+                statGen(enemy.gearScore, roomList[i].roomDifficulty);
+                enemy.weapon = element + " Weapon -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+
+                roomList[i].enemies.Add(enemy);
+            }
+
+        }
+    }
+
+}
 
 
 /* 
@@ -280,7 +360,14 @@ for each room
 	if(floorDifficulty <= playerLevel + difficultyMod)
 		roomDifficulty = floorDifficulty
 
-
+for each room
+    numEnemies = Random.Range(2, roomDifficulty/2);
+    for each enemy
+        enemyDifficulty = Random.Range(1, roomDifficulty/2)
+        roomDifficulty -= enemyDifficulty;
+        for each equip
+            gearScore = random.Range(1, enemyDifficulty)
+            statGen(gearScore, roomDifficulty)
 
 
 

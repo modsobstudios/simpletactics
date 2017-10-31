@@ -888,6 +888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLevel: 10
   enemyDifficulty: 3
+  difficultyMod: 4
 --- !u!1001 &1973358464
 Prefab:
   m_ObjectHideFlags: 0
