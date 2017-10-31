@@ -16,6 +16,8 @@ public class character : MonoBehaviour
     //TODO: Add Equipment stuff
     #region Equipment
 
+    List<Item> inventory;
+    
     #endregion
 
 
