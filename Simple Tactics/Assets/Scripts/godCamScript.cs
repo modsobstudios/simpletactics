@@ -65,12 +65,12 @@ public class godCamScript : MonoBehaviour
             DetectScroll();
 
             // Debug code
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.G))
             {
                 SetNewCamPosition(tempTarget.transform);
                 currTarget = tempTarget.transform;
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.H))
             {
                 SetNewCamPosition(tempTarget2eb.transform);
                 currTarget = tempTarget2eb.transform;

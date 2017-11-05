@@ -63,13 +63,13 @@ public class shoulderCamScript : MonoBehaviour
                 float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
                 Debug.Log(dist);
             }
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.G))
             {
                 AttachToTarget(tempTarget.transform);
                 currTarget = tempTarget;
                 switchMode = true;
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.H))
             {
                 AttachToTarget(tempTarget2eb.transform);
                 currTarget = tempTarget2eb;
@@ -84,6 +84,8 @@ public class shoulderCamScript : MonoBehaviour
             {
                 MouseYRotation();
                 ZoomTarget();
+                AttachToTarget(currTarget.transform);
+                LerpFocus();
             }
         }
     }
