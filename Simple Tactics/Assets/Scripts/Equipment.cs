@@ -70,9 +70,9 @@ public class Equipment : Item
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
+            roomGen(playerLevel, difficultyMod);
             string path = "Assets/Resources/output.txt";
             StreamWriter writer = new StreamWriter(path, true);
-            roomGen(playerLevel, difficultyMod);
             writer.WriteLine("Rooms in Floor: " + roomList.Count);
             foreach (Room room in roomList)
             {
@@ -80,10 +80,11 @@ public class Equipment : Item
                 foreach (Enemy enemy in room.enemies)
                 {
                     writer.WriteLine("\t Enemy Difficulty: " + enemy.enemyDifficulty + ", Gear Score: " + enemy.gearScore + ".");
-                    writer.WriteLine("\t\t Gear: \r\n\t\t\t" + enemy.armor + "\r\n\t\t\t " + enemy.boots + "\r\n\t\t\t " + enemy.weapon + ". ");
+                    writer.WriteLine("\t Gear: \r\n\t\t " + enemy.armor + "\r\n\t\t " + enemy.boots + "\r\n\t\t " + enemy.weapon + ". ");
                 }
             }
-           // Debug.Log("Dump complete.");
+            writer.Close();
+            Debug.Log("Dump complete.");
         }
     }
 
@@ -320,20 +321,34 @@ public class Equipment : Item
                 Enemy enemy = new Enemy();
                 enemy.enemyDifficulty = Random.Range(1, roomList[i].roomDifficulty / 2);
                 roomList[i].roomDifficulty -= enemyDifficulty;
-                enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
-                equipGen();
-                statGen(enemy.gearScore, roomList[i].roomDifficulty);
-                enemy.armor = element + " Armor -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
 
                 enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
                 equipGen();
                 statGen(enemy.gearScore, roomList[i].roomDifficulty);
-                enemy.boots = element + " Boots -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+                if((atkMod + defMod + spdMod) >= 0)
+                    enemy.armor = "+" + (atkMod + defMod + spdMod) + " " + element + " Armor -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+                else
+                    enemy.armor = "-" + (atkMod + defMod + spdMod) + " " + element + " Armor -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+
 
                 enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
                 equipGen();
                 statGen(enemy.gearScore, roomList[i].roomDifficulty);
-                enemy.weapon = element + " Weapon -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+                if ((atkMod + defMod + spdMod) >= 0)
+                    enemy.boots = "+" + (atkMod + defMod + spdMod) + " " + element + " Boots -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+                else
+                    enemy.boots = "-" + (atkMod + defMod + spdMod) + " " + element + " Boots -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+
+
+
+                enemy.gearScore = Random.Range(1, enemy.enemyDifficulty);
+                equipGen();
+                statGen(enemy.gearScore, roomList[i].roomDifficulty);
+                if ((atkMod + defMod + spdMod) >= 0)
+                    enemy.weapon = "+" + (atkMod + defMod + spdMod) + " " + element + " Weapon -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+                else
+                    enemy.weapon = "-" + (atkMod + defMod + spdMod) + " " + element + " Weapon -- ATK: " + atkMod + " DEF: " + defMod + " SPD: " + spdMod;
+
 
                 roomList[i].enemies.Add(enemy);
             }
@@ -368,7 +383,4 @@ for each room
         for each equip
             gearScore = random.Range(1, enemyDifficulty)
             statGen(gearScore, roomDifficulty)
-
-
-
 */

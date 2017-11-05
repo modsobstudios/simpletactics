@@ -1,0 +1,185 @@
+Rooms in Floor: 9
+Room Difficulty: 26, 8 Enemies.
+	 Enemy Difficulty: 4, Gear Score: 2.
+	 Gear: 
+		 +2 Heat Armor -- ATK: 0 DEF: 2 SPD: 0
+		 +4 Death Boots -- ATK: 0 DEF: 1 SPD: 3
+		 +0 Life Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 3, Gear Score: 1.
+	 Gear: 
+		 +1 Death Armor -- ATK: 2 DEF: 1 SPD: -2
+		 +2 Heat Boots -- ATK: 1 DEF: 2 SPD: -1
+		 +2 Life Weapon -- ATK: 0 DEF: 2 SPD: 0. 
+	 Enemy Difficulty: 14, Gear Score: 2.
+	 Gear: 
+		 +2 Death Armor -- ATK: 0 DEF: 1 SPD: 1
+		 +0 Heat Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +0 Heat Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +1 Heat Boots -- ATK: 0 DEF: 1 SPD: 0
+		 +2 Life Weapon -- ATK: 1 DEF: 2 SPD: -1. 
+	 Enemy Difficulty: 13, Gear Score: 9.
+	 Gear: 
+		 +10 Heat Armor -- ATK: 10 DEF: 9 SPD: -9
+		 +4 Heat Boots -- ATK: 2 DEF: 1 SPD: 1
+		 +4 Cold Weapon -- ATK: 1 DEF: -3 SPD: 6. 
+	 Enemy Difficulty: 14, Gear Score: 12.
+	 Gear: 
+		 +6 Death Armor -- ATK: 4 DEF: -1 SPD: 3
+		 +0 Cold Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 3, Gear Score: 1.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +1 Cold Boots -- ATK: 1 DEF: 2 SPD: -2
+		 +0 Cold Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 9, Gear Score: 5.
+	 Gear: 
+		 +2 Heat Armor -- ATK: 2 DEF: 0 SPD: 0
+		 +0 Cold Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +4 Life Weapon -- ATK: 4 DEF: 3 SPD: -3. 
+Room Difficulty: 11, 8 Enemies.
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Death Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Cold Boots -- ATK: 0 DEF: 1 SPD: 1
+		 +0 Cold Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 8, Gear Score: 1.
+	 Gear: 
+		 +1 Life Armor -- ATK: 1 DEF: 2 SPD: -2
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 0 DEF: 1 SPD: 1. 
+	 Enemy Difficulty: 11, Gear Score: 8.
+	 Gear: 
+		 +0 Heat Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +4 Death Boots -- ATK: 2 DEF: 0 SPD: 2
+		 +2 Death Weapon -- ATK: 1 DEF: 3 SPD: -2. 
+	 Enemy Difficulty: 7, Gear Score: 6.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Cold Weapon -- ATK: 4 DEF: 2 SPD: -4. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 2 DEF: 1 SPD: -1. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +1 Cold Armor -- ATK: -1 DEF: 2 SPD: 0
+		 +1 Heat Boots -- ATK: 0 DEF: 2 SPD: -1
+		 +2 Cold Weapon -- ATK: 2 DEF: 2 SPD: -2. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Life Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Cold Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 0 DEF: 2 SPD: 0. 
+	 Enemy Difficulty: 4, Gear Score: 2.
+	 Gear: 
+		 +1 Heat Armor -- ATK: 0 DEF: 1 SPD: 0
+		 +0 Heat Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 1 DEF: 1 SPD: 0. 
+Room Difficulty: 8, 5 Enemies.
+	 Enemy Difficulty: 6, Gear Score: 3.
+	 Gear: 
+		 +0 Death Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +1 Life Boots -- ATK: 2 DEF: 1 SPD: -2
+		 +2 Death Weapon -- ATK: 1 DEF: 1 SPD: 0. 
+	 Enemy Difficulty: 8, Gear Score: 7.
+	 Gear: 
+		 +2 Cold Armor -- ATK: 4 DEF: 1 SPD: -3
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +6 Life Weapon -- ATK: 6 DEF: 5 SPD: -5. 
+	 Enemy Difficulty: 6, Gear Score: 1.
+	 Gear: 
+		 +1 Life Armor -- ATK: 2 DEF: 0 SPD: -1
+		 +2 Death Boots -- ATK: 1 DEF: 1 SPD: 0
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 4, Gear Score: 3.
+	 Gear: 
+		 +1 Heat Armor -- ATK: 1 DEF: 2 SPD: -2
+		 +2 Cold Boots -- ATK: 0 DEF: 1 SPD: 1
+		 +4 Life Weapon -- ATK: 1 DEF: 4 SPD: -1. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +0 Life Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 1 DEF: 2 SPD: -1. 
+Room Difficulty: 16, 0 Enemies.
+Room Difficulty: 0, 5 Enemies.
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +2 Death Armor -- ATK: 2 DEF: 2 SPD: -2
+		 +0 Cold Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Cold Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 3, Gear Score: 1.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +1 Heat Boots -- ATK: 2 DEF: 0 SPD: -1
+		 +0 Life Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 3, Gear Score: 2.
+	 Gear: 
+		 +2 Life Armor -- ATK: 2 DEF: 1 SPD: -1
+		 +2 Life Boots -- ATK: 0 DEF: 2 SPD: 0
+		 +1 Heat Weapon -- ATK: 2 DEF: 0 SPD: -1. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +2 Cold Armor -- ATK: 1 DEF: 2 SPD: -1
+		 +1 Life Boots -- ATK: 2 DEF: -1 SPD: 0
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +1 Cold Armor -- ATK: 1 DEF: -1 SPD: 1
+		 +1 Life Boots -- ATK: 0 DEF: 0 SPD: 1
+		 +1 Cold Weapon -- ATK: 1 DEF: 1 SPD: -1. 
+Room Difficulty: -3, 5 Enemies.
+	 Enemy Difficulty: 4, Gear Score: 3.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Boots -- ATK: 2 DEF: 2 SPD: -2
+		 +2 Death Weapon -- ATK: 0 DEF: -1 SPD: 3. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Cold Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Heat Weapon -- ATK: 0 DEF: 2 SPD: 0. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Heat Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Heat Boots -- ATK: 1 DEF: 2 SPD: -1
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Heat Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +1 Death Boots -- ATK: 0 DEF: 1 SPD: 0
+		 +0 Cold Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +2 Death Armor -- ATK: 2 DEF: 0 SPD: 0
+		 +1 Death Boots -- ATK: 0 DEF: 2 SPD: -1
+		 +0 Death Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+Room Difficulty: 0, 3 Enemies.
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +1 Heat Armor -- ATK: -1 DEF: 1 SPD: 1
+		 +0 Heat Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Heat Weapon -- ATK: 0 DEF: 0 SPD: 0. 
+	 Enemy Difficulty: 2, Gear Score: 1.
+	 Gear: 
+		 +0 Heat Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Heat Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Life Weapon -- ATK: 2 DEF: 2 SPD: -2. 
+	 Enemy Difficulty: 1, Gear Score: 1.
+	 Gear: 
+		 +0 Life Armor -- ATK: 0 DEF: 0 SPD: 0
+		 +0 Death Boots -- ATK: 0 DEF: 0 SPD: 0
+		 +2 Death Weapon -- ATK: 0 DEF: 1 SPD: 1. 
+Room Difficulty: 9, 0 Enemies.
+Room Difficulty: 6, 1 Enemies.
+	 Enemy Difficulty: 3, Gear Score: 1.
+	 Gear: 
+		 +1 Heat Armor -- ATK: -1 DEF: 1 SPD: 1
+		 +2 Cold Boots -- ATK: 1 DEF: 2 SPD: -1
+		 +0 Life Weapon -- ATK: 0 DEF: 0 SPD: 0. 
