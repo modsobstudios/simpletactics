@@ -5,13 +5,12 @@ using UnityEngine;
 public class shoulderCamScript : MonoBehaviour
 {
     // Bool for which camera is active
-    [SerializeField]
-    bool shoulderCamActive = false;
+    public bool shoulderCamActive = false;
     bool switchMode = false;
 
     // Target character to attach the camera to
     public GameObject tempTarget, tempTarget2eb;
-    GameObject currTarget;
+    public GameObject currTarget;
 
     // The camera object
     public Camera cam;
@@ -63,6 +62,19 @@ public class shoulderCamScript : MonoBehaviour
                 float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
                 Debug.Log(dist);
             }
+
+
+            if (switchMode)
+            {
+                LerpFocus();
+            }
+            else
+            {
+                MouseYRotation();
+                ZoomTarget();
+
+            }
+
             if (Input.GetKeyDown(KeyCode.G))
             {
                 AttachToTarget(tempTarget.transform);
@@ -76,17 +88,8 @@ public class shoulderCamScript : MonoBehaviour
                 switchMode = true;
             }
 
-            if (switchMode)
-            {
-                LerpFocus();
-            }
-            else
-            {
-                MouseYRotation();
-                ZoomTarget();
-                AttachToTarget(currTarget.transform);
-                LerpFocus();
-            }
+            AttachToTarget(currTarget.transform);
+            LerpFocus();
         }
     }
 
@@ -110,7 +113,7 @@ public class shoulderCamScript : MonoBehaviour
 
             else if (Input.GetAxisRaw("Mouse X") < 0)
             {
-                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * camRotViewRate);
+                cam.transform.RotateAround(targetPos, cam.transform.up, Time.deltaTime * -camRotViewRate);
                 lookAt = cam.transform.rotation;
             }
         }
