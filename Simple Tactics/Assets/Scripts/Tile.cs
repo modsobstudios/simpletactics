@@ -84,6 +84,16 @@ public class Tile : MonoBehaviour
             thisTilesType = (tileType)0;
         }
     }
+    public void copyTile(Tile tileToCopy)
+    {
+        this.thisTilesEnergy = tileToCopy.thisTilesEnergy;
+        this.thisTilesType = tileToCopy.thisTilesType;
+        this.passable = tileToCopy.passable;
+        this.tileRowNum = tileToCopy.tileRowNum;
+        this.tileColumnNum = tileToCopy.tileColumnNum;
+        this.worldPos = tileToCopy.worldPos;
+        
+    }
 	// Use this for initialization
 	void Start ()
     {
