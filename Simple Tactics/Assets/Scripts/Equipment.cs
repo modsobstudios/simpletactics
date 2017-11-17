@@ -13,7 +13,7 @@ public class Equipment : Item
     int totalMod, atkMod, defMod, spdMod;
 
     // equipment status effects?
-
+    
 
     // ----------- Debug testing ------------ //
     string element, eqType;
@@ -37,13 +37,13 @@ public class Equipment : Item
         public List<Enemy> enemies;
     }
     List<Room> roomList = new List<Room>();
-
+    
     // --------------------------------------//
 
     // Use this for initialization
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -86,6 +86,7 @@ public class Equipment : Item
             writer.Close();
             Debug.Log("Dump complete.");
         }
+        
     }
 
     public int getTotalMod()

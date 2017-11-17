@@ -63,7 +63,6 @@ public class shoulderCamScript : MonoBehaviour
                 Debug.Log(dist);
             }
 
-
             if (switchMode)
             {
                 LerpFocus();
@@ -72,7 +71,6 @@ public class shoulderCamScript : MonoBehaviour
             {
                 MouseYRotation();
                 ZoomTarget();
-
             }
 
             if (Input.GetKeyDown(KeyCode.G))
