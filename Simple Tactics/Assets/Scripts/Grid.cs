@@ -46,7 +46,7 @@ public class Grid : MonoBehaviour {
         for(int i= 0; i< mapGrid.Count; i++)
         {
             Vector3 worldPos = mapGrid[i].getTileWorldPos();
-            
+            tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
             Instantiate(tileMarker, worldPos,Quaternion.identity);
         }
         
