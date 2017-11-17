@@ -7,6 +7,9 @@ public class Tile : MonoBehaviour
 
     character thePlayer;
     bool passable;
+    Vector3 worldPos;
+    int tileRowNum;
+    int tileColumnNum;
     public enum tileType
     {
         inert, leyline, changeable
@@ -17,21 +20,48 @@ public class Tile : MonoBehaviour
     }
 
     public tileEnergy thisTilesEnergy;
-    
+    public tileType thisTilesType;
+
     tileEnergy getTileEnergy()
     {
         return thisTilesEnergy;
+    }
+    tileType getTileType()
+    {
+        return thisTilesType;
     }
     bool getTilePassable()
     {
         return passable;
     }
-    void setTilePassable(bool _value)
+    int getTileRow()
+    {
+        return tileRowNum;
+    }
+    int getTileColumn()
+    {
+        return tileColumnNum;
+    }
+    public Vector3 getTileWorldPos()
+    {
+        return worldPos;
+    }
+    public void setTileRowAndColumnNum(int row, int column)
+    {
+        tileRowNum = row;
+        tileColumnNum = column;
+    }
+    public void setTileWorldPos(Vector3 newWorldPos)
+    {
+        worldPos = newWorldPos;
+    }
+
+    public void setTilePassable(bool _value)
     {
         passable = _value;
     }
     //0 = heat, 1 = cold, 2 = death, 3 = life, 4 = none
-     void setTilesEnergy( int energyValue)
+    public void setTilesEnergy( int energyValue)
     {
         if(energyValue >= 0 && energyValue <= 4)
         {
@@ -43,11 +73,22 @@ public class Tile : MonoBehaviour
         }
        
     }
+    public void setTileType(int typeValue)
+    {
+        if(typeValue >=0 & typeValue <=2)
+        {
+            thisTilesType = (tileType)typeValue;
+        }
+        else
+        {
+            thisTilesType = (tileType)0;
+        }
+    }
 	// Use this for initialization
 	void Start ()
     {
-        setTilesEnergy(4);
-        setTilePassable(true);
+       // setTilesEnergy(4);
+        //setTilePassable(true);
 	}
 	
 	// Update is called once per frame
