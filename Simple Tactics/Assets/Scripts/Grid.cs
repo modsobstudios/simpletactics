@@ -51,22 +51,22 @@ public class Grid : MonoBehaviour {
             tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
             if(mapGrid[i].getTileEnergy() == Tile.tileEnergy.heat)
             {
-                tileMarker.GetComponent<MeshRenderer>().material = materials[0];
+                tileMarker.GetComponent<SpriteRenderer>().material = materials[0];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.cold)
             {
-                tileMarker.GetComponent<MeshRenderer>().material = materials[1];
+                tileMarker.GetComponent<SpriteRenderer>().material = materials[1];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.death)
             {
-                tileMarker.GetComponent<MeshRenderer>().material = materials[2];
+                tileMarker.GetComponent<SpriteRenderer>().material = materials[2];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.life)
             {
-                tileMarker.GetComponent<MeshRenderer>().material = materials[3];
+                tileMarker.GetComponent<SpriteRenderer>().material = materials[3];
             }
-
-            Instantiate(tileMarker, worldPos,Quaternion.identity);
+           
+            Instantiate(tileMarker, worldPos,Quaternion.Euler(90.0f,0.0f,0.0f));
         }
         
     }
