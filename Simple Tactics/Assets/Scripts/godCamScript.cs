@@ -5,8 +5,7 @@ using UnityEngine;
 public class godCamScript : MonoBehaviour
 {
     // Bool for which camera is active
-    [SerializeField]
-    bool godCamActive = true;
+    public bool godCamActive = true;
 
     // Reference to the camera object
     public Camera cam;
@@ -14,7 +13,7 @@ public class godCamScript : MonoBehaviour
     // Temporary target objects. These will be passed in from the list of characters in the map.
     public GameObject tempTarget;
     public GameObject tempTarget2eb;
-    Transform currTarget;
+    public GameObject currTarget;
 
     // Vectors
     Vector3 newCamPos;
@@ -38,7 +37,7 @@ public class godCamScript : MonoBehaviour
 
         // temp default starting spot
         TeleportFocus(cam.transform);
-        currTarget = tempTarget.transform;
+        currTarget = tempTarget;
     }
 
     // Update is called once per frame
@@ -52,35 +51,37 @@ public class godCamScript : MonoBehaviour
 
         if (godCamActive)
         {
-            if(Input.GetKeyDown(KeyCode.Q))
-            {
-                float dist = Vector3.Distance(currTarget.position, cam.transform.position);
-                Debug.Log(dist);
-            }
             // ensure the camera is at the correct rotation
             cam.transform.rotation = Quaternion.Euler(camRotation);
 
-            // Called every frame to move the camera to the active target
+            // Called every frame to keep the camera at the object position
             LerpFocus();
+            
+            // Clamped Zooming
             DetectScroll();
 
-            // Debug code
-            if (Input.GetKeyDown(KeyCode.G))
-            {
+            // Called every frame to detect object movement
+            SetNewCamPosition(currTarget.transform);
+        }
+
+        // Debug code
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (godCamActive)
                 SetNewCamPosition(tempTarget.transform);
-                currTarget = tempTarget.transform;
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
+            currTarget = tempTarget;
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (godCamActive)
                 SetNewCamPosition(tempTarget2eb.transform);
-                currTarget = tempTarget2eb.transform;
-            }
+            currTarget = tempTarget2eb;
         }
     }
 
     void DetectScroll()
     {
-        float dist = Vector3.Distance(currTarget.position, cam.transform.position);
+        float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
 
         // Zoom In
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)

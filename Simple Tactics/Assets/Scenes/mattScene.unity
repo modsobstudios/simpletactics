@@ -483,7 +483,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 725258880}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -639,6 +639,7 @@ MonoBehaviour:
   cam: {fileID: 1492908948}
   tempTarget: {fileID: 1604909106}
   tempTarget2eb: {fileID: 1504860156}
+  currTarget: {fileID: 0}
 --- !u!114 &1492908951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,8 +652,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shoulderCamActive: 0
-  tempTarget: {fileID: 1504860156}
-  tempTarget2eb: {fileID: 1604909106}
+  tempTarget: {fileID: 1604909106}
+  tempTarget2eb: {fileID: 1504860156}
+  currTarget: {fileID: 0}
   cam: {fileID: 1492908948}
   newCamPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1492908952
@@ -765,6 +767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterObject: {fileID: 1504860156}
+  cam: {fileID: 1492908948}
 --- !u!1 &1604909106
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +780,7 @@ GameObject:
   - component: {fileID: 1604909108}
   - component: {fileID: 1604909107}
   - component: {fileID: 1604909111}
+  - component: {fileID: 1604909112}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -842,7 +846,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1604909106}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.03, y: 0, z: 17.62}
+  m_LocalPosition: {x: 21.03, y: 0.5, z: 17.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -862,6 +866,19 @@ MonoBehaviour:
   playerLevel: 10
   enemyDifficulty: 3
   difficultyMod: 4
+--- !u!114 &1604909112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1604909106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f6132e4d60a694fb306b9fc592f5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterObject: {fileID: 1604909106}
+  cam: {fileID: 1492908948}
 --- !u!1001 &1973358464
 Prefab:
   m_ObjectHideFlags: 0
