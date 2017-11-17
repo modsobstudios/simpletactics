@@ -22,11 +22,11 @@ public class Tile : MonoBehaviour
     public tileEnergy thisTilesEnergy;
     public tileType thisTilesType;
 
-    tileEnergy getTileEnergy()
+    public tileEnergy getTileEnergy()
     {
         return thisTilesEnergy;
     }
-    tileType getTileType()
+    public tileType getTileType()
     {
         return thisTilesType;
     }

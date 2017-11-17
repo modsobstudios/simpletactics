@@ -200,7 +200,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 586393177efeb6f43b2a5079c0aca683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileMarker: {fileID: 1625047599117332, guid: 3384c3a2cc17def499a4b9a2960243b8, type: 2}
+  materials:
+  - {fileID: 2100000, guid: ebd44b9a1f5ba734f93bc8a676d36e70, type: 2}
+  - {fileID: 2100000, guid: 30d7fee07fced4f4d88d90025d1559af, type: 2}
+  - {fileID: 2100000, guid: c49127c142a0a8c4383b2e40cd24e392, type: 2}
+  - {fileID: 2100000, guid: 92c8bd04e6e3b8348b5278ba2bc1c503, type: 2}
+  tileMarker: {fileID: 1549521925392350, guid: f325f897ef07d5541a6a2344fdbb61a0, type: 2}
 --- !u!4 &1468535011
 Transform:
   m_ObjectHideFlags: 0
