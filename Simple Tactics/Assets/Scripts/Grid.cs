@@ -12,7 +12,7 @@ public class Grid : MonoBehaviour {
 	void Start ()
     {
         mapGrid = new List<Tile>();
-        createGrid(50,50);
+        createGrid(500,500);
         instantiateTheGrid();
 	}
 	
