@@ -24,9 +24,9 @@ public class Grid : MonoBehaviour {
 
     void createGrid(int rowNum, int columnNum)
     {
-        for(int i=0; i< rowNum; i++)
+        for(int i=0; i < rowNum; i++)
         {
-            for(int j=0; j< columnNum; j++)
+            for(int j=0; j < columnNum; j++)
             {
                 Tile newTile = new Tile();
                 newTile.setTileRowAndColumnNum(i, j);
@@ -39,6 +39,7 @@ public class Grid : MonoBehaviour {
                 newTile.setTilesEnergy(tileEnergy);
                 newTile.setTileType(tileType);
                 mapGrid.Add(newTile);
+                
             }
         }
     }
@@ -71,5 +72,10 @@ public class Grid : MonoBehaviour {
         
     }
 
-
+    /*
+    Make random generation weighted. 50% 1 type 50% the other 3 types
+    Work on clicking for map editing Key + Click
+    Leyline system connected to each other, Leyline has multiple elements in them
+    
+    */
 }
