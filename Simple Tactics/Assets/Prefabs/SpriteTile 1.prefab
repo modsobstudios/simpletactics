@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisTilesEnergy: 1
-  thisTilesType: 0
+  thisTilesType: 1
 --- !u!212 &212891811965726142
 SpriteRenderer:
   m_ObjectHideFlags: 1
