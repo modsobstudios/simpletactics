@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour
     public Material[] materials;
     public GameObject tileMarker;
     public GameObject player;
+    public Party partyObj;
     List<GameObject> playerList;
     int width, height, numPlayers;
     // Use this for initialization
@@ -22,7 +23,7 @@ public class Grid : MonoBehaviour
         instantiateTheGrid();
         spawnCharacters();
     }
- 
+
     // Update is called once per frame
     void Update()
     {
@@ -38,10 +39,14 @@ public class Grid : MonoBehaviour
             Instantiate(player, getRandomTilePos(), Quaternion.identity);
             playerList.Add(player);
         }
-
     }
 
-    Vector3 getRandomTilePos()
+    public List<GameObject> getPlayerList()
+    {
+        return playerList;
+    }
+
+    public Vector3 getRandomTilePos()
     {
         int randMax = mapGrid.Count;
         int index = Random.Range(0, randMax);

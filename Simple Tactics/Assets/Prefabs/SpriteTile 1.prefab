@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840f488886d8b5446917b03ea132c614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisTilesEnergy: 0
+  thisTilesEnergy: 2
   thisTilesType: 0
 --- !u!212 &212891811965726142
 SpriteRenderer:
@@ -67,7 +67,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ebd44b9a1f5ba734f93bc8a676d36e70, type: 2}
+  - {fileID: 2100000, guid: c49127c142a0a8c4383b2e40cd24e392, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

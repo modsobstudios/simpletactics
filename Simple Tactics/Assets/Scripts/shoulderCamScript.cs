@@ -9,9 +9,11 @@ public class shoulderCamScript : MonoBehaviour
     bool switchMode = false;
 
     // Target character to attach the camera to
-    public GameObject tempTarget, tempTarget2eb;
     public GameObject currTarget;
 
+    public List<GameObject> playerList;
+    public Grid gridObj;
+    public int target = 0;
     // The camera object
     public Camera cam;
 
@@ -39,7 +41,8 @@ public class shoulderCamScript : MonoBehaviour
     void Start()
     {
         // Target must be set before running
-        currTarget = tempTarget;
+        playerList = gridObj.getPlayerList();
+        currTarget = playerList[0];
     }
 
     // Update is called once per frame
@@ -75,14 +78,20 @@ public class shoulderCamScript : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.G))
             {
-                AttachToTarget(tempTarget.transform);
-                currTarget = tempTarget;
+                target++;
+                if (target >= playerList.Count)
+                    target = 0;
+                AttachToTarget(playerList[target].transform);
+                currTarget = playerList[target];
                 switchMode = true;
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                AttachToTarget(tempTarget2eb.transform);
-                currTarget = tempTarget2eb;
+                target--;
+                if (target < 0)
+                    target = playerList.Count - 1;
+                AttachToTarget(playerList[target].transform);
+                currTarget = playerList[target];
                 switchMode = true;
             }
 

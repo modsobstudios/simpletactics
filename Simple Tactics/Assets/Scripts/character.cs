@@ -17,7 +17,7 @@ public class character : MonoBehaviour
     #region Equipment
 
     List<Item> inventory;
-    
+
     #endregion
 
 
@@ -51,6 +51,12 @@ public class character : MonoBehaviour
     private float attack;
     #endregion
 
+    public Vector3 worldPos;
+
+    public void setWorldPos(Vector3 _w)
+    {
+        worldPos = _w;
+    }
 
     // Use this for initialization
     void Start()
@@ -66,6 +72,7 @@ public class character : MonoBehaviour
         //reset stats to base value before calculating new buff/debuff values
         resetStats();
 
+        //GetComponentInParent<Transform>().position = worldPos;
         #region ApplyStatus
         //If the Character has Status/s, apply them
         if (!hasTakenStatus && status.Count > 0)

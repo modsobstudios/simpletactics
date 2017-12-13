@@ -11,9 +11,11 @@ public class godCamScript : MonoBehaviour
     public Camera cam;
 
     // Temporary target objects. These will be passed in from the list of characters in the map.
-    public GameObject tempTarget;
-    public GameObject tempTarget2eb;
     public GameObject currTarget;
+
+    public Grid gridObj;
+    public List<GameObject> playerList;
+    public int target = 0;
 
     // Vectors
     Vector3 newCamPos;
@@ -37,7 +39,9 @@ public class godCamScript : MonoBehaviour
 
         // temp default starting spot
         TeleportFocus(cam.transform);
-        currTarget = tempTarget;
+
+        playerList = gridObj.getPlayerList();
+        currTarget = playerList[0];
     }
 
     // Update is called once per frame
@@ -68,14 +72,24 @@ public class godCamScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             if (godCamActive)
-                SetNewCamPosition(tempTarget.transform);
-            currTarget = tempTarget;
+            {
+                target++;
+                if (target >= playerList.Count)
+                    target = 0;
+                SetNewCamPosition2(playerList[target].GetComponent<character>().worldPos);
+            }
+            currTarget = playerList[target];
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
             if (godCamActive)
-                SetNewCamPosition(tempTarget2eb.transform);
-            currTarget = tempTarget2eb;
+            {
+                target--;
+                if (target < 0)
+                    target = playerList.Count - 1;
+                SetNewCamPosition2(playerList[target].GetComponent<character>().worldPos);
+            }
+            currTarget = playerList[target];
         }
     }
 
@@ -117,6 +131,11 @@ public class godCamScript : MonoBehaviour
     void SetNewCamPosition(Transform _trans)
     {
         newCamPos = _trans.position + camOffset;
+    }
+
+    void SetNewCamPosition2(Vector3 _trans)
+    {
+        newCamPos = _trans + camOffset;
     }
 
     void LerpFocus()

@@ -173,6 +173,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &362093400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 362093402}
+  - component: {fileID: 362093401}
+  m_Layer: 0
+  m_Name: PartyObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &362093401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 362093400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7c05326e6c88741bca1a0dd84a470a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1006390653911986, guid: ae33d5798c34b7840ac7b1cb7afa0db7, type: 2}
+--- !u!4 &362093402
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 362093400}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.32143, y: -2.9155598, z: 6.649357}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &465944284
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,6 +324,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 92c8bd04e6e3b8348b5278ba2bc1c503, type: 2}
   tileMarker: {fileID: 1826199972441306, guid: b455cbf62e89fd64281d22057ccef018, type: 2}
   player: {fileID: 1006390653911986, guid: ae33d5798c34b7840ac7b1cb7afa0db7, type: 2}
+  partyObj: {fileID: 362093401}
 --- !u!4 &499921841
 Transform:
   m_ObjectHideFlags: 0
@@ -600,9 +642,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   godCamActive: 1
   cam: {fileID: 1492908948}
-  tempTarget: {fileID: 1604909106}
-  tempTarget2eb: {fileID: 0}
   currTarget: {fileID: 0}
+  gridObj: {fileID: 499921840}
+  playerList: []
+  target: 0
 --- !u!114 &1492908951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -615,9 +658,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shoulderCamActive: 0
-  tempTarget: {fileID: 1604909106}
-  tempTarget2eb: {fileID: 0}
   currTarget: {fileID: 0}
+  playerList: []
+  gridObj: {fileID: 499921840}
+  target: 0
   cam: {fileID: 1492908948}
   newCamPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1492908952
