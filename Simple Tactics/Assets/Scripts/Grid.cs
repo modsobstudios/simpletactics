@@ -2,31 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour {
+public class Grid : MonoBehaviour
+{
 
-    
+
     List<Tile> mapGrid;
     public Material[] materials;
     public GameObject tileMarker;
-	// Use this for initialization
-	void Start ()
+    public GameObject player;
+    List<GameObject> playerList;
+    int width, height, numPlayers;
+    // Use this for initialization
+    void Start()
     {
+        width = 25;
+        height = 25;
         mapGrid = new List<Tile>();
-        createGrid(500,500);
+        createGrid(width, height);
         instantiateTheGrid();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        spawnCharacters();
+    }
+ 
+    // Update is called once per frame
+    void Update()
     {
-		
-	}
+
+    }
+
+    void spawnCharacters()
+    {
+        numPlayers = 5;
+        playerList = new List<GameObject>();
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Instantiate(player, getRandomTilePos(), Quaternion.identity);
+            playerList.Add(player);
+        }
+
+    }
+
+    Vector3 getRandomTilePos()
+    {
+        int randMax = mapGrid.Count;
+        int index = Random.Range(0, randMax);
+        return mapGrid[index].getTileWorldPos();
+    }
 
     void createGrid(int rowNum, int columnNum)
     {
-        for(int i=0; i< rowNum; i++)
+        for (int i = 0; i < rowNum; i++)
         {
-            for(int j=0; j< columnNum; j++)
+            for (int j = 0; j < columnNum; j++)
             {
                 Tile newTile = new Tile();
                 newTile.setTileRowAndColumnNum(i, j);
@@ -45,11 +71,11 @@ public class Grid : MonoBehaviour {
 
     void instantiateTheGrid()
     {
-        for(int i= 0; i< mapGrid.Count; i++)
+        for (int i = 0; i < mapGrid.Count; i++)
         {
             Vector3 worldPos = mapGrid[i].getTileWorldPos();
             tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
-            if(mapGrid[i].getTileEnergy() == Tile.tileEnergy.heat)
+            if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.heat)
             {
                 tileMarker.GetComponent<SpriteRenderer>().material = materials[0];
             }
@@ -65,10 +91,10 @@ public class Grid : MonoBehaviour {
             {
                 tileMarker.GetComponent<SpriteRenderer>().material = materials[3];
             }
-           
-            Instantiate(tileMarker, worldPos,Quaternion.Euler(90.0f,0.0f,0.0f));
+
+            Instantiate(tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
         }
-        
+
     }
 
 

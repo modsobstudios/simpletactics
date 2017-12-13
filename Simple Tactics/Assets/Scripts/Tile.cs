@@ -20,6 +20,7 @@ public class Tile : MonoBehaviour
     }
 
     public tileEnergy thisTilesEnergy;
+    tileEnergy tempEnergy;
     public tileType thisTilesType;
 
     public tileEnergy getTileEnergy()
@@ -94,8 +95,9 @@ public class Tile : MonoBehaviour
         this.worldPos = tileToCopy.worldPos;
         
     }
-	// Use this for initialization
-	void Start ()
+
+    // Use this for initialization
+    void Start ()
     {
        // setTilesEnergy(4);
         //setTilePassable(true);

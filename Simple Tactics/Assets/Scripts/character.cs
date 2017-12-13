@@ -10,7 +10,7 @@ public class character : MonoBehaviour
         SPEED, ARMOR, ATTACK, NONE
     }
     private bool hasTakenStatus = false;
-    private ArrayList status;
+    private ArrayList status = new ArrayList();
     #endregion
 
     //TODO: Add Equipment stuff
@@ -28,7 +28,7 @@ public class character : MonoBehaviour
     private int health;
     private bool isDead = false;
 
-    private ArrayList Dots;
+    private ArrayList Dots = new ArrayList();
     private bool hasTakenDOT = false;
     #endregion
 
