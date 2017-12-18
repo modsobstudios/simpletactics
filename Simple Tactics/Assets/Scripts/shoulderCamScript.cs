@@ -35,6 +35,7 @@ public class shoulderCamScript : MonoBehaviour
     [HideInInspector]
     public Camera cam;
     public int target;
+    public bool switchTar = false;
 
     // Use this for initialization
     void Start()
@@ -75,30 +76,18 @@ public class shoulderCamScript : MonoBehaviour
             if (camerasOn)
             {
                 currTarget = charList[target].getCharMesh();
-
-                if (Input.GetKeyDown(KeyCode.G) && !Input.GetButton("Fire2"))
-                {
-                    target++;
-                    if (target >= charList.Count)
-                        target = 0;
-                    AttachToTarget(charList[target].getCharMesh().transform);
-                    currTarget = charList[target].getCharMesh();
-                    switchMode = true;
-                }
-                if (Input.GetKeyDown(KeyCode.H) && !Input.GetButton("Fire2"))
-                {
-                    target--;
-                    if (target < 0)
-                        target = charList.Count - 1;
-                    AttachToTarget(charList[target].getCharMesh().transform);
-                    currTarget = charList[target].getCharMesh();
-                    switchMode = true;
-                }
             }
 
             AttachToTarget(currTarget.transform);
             LerpFocus();
         }
+    }
+
+    public void switchTarget()
+    {
+        AttachToTarget(charList[target].getCharMesh().transform);
+        currTarget = charList[target].getCharMesh();
+        switchMode = true;
     }
 
     void AttachToTarget(Transform _trans)

@@ -9,6 +9,8 @@ public class godCamScript : MonoBehaviour
 
     public bool camerasOn = false;
 
+    public bool switchTar = false;
+
     // Reference to the camera object
     [HideInInspector]
     public Camera cam;
@@ -72,31 +74,15 @@ public class godCamScript : MonoBehaviour
             }
 
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                if (godCamActive)
-                {
-                    target++;
-                    if (target >= charList.Count)
-                        target = 0;
-                    SetNewCamPosition2(charList[target].worldPos);
-                }
-                currTarget = charList[target].getCharMesh();
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                if (godCamActive)
-                {
-                    target--;
-                    if (target < 0)
-                        target = charList.Count - 1;
-                    SetNewCamPosition2(charList[target].worldPos);
-                }
-                currTarget = charList[target].getCharMesh();
-            }
+
         }
     }
 
+    public void switchTarget()
+    {
+        SetNewCamPosition2(charList[target].worldPos);
+        currTarget = charList[target].getCharMesh();
+    }
     void DetectScroll()
     {
         float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);

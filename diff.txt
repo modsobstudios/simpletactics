@@ -1,0 +1,16 @@
+Easy
+	Barbarian
+	Fighter
+	Monk
+
+Intermediate
+	Sorcerer
+	Paladin
+	Ranger
+	Rogue
+
+Complicated
+	Wizard
+	Bard
+	Druid
+	Cleric

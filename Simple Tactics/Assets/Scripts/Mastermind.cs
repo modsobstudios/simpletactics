@@ -32,7 +32,7 @@ public class Mastermind : MonoBehaviour
     List<character> characterList;
 
     public int gridHeight, gridWidth, numPlayers;
-
+    public int target = 0;
 
     void Start()
     {
@@ -44,9 +44,6 @@ public class Mastermind : MonoBehaviour
         godCam.cam = mainCamera;
         godCam.cam.transform.Rotate(new Vector3(45, 0, 0));
         shoulderCam.cam = mainCamera;
-        //moveScript = GetComponent<freeMovement>();
-        //moveScript.gCam = godCam;
-        //moveScript.sCam = shoulderCam;
     }
 
     void Update()
@@ -55,6 +52,31 @@ public class Mastermind : MonoBehaviour
         {
             createCombat();
             setupCamera();
+        }
+
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            target++;
+            if (target >= characterList.Count)
+                target = 0;
+            shoulderCam.target = target;
+            godCam.target = target;
+            if (shoulderCam.shoulderCamActive)
+                shoulderCam.switchTarget();
+            else
+                godCam.switchTarget();
+        }
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            target--;
+            if (target < 0)
+                target = characterList.Count - 1;
+            shoulderCam.target = target;
+            godCam.target = target;
+            if (shoulderCam.shoulderCamActive)
+                shoulderCam.switchTarget();
+            else
+                godCam.switchTarget();
         }
     }
 
