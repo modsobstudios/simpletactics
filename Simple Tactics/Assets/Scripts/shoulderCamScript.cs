@@ -6,21 +6,17 @@ public class shoulderCamScript : MonoBehaviour
 {
     // Bool for which camera is active
     public bool shoulderCamActive = false;
+    public bool camerasOn = false;
     bool switchMode = false;
 
     // Target character to attach the camera to
     public GameObject currTarget;
 
-    public List<GameObject> playerList;
-    public Grid gridObj;
-    public int target = 0;
-    // The camera object
-    public Camera cam;
+    public List<character> charList;
 
     // Camera vectors
-    [SerializeField]
-    Vector3 newCamPosition;
-    Vector3 targetPos;
+    public Vector3 newCamPosition;
+    public Vector3 targetPos;
 
     // Quaternion for rotation storage
     Quaternion lookAt;
@@ -36,13 +32,14 @@ public class shoulderCamScript : MonoBehaviour
 
     Vector3 camPosOffset = new Vector3(0, 1, 0); // add to camera position to place it at shoulder level rather than waist level
 
+    [HideInInspector]
+    public Camera cam;
+    public int target;
 
     // Use this for initialization
     void Start()
     {
-        // Target must be set before running
-        playerList = gridObj.getPlayerList();
-        currTarget = playerList[0];
+
     }
 
     // Update is called once per frame
@@ -75,24 +72,28 @@ public class shoulderCamScript : MonoBehaviour
                 MouseYRotation();
                 ZoomTarget();
             }
+            if (camerasOn)
+            {
+                currTarget = charList[target].getCharMesh();
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                target++;
-                if (target >= playerList.Count)
-                    target = 0;
-                AttachToTarget(playerList[target].transform);
-                currTarget = playerList[target];
-                switchMode = true;
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                target--;
-                if (target < 0)
-                    target = playerList.Count - 1;
-                AttachToTarget(playerList[target].transform);
-                currTarget = playerList[target];
-                switchMode = true;
+                if (Input.GetKeyDown(KeyCode.G) && !Input.GetButton("Fire2"))
+                {
+                    target++;
+                    if (target >= charList.Count)
+                        target = 0;
+                    AttachToTarget(charList[target].getCharMesh().transform);
+                    currTarget = charList[target].getCharMesh();
+                    switchMode = true;
+                }
+                if (Input.GetKeyDown(KeyCode.H) && !Input.GetButton("Fire2"))
+                {
+                    target--;
+                    if (target < 0)
+                        target = charList.Count - 1;
+                    AttachToTarget(charList[target].getCharMesh().transform);
+                    currTarget = charList[target].getCharMesh();
+                    switchMode = true;
+                }
             }
 
             AttachToTarget(currTarget.transform);
@@ -106,7 +107,7 @@ public class shoulderCamScript : MonoBehaviour
         lookAt = Quaternion.LookRotation(_trans.forward);
         targetPos = _trans.position;
     }
-
+    
     void MouseYRotation()
     {
         if (Input.GetButton("Fire2"))

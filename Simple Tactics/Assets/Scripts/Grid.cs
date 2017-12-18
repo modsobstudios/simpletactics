@@ -7,21 +7,10 @@ public class Grid : MonoBehaviour
 
 
     List<Tile> mapGrid;
-    public Material[] materials;
-    public GameObject tileMarker;
-    public GameObject player;
-    public Party partyObj;
-    List<GameObject> playerList;
-    int width, height, numPlayers;
     // Use this for initialization
     void Start()
     {
-        width = 25;
-        height = 25;
         mapGrid = new List<Tile>();
-        createGrid(width, height);
-        instantiateTheGrid();
-        spawnCharacters();
     }
 
     // Update is called once per frame
@@ -30,30 +19,15 @@ public class Grid : MonoBehaviour
 
     }
 
-    void spawnCharacters()
-    {
-        numPlayers = 5;
-        playerList = new List<GameObject>();
-        for (int i = 0; i < numPlayers; i++)
-        {
-            Instantiate(player, getRandomTilePos(), Quaternion.identity);
-            playerList.Add(player);
-        }
-    }
-
-    public List<GameObject> getPlayerList()
-    {
-        return playerList;
-    }
 
     public Vector3 getRandomTilePos()
     {
         int randMax = mapGrid.Count;
-        int index = Random.Range(0, randMax);
-        return mapGrid[index].getTileWorldPos();
+        int index = Random.Range(0, randMax-1);
+        return mapGrid[index].getTileWorldPos() + new Vector3(0,0.95f,0);
     }
 
-    void createGrid(int rowNum, int columnNum)
+   public void createGrid(int rowNum, int columnNum)
     {
         for (int i = 0; i < rowNum; i++)
         {
@@ -74,30 +48,30 @@ public class Grid : MonoBehaviour
         }
     }
 
-    void instantiateTheGrid()
+    public void instantiateTheGrid(GameObject _tileMarker, Material[] _materials)
     {
         for (int i = 0; i < mapGrid.Count; i++)
         {
             Vector3 worldPos = mapGrid[i].getTileWorldPos();
-            tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
+            _tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
             if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.heat)
             {
-                tileMarker.GetComponent<SpriteRenderer>().material = materials[0];
+                _tileMarker.GetComponent<SpriteRenderer>().material = _materials[0];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.cold)
             {
-                tileMarker.GetComponent<SpriteRenderer>().material = materials[1];
+                _tileMarker.GetComponent<SpriteRenderer>().material = _materials[1];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.death)
             {
-                tileMarker.GetComponent<SpriteRenderer>().material = materials[2];
+                _tileMarker.GetComponent<SpriteRenderer>().material = _materials[2];
             }
             else if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.life)
             {
-                tileMarker.GetComponent<SpriteRenderer>().material = materials[3];
+                _tileMarker.GetComponent<SpriteRenderer>().material = _materials[3];
             }
 
-            Instantiate(tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
+            Instantiate(_tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
         }
 
     }

@@ -7,18 +7,21 @@ public class godCamScript : MonoBehaviour
     // Bool for which camera is active
     public bool godCamActive = true;
 
+    public bool camerasOn = false;
+
     // Reference to the camera object
+    [HideInInspector]
     public Camera cam;
 
     // Temporary target objects. These will be passed in from the list of characters in the map.
     public GameObject currTarget;
 
-    public Grid gridObj;
-    public List<GameObject> playerList;
+    //public Grid gridObj;
+    public List<character> charList;
     public int target = 0;
 
     // Vectors
-    Vector3 newCamPos;
+    public Vector3 newCamPos;
 
     // Default overhead cam position offset
     Vector3 camOffset = new Vector3(0, 10, -10);
@@ -31,17 +34,14 @@ public class godCamScript : MonoBehaviour
     void Start()
     {
         // Set default rotation (45 degrees on the X axis)
-        cam.transform.Rotate(camRotation);
+        //cam.transform.Rotate(camRotation);
 
         // Connect with the list of characters in the map
         // If no characters are found, set target to Origin
         // else set target to active character
 
         // temp default starting spot
-        TeleportFocus(cam.transform);
-
-        playerList = gridObj.getPlayerList();
-        currTarget = playerList[0];
+        //TeleportFocus(currTarget.transform);
     }
 
     // Update is called once per frame
@@ -53,43 +53,47 @@ public class godCamScript : MonoBehaviour
             godCamActive = !godCamActive;
         }
 
-        if (godCamActive)
-        {
-            // ensure the camera is at the correct rotation
-            cam.transform.rotation = Quaternion.Euler(camRotation);
-
-            // Called every frame to keep the camera at the object position
-            LerpFocus();
-            
-            // Clamped Zooming
-            DetectScroll();
-
-            // Called every frame to detect object movement
-            SetNewCamPosition(currTarget.transform);
-        }
-
         // Debug code
-        if (Input.GetKeyDown(KeyCode.G))
+        if (camerasOn)
         {
             if (godCamActive)
             {
-                target++;
-                if (target >= playerList.Count)
-                    target = 0;
-                SetNewCamPosition2(playerList[target].GetComponent<character>().worldPos);
+                // ensure the camera is at the correct rotation
+                cam.transform.rotation = Quaternion.Euler(camRotation);
+
+                // Called every frame to keep the camera at the object position
+                LerpFocus();
+
+                // Clamped Zooming
+                DetectScroll();
+
+                // Called every frame to detect object movement
+                SetNewCamPosition2(charList[target].worldPos);
             }
-            currTarget = playerList[target];
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (godCamActive)
+
+
+            if (Input.GetKeyDown(KeyCode.G))
             {
-                target--;
-                if (target < 0)
-                    target = playerList.Count - 1;
-                SetNewCamPosition2(playerList[target].GetComponent<character>().worldPos);
+                if (godCamActive)
+                {
+                    target++;
+                    if (target >= charList.Count)
+                        target = 0;
+                    SetNewCamPosition2(charList[target].worldPos);
+                }
+                currTarget = charList[target].getCharMesh();
             }
-            currTarget = playerList[target];
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                if (godCamActive)
+                {
+                    target--;
+                    if (target < 0)
+                        target = charList.Count - 1;
+                    SetNewCamPosition2(charList[target].worldPos);
+                }
+                currTarget = charList[target].getCharMesh();
+            }
         }
     }
 

@@ -21,6 +21,8 @@ public class character : MonoBehaviour
     #endregion
 
 
+    GameObject charMesh;
+
     #region HealthVariables
     //Must set the MAX_HEALTH value in the inspector for this class to function properly
     [SerializeField]
@@ -56,8 +58,18 @@ public class character : MonoBehaviour
     public void setWorldPos(Vector3 _w)
     {
         worldPos = _w;
+        charMesh.transform.position = _w + new Vector3(0,.95f,0);
     }
 
+    public void setCharMesh(GameObject _mesh)
+    {
+        charMesh = _mesh;
+    }
+
+    public GameObject getCharMesh()
+    {
+        return charMesh;
+    }
     // Use this for initialization
     void Start()
     {
@@ -233,6 +245,47 @@ public class character : MonoBehaviour
         hasTakenDOT = false;
         hasMoved = false;
         hasTakenAction = false;
+    }
+
+
+
+
+    public void initializeRandom()
+    {
+        armor = Random.Range(-10, 10);
+        attack = Random.Range(-10, 10);
+        baseArmor = Random.Range(-10, 10);
+        baseAttack = Random.Range(-10, 10);
+        baseSpeed = Random.Range(-10, 10);
+        hasMoved = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenAction = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenDOT = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenStatus = (Random.Range(0, 1) > 0 ? false : true);
+        health = Random.Range(-100, 100);
+        isDead = (Random.Range(0, 1) > 0 ? false : true);
+        isPlayerControlled = (Random.Range(0, 1) > 0 ? false : true);
+        MAX_HEALTH = Random.Range(-100, 100);
+        speed = Random.Range(-10, 10);
+        worldPos = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
+    }
+
+    public void initializeCopy(character _c)
+    {
+        armor = _c.armor;
+        attack = _c.attack;
+        baseArmor = _c.baseArmor;
+        baseAttack = _c.baseAttack;
+        baseSpeed = _c.baseSpeed;
+        hasMoved = _c.hasMoved;
+        hasTakenAction = _c.hasTakenAction;
+        hasTakenDOT = _c.hasTakenDOT;
+        hasTakenStatus = _c.hasTakenStatus;
+        health = _c.health;
+        isDead = _c.isDead;
+        isPlayerControlled = _c.isPlayerControlled;
+        MAX_HEALTH = _c.MAX_HEALTH;
+        speed = _c.speed;
+        worldPos = _c.worldPos;
     }
 }
 
