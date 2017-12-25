@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class character : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class character : MonoBehaviour
 
 
     GameObject charMesh;
+    GameObject tooltip;
 
     #region HealthVariables
     //Must set the MAX_HEALTH value in the inspector for this class to function properly
@@ -54,6 +56,7 @@ public class character : MonoBehaviour
     #endregion
 
     public Vector3 worldPos;
+    Color color;
 
     public void setWorldPos(Vector3 _w)
     {
@@ -70,6 +73,47 @@ public class character : MonoBehaviour
     {
         return charMesh;
     }
+
+
+
+    private void OnMouseEnter()
+    {
+        Debug.Log(this.name + " was moused over.");
+        color = this.GetComponent<MeshRenderer>().material.color;
+        this.GetComponent<MeshRenderer>().material.color = Color.cyan;
+        Vector3 spot = Input.mousePosition + new Vector3(100, 75, 0);
+        tooltip = Instantiate(Resources.Load("Tooltip", typeof(GameObject)) as GameObject, spot, Quaternion.identity);
+        tooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
+        tooltip.GetComponentInChildren<Text>().text = getCharText();
+    }
+
+    private void OnMouseOver()
+    {
+        tooltip.transform.position = Input.mousePosition + new Vector3(100, 75, 0);
+    }
+
+    private void OnMouseExit()
+    {
+        Debug.Log(this.name + " is no longer moused over.");
+        this.GetComponent<MeshRenderer>().material.color = color;
+        Destroy(tooltip);
+    }
+
+    string getCharText()
+    {
+        string temp;
+
+        temp = "  " + this.name + " \n" +
+                        "\n" +
+                        "  HP: " + health + "/" + MAX_HEALTH + "\n" +
+                        "  ATK: " + baseAttack + "\n" +
+                        "  ARM: " + baseArmor + "\n" +
+                        "  SPD: " + baseSpeed + "\n";
+
+
+        return temp;
+    }
+
     // Use this for initialization
     void Start()
     {

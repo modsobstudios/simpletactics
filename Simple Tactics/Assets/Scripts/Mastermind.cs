@@ -59,24 +59,14 @@ public class Mastermind : MonoBehaviour
             target++;
             if (target >= characterList.Count)
                 target = 0;
-            shoulderCam.target = target;
-            godCam.target = target;
-            if (shoulderCam.shoulderCamActive)
-                shoulderCam.switchTarget();
-            else
-                godCam.switchTarget();
+            switchTarget();
         }
         if(Input.GetKeyDown(KeyCode.G))
         {
             target--;
             if (target < 0)
                 target = characterList.Count - 1;
-            shoulderCam.target = target;
-            godCam.target = target;
-            if (shoulderCam.shoulderCamActive)
-                shoulderCam.switchTarget();
-            else
-                godCam.switchTarget();
+            switchTarget();
         }
     }
 
@@ -151,5 +141,15 @@ public class Mastermind : MonoBehaviour
         godCam.charList = characterList;
         shoulderCam.charList = characterList;
         godCam.camerasOn = shoulderCam.camerasOn = true;
+    }
+
+    void switchTarget()
+    {
+        shoulderCam.target = target;
+        godCam.target = target;
+        if (shoulderCam.shoulderCamActive)
+            shoulderCam.switchTarget();
+        else
+            godCam.switchTarget();
     }
 }
