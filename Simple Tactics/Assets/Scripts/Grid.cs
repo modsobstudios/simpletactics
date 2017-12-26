@@ -19,7 +19,7 @@ public class Grid : MonoBehaviour
 
     }
 
-
+    // returns random tile's world position
     public Vector3 getRandomTilePos()
     {
         int randMax = mapGrid.Count;
@@ -52,6 +52,7 @@ public class Grid : MonoBehaviour
     {
         for (int i = 0; i < mapGrid.Count; i++)
         {
+            GameObject tmp;
             Vector3 worldPos = mapGrid[i].getTileWorldPos();
             _tileMarker.GetComponent<Tile>().copyTile(mapGrid[i]);
             if (mapGrid[i].getTileEnergy() == Tile.tileEnergy.heat)
@@ -70,8 +71,9 @@ public class Grid : MonoBehaviour
             {
                 _tileMarker.GetComponent<SpriteRenderer>().material = _materials[3];
             }
-
-            Instantiate(_tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
+            tmp = Instantiate(_tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
+            tmp.GetComponent<Tile>().copyTile(mapGrid[i]);
+            tmp.name = "Tile (" + mapGrid[i].getTileRowAndColumnNum().x + ", " + mapGrid[i].getTileRowAndColumnNum().y + ")";
         }
 
     }

@@ -21,9 +21,14 @@ public class character : MonoBehaviour
 
     #endregion
 
-
+    #region Party Variables
     GameObject charMesh;
     GameObject tooltip;
+    MeshRenderer meshRend;
+    public Vector3 worldPos;
+    Color color;
+    Vector3 mouseOffset, scalingOffset;
+    #endregion
 
     #region HealthVariables
     //Must set the MAX_HEALTH value in the inspector for this class to function properly
@@ -38,6 +43,7 @@ public class character : MonoBehaviour
 
     #region TurnVariables
     public bool isPlayerControlled = false;
+    public bool selected = false;
 
     private bool hasMoved = false;
     private bool hasTakenAction = false;
@@ -55,69 +61,20 @@ public class character : MonoBehaviour
     private float attack;
     #endregion
 
-    public Vector3 worldPos;
-    Color color;
 
-    public void setWorldPos(Vector3 _w)
-    {
-        worldPos = _w;
-        charMesh.transform.position = _w + new Vector3(0,.95f,0);
-    }
-
-    public void setCharMesh(GameObject _mesh)
-    {
-        charMesh = _mesh;
-    }
-
-    public GameObject getCharMesh()
-    {
-        return charMesh;
-    }
-
-
-
-    private void OnMouseEnter()
-    {
-        Debug.Log(this.name + " was moused over.");
-        color = this.GetComponent<MeshRenderer>().material.color;
-        this.GetComponent<MeshRenderer>().material.color = Color.cyan;
-        Vector3 spot = Input.mousePosition + new Vector3(100, 75, 0);
-        tooltip = Instantiate(Resources.Load("Tooltip", typeof(GameObject)) as GameObject, spot, Quaternion.identity);
-        tooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
-        tooltip.GetComponentInChildren<Text>().text = getCharText();
-    }
-
-    private void OnMouseOver()
-    {
-        tooltip.transform.position = Input.mousePosition + new Vector3(100, 75, 0);
-    }
-
-    private void OnMouseExit()
-    {
-        Debug.Log(this.name + " is no longer moused over.");
-        this.GetComponent<MeshRenderer>().material.color = color;
-        Destroy(tooltip);
-    }
-
-    string getCharText()
-    {
-        string temp;
-
-        temp = "  " + this.name + " \n" +
-                        "\n" +
-                        "  HP: " + health + "/" + MAX_HEALTH + "\n" +
-                        "  ATK: " + baseAttack + "\n" +
-                        "  ARM: " + baseArmor + "\n" +
-                        "  SPD: " + baseSpeed + "\n";
-
-
-        return temp;
-    }
 
     // Use this for initialization
     void Start()
     {
         health = MAX_HEALTH;
+        // used to change colors (for now)
+        meshRend = this.GetComponent<MeshRenderer>();
+        // save off default color
+        color = meshRend.material.color;
+        // set default offset for tooltip position
+        // should == 0.5 * width, 0.5 * height of tooltip transform
+        mouseOffset = new Vector3(100, 75, 0);
+        scalingOffset = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -293,6 +250,89 @@ public class character : MonoBehaviour
 
 
 
+    #region Party Setup
+    public void setWorldPos(Vector3 _w)
+    {
+        // TODO: make one line/determine need for adjustment in worldPos vs transform.position
+        worldPos = _w;
+        charMesh.transform.position = _w + new Vector3(0, .95f, 0);
+    }
+
+    public void setCharMesh(GameObject _mesh)
+    {
+        charMesh = _mesh;
+    }
+
+    public GameObject getCharMesh()
+    {
+        return charMesh;
+    }
+    #endregion
+
+    #region Mouse Commands
+    private void OnMouseEnter()
+    {
+        // change color
+        meshRend.material.color = Color.cyan;
+        // get the mouse position offset to lower left corner
+        Vector3 spot = Input.mousePosition + scalingOffset;
+        // create tooltip
+        tooltip = Instantiate(Resources.Load("Tooltip", typeof(GameObject)) as GameObject, spot, Quaternion.identity);
+        // assign to canvas
+        tooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
+        // load tooltip
+        tooltip.GetComponentInChildren<Text>().text = getCharText();
+        // fancy
+        tooltip.transform.localScale = new Vector3(0.0f, 0.0f, 1.0f);
+    }
+
+    private void OnMouseOver()
+    {
+        // if this is a new tooltip
+        if (tooltip.transform.localScale.x < 1.0f)
+        {
+            // increase scale
+            tooltip.transform.localScale += new Vector3(0.1f, 0.1f, 0f);
+            // increase mouse offset
+            scalingOffset += new Vector3(10.0f, 7.5f, 0.0f);
+            // maintain position
+            tooltip.transform.position = Input.mousePosition + scalingOffset;
+        }
+        else
+        {
+            // maintain position
+            tooltip.transform.position = Input.mousePosition + mouseOffset;
+            // reset scale
+            scalingOffset = new Vector3(0, 0, 0);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        // return to default color
+        meshRend.material.color = color;
+        // kill it
+        Destroy(tooltip);
+        // reset offset for next tooltip
+        scalingOffset = new Vector3(0, 0, 0);
+    }
+
+    string getCharText()
+    {
+        string temp;
+
+        temp =  this.name + " \n" +
+                        "\n" +
+                        "HP: " + health + "/" + MAX_HEALTH + "\n" +
+                        "ATK: " + baseAttack + "\n" +
+                        "ARM: " + baseArmor + "\n" +
+                        "SPD: " + baseSpeed + "\n";
+
+
+        return temp;
+    }
+
+    #endregion
 
     public void initializeRandom()
     {

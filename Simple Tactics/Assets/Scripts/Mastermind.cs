@@ -48,26 +48,35 @@ public class Mastermind : MonoBehaviour
 
     void Update()
     {
+        // load the grid and players
         if(Input.GetKeyDown(KeyCode.P))
         {
             createCombat();
             setupCamera();
         }
-
+        #region Camera Keys
+        // select next character
         if(Input.GetKeyDown(KeyCode.H))
         {
+            // advance target
             target++;
+            // reset if over limit
             if (target >= characterList.Count)
                 target = 0;
+            // call cameras
             switchTarget();
         }
         if(Input.GetKeyDown(KeyCode.G))
         {
+            // decrease target
             target--;
+            // reset if under limit
             if (target < 0)
                 target = characterList.Count - 1;
+            // call cameras
             switchTarget();
         }
+        #endregion
     }
 
     void createCombat()
@@ -121,21 +130,21 @@ public class Mastermind : MonoBehaviour
             /// place lore
     }
 
+    // generates a list of characters and player objects
     void createParty()
     {
         partyObj.generateParty(gridObj, playerPrefab, numPlayers);
-        int x;
-        x = 2;
-        x = x + x * x;
         characterList = partyObj.getCharList();
     }
 
+    // generates the grid
     void createGrid()
     {
         gridObj.createGrid(gridHeight, gridWidth);
         gridObj.instantiateTheGrid(tileObj, gridMaterials);
     }
 
+    // initializes the cameras
     void setupCamera()
     {
         godCam.charList = characterList;
@@ -143,6 +152,7 @@ public class Mastermind : MonoBehaviour
         godCam.camerasOn = shoulderCam.camerasOn = true;
     }
 
+    // changes target for both cameras 
     void switchTarget()
     {
         shoulderCam.target = target;

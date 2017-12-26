@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4436825873197226}
   - component: {fileID: 212891811965726142}
   - component: {fileID: 114037394369153796}
+  - component: {fileID: 65974703413159340}
   m_Layer: 0
   m_Name: SpriteTile 1
   m_TagString: Untagged
@@ -41,6 +42,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!65 &65974703413159340
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1826199972441306}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.56, y: 2.5600007, z: 0.20000005}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114037394369153796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,8 +65,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840f488886d8b5446917b03ea132c614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisTilesEnergy: 3
-  thisTilesType: 1
+  thisTilesEnergy: 1
+  thisTilesType: 0
 --- !u!212 &212891811965726142
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -67,7 +80,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 92c8bd04e6e3b8348b5278ba2bc1c503, type: 2}
+  - {fileID: 2100000, guid: 30d7fee07fced4f4d88d90025d1559af, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

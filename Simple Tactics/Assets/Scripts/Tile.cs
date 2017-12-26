@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class Tile : MonoBehaviour
     Vector3 worldPos;
     int tileRowNum;
     int tileColumnNum;
+    GameObject tiletip;
+    Vector3 tileOffset = new Vector3(25, 7.5f, 0);
+
     public enum tileType
     {
         inert, leyline, changeable
@@ -51,6 +55,10 @@ public class Tile : MonoBehaviour
     {
         tileRowNum = row;
         tileColumnNum = column;
+    }
+    public Vector2 getTileRowAndColumnNum()
+    {
+        return new Vector2(tileRowNum, tileColumnNum);
     }
     public void setTileWorldPos(Vector3 newWorldPos)
     {
@@ -109,4 +117,35 @@ public class Tile : MonoBehaviour
         
 	}
 
+    private void OnMouseEnter()
+    {
+        Debug.Log(this.name + "was moused.");
+        // raise slightly to indicate selection
+        this.transform.position += new Vector3(0, 0.15f, 0);
+
+        // capture spot for tooltip
+        Vector3 spot = Input.mousePosition + tileOffset;
+        // create the thing
+        tiletip = Instantiate(Resources.Load("tiletip", typeof(GameObject)) as GameObject, spot, Quaternion.identity);
+        // assign to canvas
+        tiletip.transform.SetParent(FindObjectOfType<Canvas>().transform);
+        // set text
+        tiletip.GetComponentInChildren<Text>().text = "(" + tileRowNum + ", " + tileColumnNum + ")";
+
+    }
+
+    // while mouse is hovering
+    private void OnMouseOver()
+    {
+        // maintain position
+        tiletip.transform.position = Input.mousePosition + tileOffset;
+    }
+
+    private void OnMouseExit()
+    {
+        // reset position
+        this.transform.position -= new Vector3(0, 0.15f, 0);
+        // remove tooltip
+        Destroy(tiletip);
+    }
 }
