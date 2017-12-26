@@ -162,6 +162,13 @@ public class character : MonoBehaviour
         {
             meshRend.material.color = color;
         }
+
+        // tableflip button
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            charMesh.AddComponent<Rigidbody>();
+            charMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
+        }
     }
 
     #region HealthFunctions

@@ -957,7 +957,7 @@ MonoBehaviour:
     'F' to switch camera modes.\n\nScroll to zoom in/out.\n(not finished, clamping
     bugged)\n\nRight-Click + Drag to rotate camera\nwhen in third person mode.\n\nPress
     'M' or click the 'move' \nbutton with a player selected,\nthen click a tile to
-    move the player."
+    move the player.\n\nPress 'B' to tableflip.\n(permanent)"
 --- !u!222 &1815040564
 CanvasRenderer:
   m_ObjectHideFlags: 0

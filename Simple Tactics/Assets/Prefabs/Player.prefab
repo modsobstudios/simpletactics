@@ -93,9 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63aecc6c891b1cd499a09b631bac913e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldPos: {x: 0, y: 0, z: 0}
   MAX_HEALTH: 100
   isPlayerControlled: 1
-  worldPos: {x: 0, y: 0, z: 0}
+  selected: 0
 --- !u!136 &136363856051474334
 CapsuleCollider:
   m_ObjectHideFlags: 1

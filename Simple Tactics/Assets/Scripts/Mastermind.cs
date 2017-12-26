@@ -81,6 +81,16 @@ public class Mastermind : MonoBehaviour
             beginMove();
         }
 
+        // tableflip button
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            foreach(Tile t in mapGrid)
+            {
+                t.tileMesh.AddComponent<Rigidbody>();
+                t.tileMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
+            }
+        }
+
         #region Camera Keys
         // select next character
         //if(Input.GetKeyDown(KeyCode.H))

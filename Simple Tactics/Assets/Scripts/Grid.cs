@@ -104,6 +104,7 @@ public class Grid : MonoBehaviour
                 tmp.name = "Tile (" + i + ", " + j + ")";
                 newTile.setMesh(tmp);
                 tmp.GetComponent<Tile>().copyTile(newTile);
+                tmp.GetComponent<Tile>().setMesh(tmp);
                 mapGrid.Add(tmp.GetComponent<Tile>());
             }
         }

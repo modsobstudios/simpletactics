@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour
     Vector3 worldPos;
     int tileRowNum;
     int tileColumnNum;
-    GameObject tiletip, tileMesh;
+    public GameObject tiletip, tileMesh;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
     SpriteRenderer spriteRend;
     Color color;
