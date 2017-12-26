@@ -24,6 +24,7 @@ public class character : MonoBehaviour
     #region Party Variables
     GameObject charMesh;
     public Vector3 worldPos;
+    Vector3 charOffset = new Vector3(0, .95f, 0);
     #endregion
 
     #region UI Variables
@@ -268,7 +269,7 @@ public class character : MonoBehaviour
     {
         // TODO: make one line/determine need for adjustment in worldPos vs transform.position
         worldPos = _w;
-        charMesh.transform.position = _w + new Vector3(0, .95f, 0);
+        charMesh.transform.position = _w + charOffset;
     }
 
     public void setCharMesh(GameObject _mesh)
@@ -387,6 +388,12 @@ public class character : MonoBehaviour
         MAX_HEALTH = _c.MAX_HEALTH;
         speed = _c.speed;
         worldPos = _c.worldPos;
+    }
+
+    public void moveTo(Vector3 _pos)
+    {
+        worldPos = _pos;
+        charMesh.transform.position = _pos + charOffset;
     }
 }
 

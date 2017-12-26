@@ -30,12 +30,16 @@ public class Mastermind : MonoBehaviour
 
     // Variables
     List<character> characterList;
-    character activeCharacter;
-    int activeChar;
+    List<Tile> mapGrid;
+
+    int activeChar = -1;
+    int activeTile = -1;
+    int targetChar = -1;
+    int targetTile = -1;
 
     public int gridHeight, gridWidth, numPlayers;
     public int target = 0;
-
+    bool moveChar = false;
     void Start()
     {
         // Required components
@@ -60,44 +64,83 @@ public class Mastermind : MonoBehaviour
         if(Input.GetButtonUp("Fire1"))
         {
             runSelection();
-            focusTarget();
+            if(activeChar != -1)
+                focusTarget();
+            if(moveChar)
+            {
+                if(activeTile != -1)
+                {
+                    teleportChar(activeTile);
+                    moveChar = false;
+                }
+            }
+        }
+        
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            beginMove();
         }
 
         #region Camera Keys
         // select next character
-        if(Input.GetKeyDown(KeyCode.H))
-        {
-            // advance target
-            target++;
-            // reset if over limit
-            if (target >= characterList.Count)
-                target = 0;
-            // call cameras
-            switchTarget();
-        }
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            // decrease target
-            target--;
-            // reset if under limit
-            if (target < 0)
-                target = characterList.Count - 1;
-            // call cameras
-            switchTarget();
-        }
+        //if(Input.GetKeyDown(KeyCode.H))
+        //{
+        //    // advance target
+        //    target++;
+        //    // reset if over limit
+        //    if (target >= characterList.Count)
+        //        target = 0;
+        //    // call cameras
+        //    switchTarget();
+        //}
+        //if(Input.GetKeyDown(KeyCode.G))
+        //{
+        //    // decrease target
+        //    target--;
+        //    // reset if under limit
+        //    if (target < 0)
+        //        target = characterList.Count - 1;
+        //    // call cameras
+        //    switchTarget();
+        //}
         #endregion
     }
 
+    void teleportChar(int _tile)
+    {
+        characterList[activeChar].moveTo(mapGrid[_tile].getTileWorldPos());
+    }
+
+    public void beginMove()
+    {
+        activeTile = -1;
+        foreach (Tile t in mapGrid)
+        {
+            t.selected = false;
+        }
+        moveChar = true;
+    }
     void runSelection()
     {
         for(int i = 0; i < characterList.Count; i++)
         {
             if(characterList[i].selected && i != activeChar)
             {
-                characterList[activeChar].selected = false;
+                if(activeChar != -1)
+                    characterList[activeChar].selected = false;
                 activeChar = i;
             }
         }
+        for (int i = 0; i < mapGrid.Count; i++)
+        {
+            if (mapGrid[i].selected && i != activeTile)
+            {
+                if (activeTile != -1)
+                    mapGrid[activeTile].selected = false;
+                activeTile = i;
+            }
+        }
+
     }
 
     void createCombat()
@@ -161,8 +204,9 @@ public class Mastermind : MonoBehaviour
     // generates the grid
     void createGrid()
     {
-        gridObj.createGrid(gridHeight, gridWidth);
-        gridObj.instantiateTheGrid(tileObj, gridMaterials);
+        gridObj.createGrid(gridHeight, gridWidth, tileObj, gridMaterials);
+    //    gridObj.instantiateTheGrid(tileObj, gridMaterials);
+        mapGrid = gridObj.getGrid();
     }
 
     // initializes the cameras
@@ -191,4 +235,5 @@ public class Mastermind : MonoBehaviour
         else
             godCam.switchTarget();
     }
+
 }

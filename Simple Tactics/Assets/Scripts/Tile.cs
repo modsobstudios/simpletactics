@@ -8,11 +8,14 @@ public class Tile : MonoBehaviour
 
     character thePlayer;
     bool passable;
+    public bool selected = false;
     Vector3 worldPos;
     int tileRowNum;
     int tileColumnNum;
-    GameObject tiletip;
+    GameObject tiletip, tileMesh;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
+    SpriteRenderer spriteRend;
+    Color color;
 
     public enum tileType
     {
@@ -46,6 +49,14 @@ public class Tile : MonoBehaviour
     int getTileColumn()
     {
         return tileColumnNum;
+    }
+    public GameObject getMesh()
+    {
+        return tileMesh;
+    }
+    public void setMesh(GameObject _o)
+    {
+        tileMesh = _o;
     }
     public Vector3 getTileWorldPos()
     {
@@ -104,22 +115,28 @@ public class Tile : MonoBehaviour
 
     }
 
+
     // Use this for initialization
     void Start()
     {
         // setTilesEnergy(4);
         //setTilePassable(true);
+        spriteRend = GetComponent<SpriteRenderer>();
+        color = spriteRend.material.color;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (selected)
+            spriteRend.material.color = Color.blue;
+        else
+            spriteRend.material.color = color;
 
     }
 
     private void OnMouseEnter()
     {
-        Debug.Log(this.name + "was moused.");
         // raise slightly to indicate selection
         this.transform.position += new Vector3(0, 0.15f, 0);
 
@@ -147,6 +164,11 @@ public class Tile : MonoBehaviour
         this.transform.position -= new Vector3(0, 0.15f, 0);
         // remove tooltip
         Destroy(tiletip);
+    }
+
+    private void OnMouseDown()
+    {
+        selected = true;
     }
 
     private string getTypeString()

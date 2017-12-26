@@ -8,6 +8,7 @@ public class Grid : MonoBehaviour
 
     List<Tile> mapGrid;
     List<int> occupiedSpaces;
+    int activeTile = -1;
     // Use this for initialization
     void Start()
     {
@@ -21,16 +22,21 @@ public class Grid : MonoBehaviour
 
     }
 
+    public List<Tile> getGrid()
+    {
+        return mapGrid;
+    }
+
     // returns random tile's world position
     public Vector3 getRandomTilePos()
     {
         int randMax = mapGrid.Count;
         bool trip = true;
-        int index = Random.Range(0, randMax-1);
-        while(trip)
+        int index = Random.Range(0, randMax - 1);
+        while (trip)
         {
             bool trap = false;
-            foreach(int x in occupiedSpaces)
+            foreach (int x in occupiedSpaces)
             {
                 if (x == index)
                 {
@@ -42,10 +48,10 @@ public class Grid : MonoBehaviour
                 trip = false;
         }
         occupiedSpaces.Add(index);
-        return mapGrid[index].getTileWorldPos() + new Vector3(0,0.95f,0);
+        return mapGrid[index].getTileWorldPos() + new Vector3(0, 0.95f, 0);
     }
 
-   public void createGrid(int rowNum, int columnNum)
+    public void createGrid(int rowNum, int columnNum, GameObject _obj, Material[] _mats)
     {
         for (int i = 0; i < rowNum; i++)
         {
@@ -61,7 +67,44 @@ public class Grid : MonoBehaviour
                 int tileType = Random.Range(0, 2);
                 newTile.setTilesEnergy(tileEnergy);
                 newTile.setTileType(tileType);
-                mapGrid.Add(newTile);
+
+
+                switch ((Tile.tileEnergy)tileEnergy)
+                {
+                    case Tile.tileEnergy.heat:
+                        {
+                            _obj.GetComponent<SpriteRenderer>().material = _mats[0];
+
+                            break;
+                        }
+                    case Tile.tileEnergy.cold:
+                        {
+                            _obj.GetComponent<SpriteRenderer>().material = _mats[1];
+
+                            break;
+                        }
+                    case Tile.tileEnergy.death:
+                        {
+                            _obj.GetComponent<SpriteRenderer>().material = _mats[2];
+
+                            break;
+                        }
+                    case Tile.tileEnergy.life:
+                        {
+                            _obj.GetComponent<SpriteRenderer>().material = _mats[3];
+
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                GameObject tmp;
+                tmp = Instantiate(_obj, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
+                tmp.transform.SetParent(this.transform);
+                tmp.name = "Tile (" + i + ", " + j + ")";
+                newTile.setMesh(tmp);
+                tmp.GetComponent<Tile>().copyTile(newTile);
+                mapGrid.Add(tmp.GetComponent<Tile>());
             }
         }
     }
