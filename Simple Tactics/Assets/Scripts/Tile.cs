@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour
     int tileRowNum;
     int tileColumnNum;
     GameObject tiletip;
-    Vector3 tileOffset = new Vector3(25, 7.5f, 0);
+    Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
 
     public enum tileType
     {
@@ -20,7 +20,7 @@ public class Tile : MonoBehaviour
     }
     public enum tileEnergy
     {
-         heat, cold, death, life, none
+        heat, cold, death, life, none
     }
 
     public tileEnergy thisTilesEnergy;
@@ -70,9 +70,9 @@ public class Tile : MonoBehaviour
         passable = _value;
     }
     //0 = heat, 1 = cold, 2 = death, 3 = life, 4 = none
-    public void setTilesEnergy( int energyValue)
+    public void setTilesEnergy(int energyValue)
     {
-        if(energyValue >= 0 && energyValue <= 4)
+        if (energyValue >= 0 && energyValue <= 4)
         {
             thisTilesEnergy = (tileEnergy)energyValue;
         }
@@ -80,11 +80,11 @@ public class Tile : MonoBehaviour
         {
             thisTilesEnergy = (tileEnergy)4;
         }
-       
+
     }
     public void setTileType(int typeValue)
     {
-        if(typeValue >=0 & typeValue <=2)
+        if (typeValue >= 0 & typeValue <= 2)
         {
             thisTilesType = (tileType)typeValue;
         }
@@ -101,21 +101,21 @@ public class Tile : MonoBehaviour
         this.tileRowNum = tileToCopy.tileRowNum;
         this.tileColumnNum = tileToCopy.tileColumnNum;
         this.worldPos = tileToCopy.worldPos;
-        
+
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-       // setTilesEnergy(4);
+        // setTilesEnergy(4);
         //setTilePassable(true);
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-        
-	}
+
+    }
 
     private void OnMouseEnter()
     {
@@ -130,7 +130,7 @@ public class Tile : MonoBehaviour
         // assign to canvas
         tiletip.transform.SetParent(FindObjectOfType<Canvas>().transform);
         // set text
-        tiletip.GetComponentInChildren<Text>().text = "(" + tileRowNum + ", " + tileColumnNum + ")";
+        tiletip.GetComponentInChildren<Text>().text = getTypeString() + " (" + tileRowNum + ", " + tileColumnNum + ")";
 
     }
 
@@ -147,5 +147,30 @@ public class Tile : MonoBehaviour
         this.transform.position -= new Vector3(0, 0.15f, 0);
         // remove tooltip
         Destroy(tiletip);
+    }
+
+    private string getTypeString()
+    {
+        switch (thisTilesEnergy)
+        {
+            case tileEnergy.cold:
+                {
+                    return "Cold";
+                }
+            case tileEnergy.death:
+                {
+                    return "Death";
+                }
+            case tileEnergy.heat:
+                {
+                    return "Heat";
+                }
+            case tileEnergy.life:
+                {
+                    return "Life";
+                }
+            default:
+                return "ERR";
+        }
     }
 }

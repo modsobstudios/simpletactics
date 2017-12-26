@@ -7,10 +7,12 @@ public class Grid : MonoBehaviour
 
 
     List<Tile> mapGrid;
+    List<int> occupiedSpaces;
     // Use this for initialization
     void Start()
     {
         mapGrid = new List<Tile>();
+        occupiedSpaces = new List<int>();
     }
 
     // Update is called once per frame
@@ -23,7 +25,23 @@ public class Grid : MonoBehaviour
     public Vector3 getRandomTilePos()
     {
         int randMax = mapGrid.Count;
+        bool trip = true;
         int index = Random.Range(0, randMax-1);
+        while(trip)
+        {
+            bool trap = false;
+            foreach(int x in occupiedSpaces)
+            {
+                if (x == index)
+                {
+                    index = Random.Range(0, randMax - 1);
+                    trap = true;
+                }
+            }
+            if (!trap)
+                trip = false;
+        }
+        occupiedSpaces.Add(index);
         return mapGrid[index].getTileWorldPos() + new Vector3(0,0.95f,0);
     }
 
@@ -73,6 +91,7 @@ public class Grid : MonoBehaviour
             }
             tmp = Instantiate(_tileMarker, worldPos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
             tmp.GetComponent<Tile>().copyTile(mapGrid[i]);
+            tmp.transform.SetParent(this.transform);
             tmp.name = "Tile (" + mapGrid[i].getTileRowAndColumnNum().x + ", " + mapGrid[i].getTileRowAndColumnNum().y + ")";
         }
 

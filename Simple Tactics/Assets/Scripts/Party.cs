@@ -74,6 +74,7 @@ public class Party : MonoBehaviour
             // assign relations
             newP.GetComponent<character>().initializeCopy(temp);
             newP.GetComponent<character>().setCharMesh(newP);
+            newP.transform.SetParent(this.transform);
             // put it in the list
             charList.Add(newP.GetComponent<character>());
         }

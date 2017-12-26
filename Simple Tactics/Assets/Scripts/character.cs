@@ -23,9 +23,12 @@ public class character : MonoBehaviour
 
     #region Party Variables
     GameObject charMesh;
+    public Vector3 worldPos;
+    #endregion
+
+    #region UI Variables
     GameObject tooltip;
     MeshRenderer meshRend;
-    public Vector3 worldPos;
     Color color;
     Vector3 mouseOffset, scalingOffset;
     #endregion
@@ -148,6 +151,16 @@ public class character : MonoBehaviour
             //TODO: Add attack / consumable things
         }
         #endregion
+
+        // selection updates
+        if(selected && meshRend.material.color != Color.green)
+        {
+            meshRend.material.color = Color.green;
+        }
+        else if(!selected && meshRend.material.color != color && meshRend.material.color != Color.cyan)
+        {
+            meshRend.material.color = color;
+        }
     }
 
     #region HealthFunctions
@@ -317,6 +330,10 @@ public class character : MonoBehaviour
         scalingOffset = new Vector3(0, 0, 0);
     }
 
+    private void OnMouseDown()
+    {
+        selected = true;
+    }
     string getCharText()
     {
         string temp;

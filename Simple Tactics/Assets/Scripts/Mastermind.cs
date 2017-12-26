@@ -30,6 +30,8 @@ public class Mastermind : MonoBehaviour
 
     // Variables
     List<character> characterList;
+    character activeCharacter;
+    int activeChar;
 
     public int gridHeight, gridWidth, numPlayers;
     public int target = 0;
@@ -54,6 +56,13 @@ public class Mastermind : MonoBehaviour
             createCombat();
             setupCamera();
         }
+
+        if(Input.GetButtonUp("Fire1"))
+        {
+            runSelection();
+            focusTarget();
+        }
+
         #region Camera Keys
         // select next character
         if(Input.GetKeyDown(KeyCode.H))
@@ -77,6 +86,18 @@ public class Mastermind : MonoBehaviour
             switchTarget();
         }
         #endregion
+    }
+
+    void runSelection()
+    {
+        for(int i = 0; i < characterList.Count; i++)
+        {
+            if(characterList[i].selected && i != activeChar)
+            {
+                characterList[activeChar].selected = false;
+                activeChar = i;
+            }
+        }
     }
 
     void createCombat()
@@ -155,8 +176,16 @@ public class Mastermind : MonoBehaviour
     // changes target for both cameras 
     void switchTarget()
     {
-        shoulderCam.target = target;
-        godCam.target = target;
+        shoulderCam.target = godCam.target = target;
+        if (shoulderCam.shoulderCamActive)
+            shoulderCam.switchTarget();
+        else
+            godCam.switchTarget();
+    }
+
+    void focusTarget()
+    {
+        godCam.target = shoulderCam.target = activeChar;
         if (shoulderCam.shoulderCamActive)
             shoulderCam.switchTarget();
         else
