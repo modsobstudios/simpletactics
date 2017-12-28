@@ -66,6 +66,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selected: 0
+  isNeighbor: 0
   tiletip: {fileID: 0}
   tileMesh: {fileID: 0}
   thisTilesEnergy: 1

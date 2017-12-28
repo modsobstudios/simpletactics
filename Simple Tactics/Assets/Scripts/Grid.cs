@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-
-
     List<Tile> mapGrid;
     List<int> occupiedSpaces;
     int activeTile = -1;
+    int width, height;
     // Use this for initialization
     void Start()
     {
@@ -51,8 +50,56 @@ public class Grid : MonoBehaviour
         return mapGrid[index].getTileWorldPos() + new Vector3(0, 0.95f, 0);
     }
 
+
+
+    // Neighbor Getters
+    // r * w + c = i
+    public int verifyTileIndex(int _index)
+    {
+        return mapGrid[_index].getTileRow() * width + mapGrid[_index].getTileColumn();
+    }
+
+    // returns the north neighbor's index, takes the index of the tile in question
+    // (r - 1) * w + c = i
+    public int getNorthIndex(int _index)
+    {
+        if (mapGrid[_index].getTileRow() == 0)
+            return -1;
+        else
+            return (mapGrid[_index].getTileRow() - 1) * width + mapGrid[_index].getTileColumn();
+    }
+    // returns the east neighbor's index, takes the index of the tile in question
+    // r * w + (c - 1) = i
+    public int getEastIndex(int _index)
+    {
+        if (mapGrid[_index].getTileColumn() == width - 1)
+            return -1;
+        else
+            return mapGrid[_index].getTileRow() * width + (mapGrid[_index].getTileColumn() + 1);
+    }
+    // returns the south neighbor's index, takes the index of the tile in question
+    // (r + 1) * w + c = i
+    public int getSouthIndex(int _index)
+    {
+        if (mapGrid[_index].getTileRow() == height - 1)
+            return -1;
+        else
+            return (mapGrid[_index].getTileRow() + 1) * width + mapGrid[_index].getTileColumn();
+    }
+    // returns the west neighbor's index, takes the index of the tile in question
+    // r * w + (c + 1) = i
+    public int getWestIndex(int _index)
+    {
+        if (mapGrid[_index].getTileColumn() == 0)
+            return -1;
+        else
+            return mapGrid[_index].getTileRow() * width + (mapGrid[_index].getTileColumn() - 1);
+    }
+
     public void createGrid(int rowNum, int columnNum, GameObject _obj, Material[] _mats)
     {
+        width = columnNum;
+        height = rowNum;
         for (int i = 0; i < rowNum; i++)
         {
             for (int j = 0; j < columnNum; j++)
@@ -110,6 +157,9 @@ public class Grid : MonoBehaviour
         }
     }
 
+
+
+    // functionality added to createGrid() to assist Tile/GameObject association
     public void instantiateTheGrid(GameObject _tileMarker, Material[] _materials)
     {
         for (int i = 0; i < mapGrid.Count; i++)

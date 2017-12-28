@@ -9,13 +9,14 @@ public class Tile : MonoBehaviour
     character thePlayer;
     bool passable;
     public bool selected = false;
+    public bool isNeighbor = false;
     Vector3 worldPos;
     int tileRowNum;
     int tileColumnNum;
     public GameObject tiletip, tileMesh;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
     SpriteRenderer spriteRend;
-    Color color;
+    Color color, inColor;
 
     public enum tileType
     {
@@ -42,11 +43,11 @@ public class Tile : MonoBehaviour
     {
         return passable;
     }
-    int getTileRow()
+    public int getTileRow()
     {
         return tileRowNum;
     }
-    int getTileColumn()
+    public int getTileColumn()
     {
         return tileColumnNum;
     }
@@ -129,7 +130,11 @@ public class Tile : MonoBehaviour
     void Update()
     {
         if (selected)
+        {
             spriteRend.material.color = Color.blue;
+        }
+        else if (isNeighbor)
+            spriteRend.material.color = inColor;
         else
             spriteRend.material.color = color;
 
@@ -194,5 +199,15 @@ public class Tile : MonoBehaviour
             default:
                 return "ERR";
         }
+    }
+
+    public void changeColor(Color _c)
+    {
+        inColor = _c;
+        isNeighbor = true;
+    }
+    public void resetColor()
+    {
+        isNeighbor = false;
     }
 }

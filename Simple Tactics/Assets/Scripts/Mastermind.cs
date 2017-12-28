@@ -55,42 +55,59 @@ public class Mastermind : MonoBehaviour
     void Update()
     {
         // load the grid and players
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             createCombat();
             setupCamera();
         }
 
-        if(Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp("Fire1"))
         {
             runSelection();
-            if(activeChar != -1)
+            if (activeChar != -1)
                 focusTarget();
-            if(moveChar)
+            if (moveChar)
             {
-                if(activeTile != -1)
+                if (activeTile != -1)
                 {
                     teleportChar(activeTile);
                     moveChar = false;
                 }
             }
         }
-        
-        if(Input.GetKeyDown(KeyCode.M))
+
+        if (Input.GetKeyDown(KeyCode.M))
         {
             beginMove();
         }
 
         // tableflip button
-        if(Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            foreach(Tile t in mapGrid)
+            foreach (Tile t in mapGrid)
             {
                 t.tileMesh.AddComponent<Rigidbody>();
                 t.tileMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
             }
         }
 
+        // adjacency testing
+        if (Input.GetKeyDown(KeyCode.Keypad8))
+            highlightNorth();
+        if (Input.GetKeyDown(KeyCode.Keypad6))
+            highlightEast();
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+            highlightSouth();
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+            highlightWest();
+        if (Input.GetKeyUp(KeyCode.Keypad8))
+            lowlightNorth();
+        if (Input.GetKeyUp(KeyCode.Keypad6))
+            lowlightEast();
+        if (Input.GetKeyUp(KeyCode.Keypad2))
+            lowlightSouth();
+        if (Input.GetKeyUp(KeyCode.Keypad4))
+            lowlightWest();
         #region Camera Keys
         // select next character
         //if(Input.GetKeyDown(KeyCode.H))
@@ -132,11 +149,11 @@ public class Mastermind : MonoBehaviour
     }
     void runSelection()
     {
-        for(int i = 0; i < characterList.Count; i++)
+        for (int i = 0; i < characterList.Count; i++)
         {
-            if(characterList[i].selected && i != activeChar)
+            if (characterList[i].selected && i != activeChar)
             {
-                if(activeChar != -1)
+                if (activeChar != -1)
                     characterList[activeChar].selected = false;
                 activeChar = i;
             }
@@ -146,12 +163,19 @@ public class Mastermind : MonoBehaviour
             if (mapGrid[i].selected && i != activeTile)
             {
                 if (activeTile != -1)
+                {
                     mapGrid[activeTile].selected = false;
+//                    lowlightNeighbors();
+                }
                 activeTile = i;
             }
         }
 
+        //if (activeTile != -1)
+ //           highlightNeighbors();
     }
+
+    #region Creation
 
     void createCombat()
     {
@@ -159,49 +183,49 @@ public class Mastermind : MonoBehaviour
         /// if new map, generate a new map
         /// if saved, load saved map
         // create the grid
-            // create tile obj
-            /// load tile info from saved map
-            /// or new map
-            // fill tile info
-            // add to array
+        // create tile obj
+        /// load tile info from saved map
+        /// or new map
+        // fill tile info
+        // add to array
         // instantiate the grid
-            // copy tile information
-            // apply material
-            // instantiate tile
+        // copy tile information
+        // apply material
+        // instantiate tile
         // modify the grid
-            // place starting locations
-            // define impassable terrain
-            /// load info from saved map
-            /// or new map
-            /// define leylines
-            /// define rooms
+        // place starting locations
+        // define impassable terrain
+        /// load info from saved map
+        /// or new map
+        /// define leylines
+        /// define rooms
         createGrid();
 
         // create the characters
-            // create character obj
-            /// load character from saved party
-            /// or generate new party
-            // fill character obj
-            // load into array
+        // create character obj
+        /// load character from saved party
+        /// or generate new party
+        // fill character obj
+        // load into array
         // create the party
-            // create party obj
-            /// load info from saved party
-            /// or new party
-            /// fill item inventory
-            /// fill currency
+        // create party obj
+        /// load info from saved party
+        /// or new party
+        /// fill item inventory
+        /// fill currency
         createParty();
 
         // populate the grid
-            /// load info from saved map
-            /// or new map
-            // instantiate player pawns
-            // place player pawns
-            /// instantiate enemies
-            /// instantiate items
-            /// instantiate lore
-            /// place items
-            /// place enemies
-            /// place lore
+        /// load info from saved map
+        /// or new map
+        // instantiate player pawns
+        // place player pawns
+        /// instantiate enemies
+        /// instantiate items
+        /// instantiate lore
+        /// place items
+        /// place enemies
+        /// place lore
     }
 
     // generates a list of characters and player objects
@@ -215,10 +239,13 @@ public class Mastermind : MonoBehaviour
     void createGrid()
     {
         gridObj.createGrid(gridHeight, gridWidth, tileObj, gridMaterials);
-    //    gridObj.instantiateTheGrid(tileObj, gridMaterials);
+        //    gridObj.instantiateTheGrid(tileObj, gridMaterials);
         mapGrid = gridObj.getGrid();
     }
 
+    #endregion
+
+    #region Camera
     // initializes the cameras
     void setupCamera()
     {
@@ -245,5 +272,106 @@ public class Mastermind : MonoBehaviour
         else
             godCam.switchTarget();
     }
+    #endregion
 
+
+    // adjacency testing
+    void highlightNeighbors()
+    {
+        int neighbor = gridObj.getNorthIndex(activeTile);
+        if (neighbor != -1)
+        {
+            mapGrid[neighbor].changeColor(Color.white);
+        }
+
+        neighbor = gridObj.getEastIndex(activeTile);
+        if (neighbor != -1)
+        {
+            mapGrid[neighbor].changeColor(Color.white);
+        }
+
+
+        neighbor = gridObj.getSouthIndex(activeTile);
+        if (neighbor != -1)
+        {
+            mapGrid[neighbor].changeColor(Color.white);
+        }
+
+        neighbor = gridObj.getWestIndex(activeTile);
+        if (neighbor != -1)
+        {
+            mapGrid[neighbor].changeColor(Color.white);
+        }
+    }
+
+    void lowlightNeighbors()
+    {
+        int neighbor = gridObj.getNorthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+
+        neighbor = gridObj.getEastIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+
+        neighbor = gridObj.getSouthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+
+        neighbor = gridObj.getWestIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+    }
+
+    void highlightNorth()
+    {
+        int neighbor = gridObj.getNorthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].changeColor(Color.white);
+    }
+    void highlightEast()
+    {
+        int neighbor = gridObj.getEastIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].changeColor(Color.white);
+    }
+    void highlightSouth()
+    {
+        int neighbor = gridObj.getSouthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].changeColor(Color.white);
+    }
+    void highlightWest()
+    {
+        int neighbor = gridObj.getWestIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].changeColor(Color.white);
+    }
+
+
+
+    void lowlightNorth()
+    {
+        int neighbor = gridObj.getNorthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+    }
+    void lowlightEast()
+    {
+        int neighbor = gridObj.getEastIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+    }
+    void lowlightSouth()
+    {
+        int neighbor = gridObj.getSouthIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+    }
+    void lowlightWest()
+    {
+        int neighbor = gridObj.getWestIndex(activeTile);
+        if (neighbor != -1)
+            mapGrid[neighbor].resetColor();
+    }
 }

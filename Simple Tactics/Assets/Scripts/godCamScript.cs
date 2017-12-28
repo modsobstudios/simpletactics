@@ -26,8 +26,8 @@ public class godCamScript : MonoBehaviour
     public Vector3 newCamPos;
 
     // Default overhead cam position offset
-    Vector3 camOffset = new Vector3(0, 10, -10);
-    Vector3 camRotation = new Vector3(45, 0, 0);
+    Vector3 camOffset = new Vector3(10, 10, 0);
+    Vector3 camRotation = new Vector3(45, -90, 0);
 
     float camLerpSpeed = 3.0f;
     float camZoomRate = 50.0f;
