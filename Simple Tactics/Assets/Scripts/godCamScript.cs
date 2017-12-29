@@ -93,8 +93,8 @@ public class godCamScript : MonoBehaviour
             if (dist >= 5.0f)
             {
                 Debug.Log("Distance is " + dist + ", zooming IN.");
-                camOffset -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
-                newCamPos -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                camOffset -= new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
+                newCamPos -= new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
             }
             else
                 Debug.Log("Distance is " + dist + ", cannot zoom IN.");
@@ -105,8 +105,8 @@ public class godCamScript : MonoBehaviour
             if (dist <= 15.0f)
             {
                 Debug.Log("Distance is " + dist + ", zooming OUT.");
-                camOffset += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
-                newCamPos += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                camOffset += new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
+                newCamPos += new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
             }
             else
                 Debug.Log("Distance is " + dist + ", cannot zoom OUT.");

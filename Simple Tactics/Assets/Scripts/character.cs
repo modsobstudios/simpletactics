@@ -22,7 +22,7 @@ public class character : MonoBehaviour
     #endregion
 
     #region Party Variables
-    GameObject charMesh;
+    public GameObject charMesh;
     public Vector3 worldPos;
     Vector3 charOffset = new Vector3(0, .95f, 0);
     #endregion
@@ -161,13 +161,6 @@ public class character : MonoBehaviour
         else if(!selected && meshRend.material.color != color && meshRend.material.color != Color.cyan)
         {
             meshRend.material.color = color;
-        }
-
-        // tableflip button
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            charMesh.AddComponent<Rigidbody>();
-            charMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
         }
     }
 

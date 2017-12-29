@@ -20,7 +20,7 @@ public class Mastermind : MonoBehaviour
     Grid gridObj;
     shoulderCamScript shoulderCam;
     godCamScript godCam;
-
+    bool sweepTime = false;
 
     // Required components for required components
     public GameObject playerPrefab;
@@ -36,6 +36,8 @@ public class Mastermind : MonoBehaviour
     int activeTile = -1;
     int targetChar = -1;
     int targetTile = -1;
+
+    public float sweepZ = -20.0f;
 
     public int gridHeight, gridWidth, numPlayers;
     public int target = 0;
@@ -54,6 +56,8 @@ public class Mastermind : MonoBehaviour
 
     void Update()
     {
+        if (sweepTime)
+            sweepTable();
         // load the grid and players
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -89,7 +93,20 @@ public class Mastermind : MonoBehaviour
                 t.tileMesh.AddComponent<Rigidbody>();
                 t.tileMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
             }
+
+            foreach (character c in characterList)
+            {
+                c.charMesh.AddComponent<Rigidbody>();
+                c.charMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
+            }
         }
+
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            sweepTime = true;
+        }
+
+
 
         // adjacency testing
         if (Input.GetKeyDown(KeyCode.Keypad8))
@@ -108,6 +125,9 @@ public class Mastermind : MonoBehaviour
             lowlightSouth();
         if (Input.GetKeyUp(KeyCode.Keypad4))
             lowlightWest();
+
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+            highlightRange(2);
         #region Camera Keys
         // select next character
         //if(Input.GetKeyDown(KeyCode.H))
@@ -147,6 +167,7 @@ public class Mastermind : MonoBehaviour
         }
         moveChar = true;
     }
+
     void runSelection()
     {
         for (int i = 0; i < characterList.Count; i++)
@@ -274,7 +295,7 @@ public class Mastermind : MonoBehaviour
     }
     #endregion
 
-
+    #region Adjacency
     // adjacency testing
     void highlightNeighbors()
     {
@@ -348,6 +369,11 @@ public class Mastermind : MonoBehaviour
             mapGrid[neighbor].changeColor(Color.white);
     }
 
+    void highlightRange(int _range)
+    {
+
+    }
+
 
 
     void lowlightNorth()
@@ -373,5 +399,26 @@ public class Mastermind : MonoBehaviour
         int neighbor = gridObj.getWestIndex(activeTile);
         if (neighbor != -1)
             mapGrid[neighbor].resetColor();
+    }
+    #endregion
+
+    void sweepTable()
+    {
+        foreach (character c in characterList)
+        {
+            if(c.charMesh.transform.position.z < sweepZ)
+            {
+                Vector3 pushForce = new Vector3(Random.Range(-250, 250), Random.Range(-250, 250), 250);
+                Vector3 pushPosition = new Vector3(0, -1, -1);
+                c.charMesh.AddComponent<Rigidbody>();
+                c.charMesh.GetComponent<Rigidbody>().AddForceAtPosition(pushForce, pushPosition);
+            }
+        }
+        sweepZ += 1.0f;
+        if (sweepZ > 200.0f)
+        {
+            sweepTime = false;
+            sweepZ = -20.0f;
+        }
     }
 }

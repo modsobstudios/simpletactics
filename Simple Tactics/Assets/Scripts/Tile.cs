@@ -137,7 +137,6 @@ public class Tile : MonoBehaviour
             spriteRend.material.color = inColor;
         else
             spriteRend.material.color = color;
-
     }
 
     private void OnMouseEnter()
