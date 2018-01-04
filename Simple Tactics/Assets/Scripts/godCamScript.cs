@@ -7,20 +7,27 @@ public class godCamScript : MonoBehaviour
     // Bool for which camera is active
     public bool godCamActive = true;
 
+    public bool camerasOn = false;
+
+    public bool switchTar = false;
+
     // Reference to the camera object
+    [HideInInspector]
     public Camera cam;
 
     // Temporary target objects. These will be passed in from the list of characters in the map.
-    public GameObject tempTarget;
-    public GameObject tempTarget2eb;
     public GameObject currTarget;
 
+    //public Grid gridObj;
+    public List<character> charList;
+    public int target = 0;
+
     // Vectors
-    Vector3 newCamPos;
+    public Vector3 newCamPos;
 
     // Default overhead cam position offset
-    Vector3 camOffset = new Vector3(0, 10, -10);
-    Vector3 camRotation = new Vector3(45, 0, 0);
+    Vector3 camOffset = new Vector3(10, 10, 0);
+    Vector3 camRotation = new Vector3(45, -90, 0);
 
     float camLerpSpeed = 3.0f;
     float camZoomRate = 50.0f;
@@ -29,15 +36,14 @@ public class godCamScript : MonoBehaviour
     void Start()
     {
         // Set default rotation (45 degrees on the X axis)
-        cam.transform.Rotate(camRotation);
+        //cam.transform.Rotate(camRotation);
 
         // Connect with the list of characters in the map
         // If no characters are found, set target to Origin
         // else set target to active character
 
         // temp default starting spot
-        TeleportFocus(cam.transform);
-        currTarget = tempTarget;
+        //TeleportFocus(currTarget.transform);
     }
 
     // Update is called once per frame
@@ -49,36 +55,34 @@ public class godCamScript : MonoBehaviour
             godCamActive = !godCamActive;
         }
 
-        if (godCamActive)
-        {
-            // ensure the camera is at the correct rotation
-            cam.transform.rotation = Quaternion.Euler(camRotation);
-
-            // Called every frame to keep the camera at the object position
-            LerpFocus();
-            
-            // Clamped Zooming
-            DetectScroll();
-
-            // Called every frame to detect object movement
-            SetNewCamPosition(currTarget.transform);
-        }
-
         // Debug code
-        if (Input.GetKeyDown(KeyCode.G))
+        if (camerasOn)
         {
             if (godCamActive)
-                SetNewCamPosition(tempTarget.transform);
-            currTarget = tempTarget;
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (godCamActive)
-                SetNewCamPosition(tempTarget2eb.transform);
-            currTarget = tempTarget2eb;
+            {
+                // ensure the camera is at the correct rotation
+                cam.transform.rotation = Quaternion.Euler(camRotation);
+
+                // Called every frame to keep the camera at the object position
+                LerpFocus();
+
+                // Clamped Zooming
+                DetectScroll();
+
+                // Called every frame to detect object movement
+                SetNewCamPosition2(charList[target].worldPos);
+            }
+
+
+
         }
     }
 
+    public void switchTarget()
+    {
+        SetNewCamPosition2(charList[target].worldPos);
+        currTarget = charList[target].getCharMesh();
+    }
     void DetectScroll()
     {
         float dist = Vector3.Distance(currTarget.transform.position, cam.transform.position);
@@ -89,8 +93,8 @@ public class godCamScript : MonoBehaviour
             if (dist >= 5.0f)
             {
                 Debug.Log("Distance is " + dist + ", zooming IN.");
-                camOffset -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
-                newCamPos -= new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                camOffset -= new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
+                newCamPos -= new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
             }
             else
                 Debug.Log("Distance is " + dist + ", cannot zoom IN.");
@@ -101,8 +105,8 @@ public class godCamScript : MonoBehaviour
             if (dist <= 15.0f)
             {
                 Debug.Log("Distance is " + dist + ", zooming OUT.");
-                camOffset += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
-                newCamPos += new Vector3(0, 1, -1) * Time.deltaTime * camZoomRate;
+                camOffset += new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
+                newCamPos += new Vector3(1, 1, 0) * Time.deltaTime * camZoomRate;
             }
             else
                 Debug.Log("Distance is " + dist + ", cannot zoom OUT.");
@@ -117,6 +121,11 @@ public class godCamScript : MonoBehaviour
     void SetNewCamPosition(Transform _trans)
     {
         newCamPos = _trans.position + camOffset;
+    }
+
+    void SetNewCamPosition2(Vector3 _trans)
+    {
+        newCamPos = _trans + camOffset;
     }
 
     void LerpFocus()

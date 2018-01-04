@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class character : MonoBehaviour
 {
@@ -10,16 +11,28 @@ public class character : MonoBehaviour
         SPEED, ARMOR, ATTACK, NONE
     }
     private bool hasTakenStatus = false;
-    private ArrayList status;
+    private ArrayList status = new ArrayList();
     #endregion
 
     //TODO: Add Equipment stuff
     #region Equipment
 
     List<Item> inventory;
-    
+
     #endregion
 
+    #region Party Variables
+    public GameObject charMesh;
+    public Vector3 worldPos;
+    Vector3 charOffset = new Vector3(0, .95f, 0);
+    #endregion
+
+    #region UI Variables
+    GameObject tooltip;
+    MeshRenderer meshRend;
+    Color color;
+    Vector3 mouseOffset, scalingOffset;
+    #endregion
 
     #region HealthVariables
     //Must set the MAX_HEALTH value in the inspector for this class to function properly
@@ -28,12 +41,13 @@ public class character : MonoBehaviour
     private int health;
     private bool isDead = false;
 
-    private ArrayList Dots;
+    private ArrayList Dots = new ArrayList();
     private bool hasTakenDOT = false;
     #endregion
 
     #region TurnVariables
     public bool isPlayerControlled = false;
+    public bool selected = false;
 
     private bool hasMoved = false;
     private bool hasTakenAction = false;
@@ -52,10 +66,19 @@ public class character : MonoBehaviour
     #endregion
 
 
+
     // Use this for initialization
     void Start()
     {
         health = MAX_HEALTH;
+        // used to change colors (for now)
+        meshRend = this.GetComponent<MeshRenderer>();
+        // save off default color
+        color = meshRend.material.color;
+        // set default offset for tooltip position
+        // should == 0.5 * width, 0.5 * height of tooltip transform
+        mouseOffset = new Vector3(100, 75, 0);
+        scalingOffset = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -66,6 +89,7 @@ public class character : MonoBehaviour
         //reset stats to base value before calculating new buff/debuff values
         resetStats();
 
+        //GetComponentInParent<Transform>().position = worldPos;
         #region ApplyStatus
         //If the Character has Status/s, apply them
         if (!hasTakenStatus && status.Count > 0)
@@ -128,6 +152,16 @@ public class character : MonoBehaviour
             //TODO: Add attack / consumable things
         }
         #endregion
+
+        // selection updates
+        if(selected && meshRend.material.color != Color.green)
+        {
+            meshRend.material.color = Color.green;
+        }
+        else if(!selected && meshRend.material.color != color && meshRend.material.color != Color.cyan)
+        {
+            meshRend.material.color = color;
+        }
     }
 
     #region HealthFunctions
@@ -226,6 +260,140 @@ public class character : MonoBehaviour
         hasTakenDOT = false;
         hasMoved = false;
         hasTakenAction = false;
+    }
+
+
+
+    #region Party Setup
+    public void setWorldPos(Vector3 _w)
+    {
+        // TODO: make one line/determine need for adjustment in worldPos vs transform.position
+        worldPos = _w;
+        charMesh.transform.position = _w + charOffset;
+    }
+
+    public void setCharMesh(GameObject _mesh)
+    {
+        charMesh = _mesh;
+    }
+
+    public GameObject getCharMesh()
+    {
+        return charMesh;
+    }
+    #endregion
+
+    #region Mouse Commands
+    private void OnMouseEnter()
+    {
+        // change color
+        meshRend.material.color = Color.cyan;
+        // get the mouse position offset to lower left corner
+        Vector3 spot = Input.mousePosition + scalingOffset;
+        // create tooltip
+        tooltip = Instantiate(Resources.Load("Tooltip", typeof(GameObject)) as GameObject, spot, Quaternion.identity);
+        // assign to canvas
+        tooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
+        // load tooltip
+        tooltip.GetComponentInChildren<Text>().text = getCharText();
+        // fancy
+        tooltip.transform.localScale = new Vector3(0.0f, 0.0f, 1.0f);
+    }
+
+    private void OnMouseOver()
+    {
+        // if this is a new tooltip
+        if (tooltip.transform.localScale.x < 1.0f)
+        {
+            // increase scale
+            tooltip.transform.localScale += new Vector3(0.1f, 0.1f, 0f);
+            // increase mouse offset
+            scalingOffset += new Vector3(10.0f, 7.5f, 0.0f);
+            // maintain position
+            tooltip.transform.position = Input.mousePosition + scalingOffset;
+        }
+        else
+        {
+            // maintain position
+            tooltip.transform.position = Input.mousePosition + mouseOffset;
+            // reset scale
+            scalingOffset = new Vector3(0, 0, 0);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        // return to default color
+        meshRend.material.color = color;
+        // kill it
+        Destroy(tooltip);
+        // reset offset for next tooltip
+        scalingOffset = new Vector3(0, 0, 0);
+    }
+
+    private void OnMouseDown()
+    {
+        selected = true;
+    }
+    string getCharText()
+    {
+        string temp;
+
+        temp =  this.name + " \n" +
+                        "\n" +
+                        "HP: " + health + "/" + MAX_HEALTH + "\n" +
+                        "ATK: " + baseAttack + "\n" +
+                        "ARM: " + baseArmor + "\n" +
+                        "SPD: " + baseSpeed + "\n";
+
+
+        return temp;
+    }
+
+    #endregion
+
+    public void initializeRandom()
+    {
+        armor = Random.Range(-10, 10);
+        attack = Random.Range(-10, 10);
+        baseArmor = Random.Range(-10, 10);
+        baseAttack = Random.Range(-10, 10);
+        baseSpeed = Random.Range(-10, 10);
+        hasMoved = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenAction = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenDOT = (Random.Range(0, 1) > 0 ? false : true);
+        hasTakenStatus = (Random.Range(0, 1) > 0 ? false : true);
+        health = Random.Range(-100, 100);
+        isDead = (Random.Range(0, 1) > 0 ? false : true);
+        isPlayerControlled = (Random.Range(0, 1) > 0 ? false : true);
+        MAX_HEALTH = Random.Range(-100, 100);
+        speed = Random.Range(-10, 10);
+        worldPos = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
+    }
+
+    public void initializeCopy(character _c)
+    {
+        armor = _c.armor;
+        attack = _c.attack;
+        baseArmor = _c.baseArmor;
+        baseAttack = _c.baseAttack;
+        baseSpeed = _c.baseSpeed;
+        hasMoved = _c.hasMoved;
+        hasTakenAction = _c.hasTakenAction;
+        hasTakenDOT = _c.hasTakenDOT;
+        hasTakenStatus = _c.hasTakenStatus;
+        health = _c.health;
+        isDead = _c.isDead;
+        isPlayerControlled = _c.isPlayerControlled;
+        MAX_HEALTH = _c.MAX_HEALTH;
+        speed = _c.speed;
+        worldPos = _c.worldPos;
+    }
+
+    public void moveTo(Vector3 _pos)
+    {
+        worldPos = _pos;
+        charMesh.transform.position = _pos + charOffset;
     }
 }
 

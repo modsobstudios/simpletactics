@@ -6,19 +6,17 @@ public class shoulderCamScript : MonoBehaviour
 {
     // Bool for which camera is active
     public bool shoulderCamActive = false;
+    public bool camerasOn = false;
     bool switchMode = false;
 
     // Target character to attach the camera to
-    public GameObject tempTarget, tempTarget2eb;
     public GameObject currTarget;
 
-    // The camera object
-    public Camera cam;
+    public List<character> charList;
 
     // Camera vectors
-    [SerializeField]
-    Vector3 newCamPosition;
-    Vector3 targetPos;
+    public Vector3 newCamPosition;
+    public Vector3 targetPos;
 
     // Quaternion for rotation storage
     Quaternion lookAt;
@@ -34,12 +32,15 @@ public class shoulderCamScript : MonoBehaviour
 
     Vector3 camPosOffset = new Vector3(0, 1, 0); // add to camera position to place it at shoulder level rather than waist level
 
+    [HideInInspector]
+    public Camera cam;
+    public int target;
+    public bool switchTar = false;
 
     // Use this for initialization
     void Start()
     {
-        // Target must be set before running
-        currTarget = tempTarget;
+
     }
 
     // Update is called once per frame
@@ -72,23 +73,21 @@ public class shoulderCamScript : MonoBehaviour
                 MouseYRotation();
                 ZoomTarget();
             }
-
-            if (Input.GetKeyDown(KeyCode.G))
+            if (camerasOn)
             {
-                AttachToTarget(tempTarget.transform);
-                currTarget = tempTarget;
-                switchMode = true;
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                AttachToTarget(tempTarget2eb.transform);
-                currTarget = tempTarget2eb;
-                switchMode = true;
+                currTarget = charList[target].getCharMesh();
             }
 
             AttachToTarget(currTarget.transform);
             LerpFocus();
         }
+    }
+
+    public void switchTarget()
+    {
+        AttachToTarget(charList[target].getCharMesh().transform);
+        currTarget = charList[target].getCharMesh();
+        switchMode = true;
     }
 
     void AttachToTarget(Transform _trans)
@@ -97,7 +96,7 @@ public class shoulderCamScript : MonoBehaviour
         lookAt = Quaternion.LookRotation(_trans.forward);
         targetPos = _trans.position;
     }
-
+    
     void MouseYRotation()
     {
         if (Input.GetButton("Fire2"))

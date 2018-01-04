@@ -8,18 +8,14 @@ public class freeMovement : MonoBehaviour
     [SerializeField]
     GameObject characterObject;
 
-    [SerializeField]
-    Camera cam;
-    godCamScript gCam;
-    shoulderCamScript sCam;
+    public godCamScript gCam;
+    public shoulderCamScript sCam;
 
     Transform characterTransform;
     // Use this for initialization
     void Start()
     {
         characterTransform = characterObject.transform;
-        gCam = cam.GetComponent<godCamScript>();
-        sCam = cam.GetComponent<shoulderCamScript>();
     }
 
     // Update is called once per frame
