@@ -304,6 +304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1bebd5af797d87479642430c7eb4271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  path: 
+  bfsStart: 0
+  bfsGoal: 0
 --- !u!1 &294930375
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,13 +969,14 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\nPress 'P' to spawn grid and players.\n\nClick to select tiles or players.\n\nPress
-    (NUMPAD) 8, 6, 2, 4 to highlight \n      neighboring tiles N, E, S, W (respectively).\n\nPress
-    'F' to switch camera modes.\n\nScroll to zoom in/out.\n(not finished, clamping
-    bugged)\n\nRight-Click + Drag to rotate camera\nwhen in third person mode.\n\nPress
-    'M' or click the 'move' \nbutton with a player selected,\nthen click a tile to
-    move the player.\n\nPress 'B' to tableflip.\n(permanent)\n\nPress 'N' to sweep
-    the pieces from \nthe board.\n(permanent)"
+  m_Text: "\nPress 'P' to spawn grid and players.\n\nPress 'V' to initiate pathfinding.\n\nPress
+    'C' to generate a random path.\n(must press 'V' first)\n\nClick to select tiles
+    or players.\n(must press 'P' first)\n\nPress (NUMPAD) 8, 6, 2, 4 to highlight
+    \n      neighboring tiles N, E, S, W (respectively).\n\nPress 'F' to switch camera
+    modes.\n\nScroll to zoom in/out.\n(not finished, clamping bugged)\n\nRight-Click
+    + Drag to rotate camera\nwhen in third person mode.\n\nPress 'M' or click the
+    'move' \nbutton with a player selected,\nthen click a tile to move the player.\n\nPress
+    'B' to tableflip.\n(permanent)\n\nPress 'N' to sweep the pieces from \nthe board.\n(permanent)"
 --- !u!222 &1815040564
 CanvasRenderer:
   m_ObjectHideFlags: 0

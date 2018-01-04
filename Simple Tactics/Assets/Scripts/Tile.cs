@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     Vector3 worldPos;
     int tileRowNum;
     int tileColumnNum;
+    public int gridIndex, gridW, gridH;
     public GameObject tiletip, tileMesh;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
     SpriteRenderer spriteRend;
@@ -113,7 +114,9 @@ public class Tile : MonoBehaviour
         this.tileRowNum = tileToCopy.tileRowNum;
         this.tileColumnNum = tileToCopy.tileColumnNum;
         this.worldPos = tileToCopy.worldPos;
-
+        this.gridH = tileToCopy.gridH;
+        this.gridW = tileToCopy.gridW;
+        this.gridIndex = tileToCopy.gridIndex;
     }
 
 
@@ -208,5 +211,37 @@ public class Tile : MonoBehaviour
     public void resetColor()
     {
         isNeighbor = false;
+    }
+
+    public int getNorthIndex()
+    {
+        if (tileRowNum == 0)
+            return -1;
+        else
+            return (tileRowNum - 1) * gridW + tileColumnNum;
+    }
+
+    public int getEastIndex()
+    {
+        if (tileColumnNum == gridW - 1)
+            return -1;
+        else
+            return tileRowNum * gridW + (tileColumnNum + 1);
+    }
+
+    public int getSouthIndex()
+    {
+        if (tileRowNum == gridH - 1)
+            return -1;
+        else
+            return (tileRowNum + 1) * gridW + tileColumnNum;
+    }
+
+    public int getWestIndex()
+    {
+        if (tileColumnNum == 0)
+            return -1;
+        else
+            return tileRowNum * gridW + (tileColumnNum - 1);
     }
 }

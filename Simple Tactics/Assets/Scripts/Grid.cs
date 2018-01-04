@@ -106,6 +106,8 @@ public class Grid : MonoBehaviour
             {
                 Tile newTile = new Tile();
                 newTile.setTileRowAndColumnNum(i, j);
+                newTile.gridH = rowNum;
+                newTile.gridW = columnNum;
                 Vector3 worldPos = new Vector3(0, 0, 0);
                 worldPos.x += i;
                 worldPos.z += j;
@@ -155,6 +157,8 @@ public class Grid : MonoBehaviour
                 mapGrid.Add(tmp.GetComponent<Tile>());
             }
         }
+        for (int i = 0; i < mapGrid.Count; i++)
+            mapGrid[i].gridIndex = i;
     }
 
 
