@@ -8,8 +8,9 @@ public class Pathfinder : MonoBehaviour
     List<Tile> mapGrid;
     public List<int> path;
     public int bfsStart, bfsGoal;
+    float heuristicWeight = 1.2f;
     int tileCt;
-
+    PriorityQueue<double, Queue<PlannerNode>> open;
     class Edge
     {
         public int cost;
@@ -68,6 +69,13 @@ public class Pathfinder : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))
             BFS(nodes[mapGrid[Random.Range(0, tileCt)]], nodes[mapGrid[Random.Range(0, tileCt)]]);
+        if (Input.GetKeyDown(KeyCode.X))
+            greedy(nodes[mapGrid[Random.Range(0, tileCt)]], nodes[mapGrid[Random.Range(0, tileCt)]]);
+        if (Input.GetKeyDown(KeyCode.Z))
+            uniformCost(nodes[mapGrid[Random.Range(0, tileCt)]], nodes[mapGrid[Random.Range(0, tileCt)]]);
+
+        if (Input.GetKeyDown(KeyCode.O))
+            Astar(nodes[mapGrid[Random.Range(0, tileCt)]], nodes[mapGrid[Random.Range(0, tileCt)]]);
     }
 
     void buildSearchGraph()
@@ -100,7 +108,7 @@ public class Pathfinder : MonoBehaviour
 
     void BFS(SearchNode _start, SearchNode _goal)
     {
-        foreach(Tile t in mapGrid)
+        foreach (Tile t in mapGrid)
         {
             t.resetColor();
         }
@@ -139,9 +147,239 @@ public class Pathfinder : MonoBehaviour
         return;
     }
 
+    void greedy(SearchNode _start, SearchNode _goal)
+    {
+        foreach (Tile t in mapGrid)
+        {
+            t.resetColor();
+        }
+        List<PlannerNode> open = new List<PlannerNode>();
+        Dictionary<SearchNode, PlannerNode> visited = new Dictionary<SearchNode, PlannerNode>();
+        open.Add(new PlannerNode(_start));
+        visited[_start] = open[0];
+        visited[_start].heuristicCost = calculateCost(_start, _goal);
+
+        while (open.Count != 0)
+        {
+            int lowestIndex = getLowestHeuristic(open);
+            PlannerNode current = open[lowestIndex];
+            open.Remove(open[lowestIndex]);
+            if (current.vertex == _goal)
+            {
+                current.vertex.t.changeColor(Color.yellow);
+
+                while (current.parent != null)
+                {
+                    path.Add(current.vertex.t.gridIndex);
+                    current = current.parent;
+                    current.vertex.t.changeColor(Color.yellow);
+                }
+                return;
+            }
+            foreach (Edge e in current.vertex.edges)
+            {
+                SearchNode successor = e.node;
+                if (!visited.ContainsKey(successor))
+                {
+                    PlannerNode successorNode = new PlannerNode(successor);
+                    successorNode.parent = current;
+                    successorNode.heuristicCost = calculateCost(successor, _goal);
+                    visited[successor] = successorNode;
+
+                    open.Add(successorNode);
+                }
+            }
+        }
+        return;
+    }
+
+    void uniformCost(SearchNode _start, SearchNode _goal)
+    {
+        foreach (Tile t in mapGrid)
+        {
+            t.resetColor();
+        }
+        List<PlannerNode> open = new List<PlannerNode>();
+        Dictionary<SearchNode, PlannerNode> visited = new Dictionary<SearchNode, PlannerNode>();
+        open.Add(new PlannerNode(_start));
+        visited[_start] = open[0];
+        visited[_start].givenCost = 0;
+
+        while (open.Count != 0)
+        {
+            int lowestIndex = getLowestGiven(open);
+            PlannerNode current = open[lowestIndex];
+            open.Remove(open[lowestIndex]);
+            if (current.vertex == _goal)
+            {
+                current.vertex.t.changeColor(Color.yellow);
+
+                while (current.parent != null)
+                {
+                    path.Add(current.vertex.t.gridIndex);
+                    current = current.parent;
+                    current.vertex.t.changeColor(Color.yellow);
+                }
+                return;
+            }
+            foreach (Edge e in current.vertex.edges)
+            {
+                SearchNode successor = e.node;
+                float tempGiven = current.givenCost + e.cost;
+                if (visited.ContainsKey(successor))
+                {
+                    if (tempGiven < visited[successor].givenCost)
+                    {
+                        PlannerNode successorNode = new PlannerNode(successor);
+                        open.Remove(successorNode);
+                        successorNode.givenCost = tempGiven;
+                        successorNode.parent = current;
+                        open.Add(successorNode);
+                    }
+                }
+                else
+                {
+
+                    PlannerNode successorNode = new PlannerNode(successor);
+                    successorNode.givenCost = tempGiven;
+                    successorNode.parent = current;
+                    visited[successor] = successorNode;
+
+                    open.Add(successorNode);
+                }
+
+            }
+        }
+        return;
+    }
+
+    void Astar(SearchNode _start, SearchNode _goal)
+    {
+        foreach (Tile t in mapGrid)
+        {
+            t.resetColor();
+        }
+        List<PlannerNode> open = new List<PlannerNode>();
+        Dictionary<SearchNode, PlannerNode> visited = new Dictionary<SearchNode, PlannerNode>();
+        open.Add(new PlannerNode(_start));
+        visited[_start] = open[0];
+        visited[_start].givenCost = 0;
+        visited[_start].heuristicCost = calculateCost(_start, _goal);
+        visited[_start].finalCost = visited[_start].givenCost + visited[_start].heuristicCost * heuristicWeight;
+
+        while (open.Count != 0)
+        {
+            int lowestIndex = getLowestFinal(open);
+            PlannerNode current = open[lowestIndex];
+            open.Remove(open[lowestIndex]);
+            if (current.vertex == _goal)
+            {
+                current.vertex.t.changeColor(Color.yellow);
+
+                while (current.parent != null)
+                {
+                    path.Add(current.vertex.t.gridIndex);
+                    current = current.parent;
+                    current.vertex.t.changeColor(Color.yellow);
+                }
+                return;
+            }
+            foreach (Edge e in current.vertex.edges)
+            {
+                SearchNode successor = e.node;
+                float tempGiven = current.givenCost + e.cost;
+                if (visited.ContainsKey(successor))
+                {
+                    if (tempGiven < visited[successor].givenCost)
+                    {
+                        PlannerNode successorNode = new PlannerNode(successor);
+                        open.Remove(successorNode);
+                        successorNode.givenCost = tempGiven;
+                        successorNode.finalCost = successorNode.givenCost + successorNode.heuristicCost * heuristicWeight;
+                        successorNode.parent = current;
+                        open.Add(successorNode);
+                    }
+                }
+                else
+                {
+
+                    PlannerNode successorNode = new PlannerNode(successor);
+                    successorNode.givenCost = tempGiven;
+                    successorNode.heuristicCost = calculateCost(successor, _goal);
+                    successorNode.finalCost = successorNode.givenCost + successorNode.heuristicCost * heuristicWeight;
+                    successorNode.parent = current;
+                    visited[successor] = successorNode;
+
+                    open.Add(successorNode);
+                }
+
+            }
+        }
+        return;
+    }
+
+    int getLowestHeuristic(List<PlannerNode> _d)
+    {
+        float k = float.MaxValue;
+        int index = -1;
+        for (int i = 0; i < _d.Count; i++)
+        {
+            if (_d[i].heuristicCost < k)
+            {
+                k = _d[i].heuristicCost;
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    int getLowestGiven(List<PlannerNode> _d)
+    {
+        float k = float.MaxValue;
+        int index = -1;
+        for (int i = 0; i < _d.Count; i++)
+        {
+            if (_d[i].givenCost < k)
+            {
+                k = _d[i].givenCost;
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    int getLowestFinal(List<PlannerNode> _d)
+    {
+        float k = float.MaxValue;
+        int index = -1;
+        for (int i = 0; i < _d.Count; i++)
+        {
+            if (_d[i].finalCost < k)
+            {
+                k = _d[i].finalCost;
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
     SearchNode fancyFunction()
     {
         // i wonder what it does...
         return null;
+    }
+
+    float calculateCost(SearchNode _s, SearchNode _g)
+    {
+        float x1 = _s.t.getTileColumn();
+        float x2 = _g.t.getTileColumn();
+        float y1 = _s.t.getTileRow();
+        float y2 = _g.t.getTileRow();
+
+        return Mathf.Sqrt(Mathf.Pow((x1 - x2), 2) + Mathf.Pow((y1 - y2), 2));
+
     }
 }
