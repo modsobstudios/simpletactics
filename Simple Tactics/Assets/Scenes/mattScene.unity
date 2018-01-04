@@ -854,7 +854,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 500}
+  m_SizeDelta: {x: 300, y: 800}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1815040563
 MonoBehaviour:
@@ -889,10 +889,11 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\nPress 'P' to spawn grid and players.\n\nPress 'V' to initiate pathfinding.\n\nPress
-    'C' to generate a random path.\n(must press 'V' first)\n\nClick to select tiles
-    or players.\n(must press 'P' first)\n\nPress (NUMPAD) 8, 6, 2, 4 to highlight
-    \n      neighboring tiles N, E, S, W (respectively).\n\nPress 'F' to switch camera
-    modes.\n\nScroll to zoom in/out.\n(not finished, clamping bugged)\n\nRight-Click
+    'C', 'X'. 'Z'. or 'O' to generate a random path using Breadth-First, Greedy Best-First,
+    Uniform Cost, or A* search (respectively).\n(must press 'V' first)\n\nClick to
+    select tiles or players.\n(must press 'P' first)\n\nPress (NUMPAD) 8, 6, 2, 4
+    to highlight \n      neighboring tiles N, E, S, W (respectively).\n\nPress 'F'
+    to switch camera modes.\n\nScroll to zoom in/out.\n(not finished, clamping bugged)\n\nRight-Click
     + Drag to rotate camera\nwhen in third person mode.\n\nPress 'M' or click the
     'move' \nbutton with a player selected,\nthen click a tile to move the player.\n\nPress
     'B' to tableflip.\n(permanent)\n\nPress 'N' to sweep the pieces from \nthe board.\n(permanent)"
