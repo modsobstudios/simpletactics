@@ -12,7 +12,7 @@ public class Grid : MonoBehaviour {
 	void Start ()
     {
         mapGrid = new List<Tile>();
-        createGrid(500,500);
+        createGrid(5,5);
         instantiateTheGrid();
 	}
 	
@@ -76,6 +76,5 @@ public class Grid : MonoBehaviour {
     Make random generation weighted. 50% 1 type 50% the other 3 types
     Work on clicking for map editing Key + Click
     Leyline system connected to each other, Leyline has multiple elements in them
-    
     */
 }

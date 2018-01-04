@@ -97,7 +97,7 @@ public class Tile : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-       // setTilesEnergy(4);
+        //setTilesEnergy(4);
         //setTilePassable(true);
 	}
 	
