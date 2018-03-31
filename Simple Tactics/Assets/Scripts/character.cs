@@ -27,6 +27,9 @@ public class character : MonoBehaviour
     Vector3 charOffset = new Vector3(0, .95f, 0);
     #endregion
 
+    public delegate void MyDel(int _i);
+    MyDel myDel;
+
     #region UI Variables
     GameObject tooltip;
     MeshRenderer meshRend;
@@ -79,6 +82,7 @@ public class character : MonoBehaviour
         // should == 0.5 * width, 0.5 * height of tooltip transform
         mouseOffset = new Vector3(100, 75, 0);
         scalingOffset = new Vector3(0, 0, 0);
+
     }
 
     // Update is called once per frame
@@ -334,6 +338,9 @@ public class character : MonoBehaviour
     private void OnMouseDown()
     {
         selected = true;
+        Debug.Log("Calling delegate in Party.cs from character...");
+        GetComponentInParent<Party>().myDel(13);
+        Debug.Log("Delegate called!");
     }
     string getCharText()
     {
