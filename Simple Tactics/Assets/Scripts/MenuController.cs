@@ -28,32 +28,83 @@ public class MenuController : MonoBehaviour
     {
         if (isPaused || isMenu)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (hit.transform != null && hit.transform.GetComponent<Button>().Selectable)
             {
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, 1000.0f))
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (hit.transform.tag == "Button" || hit.transform.tag == "Scene")
+                    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit, 1000.0f))
                     {
+                        if (hit.transform.tag == "Button" || hit.transform.tag == "Scene")
                         {
-                            Debug.Log("You selected " + hit.transform.name);
-                            if (!hit.transform.GetComponent<Button>().isClicked)
                             {
-                                hit.transform.GetComponent<Button>().isClicked = true;
-                            }
 
-                            if(Selected == null)
-                            {
-                                Selected = hit.transform.gameObject;
-                                hit.transform.GetComponent<Button>().isSelected = true;
-                            }
-                            if (Selected != hit.transform.gameObject && Selected != null)
-                            {
-                                Selected.GetComponent<Button>().isSelected = false;
-                                hit.transform.GetComponent<Button>().isSelected = true;
-                                Selected = hit.transform.gameObject;
+                                Debug.Log("You selected " + hit.transform.name);
+                                if (!hit.transform.GetComponent<Button>().getIsClicked())
+                                {
+                                    hit.transform.GetComponent<Button>().setIsClicked(true);
+                                }
+
+                                if (Selected == null)
+                                {
+                                    Selected = hit.transform.gameObject;
+                                    hit.transform.GetComponent<Button>().setIsSelected(true);
+                                }
+                                else if (Selected != hit.transform.gameObject && Selected != null)
+                                {
+                                    Selected.GetComponent<Button>().setIsSelected(false);
+                                    hit.transform.GetComponent<Button>().setIsSelected(true);
+                                    Selected = hit.transform.gameObject;
+                                }
+                                else if (Selected == hit.transform.gameObject)
+                                {
+                                    hit.transform.GetComponent<Button>().setIsSelected(false);
+                                    Selected = null;
+                                }
                             }
                         }
+                    }
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit, 1000.0f))
+                    {
+                        if (hit.transform.tag == "Button" || hit.transform.tag == "Scene")
+                        {
+                            {
+                                Selected = hit.transform.gameObject;
+                                Debug.Log("You held " + hit.transform.name);
+                                if (!hit.transform.GetComponent<Button>().getIsClicked())
+                                {
+                                    hit.transform.GetComponent<Button>().setIsClicked(true);
+                                }
+
+                                if (!hit.transform.GetComponent<Button>().getIsHeld())
+                                {
+                                    hit.transform.GetComponent<Button>().setIsHeld(true);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Selected != null)
+                        {
+                            Selected.GetComponent<Button>().setIsHeld(false);
+                        }
+                        Selected = null;
+                    }
+                }
+                if (Input.GetMouseButtonUp(0))
+                {
+                    if (Selected != null)
+                    {
+                        Selected.GetComponent<Button>().setIsHeld(false);
+                        Selected = null;
                     }
                 }
             }
@@ -67,11 +118,11 @@ public class MenuController : MonoBehaviour
                     {
                         if (hitRef != null)
                         {
-                            hitRef.GetComponent<Button>().isHighlighted = false;
+                            hitRef.GetComponent<Button>().setIsHighlighted(false);
                         }
                         Debug.Log("You Highlighted " + hit.transform.name);
                         lastHit = hit.transform.name;
-                        hit.transform.GetComponent<Button>().isHighlighted = true;
+                        hit.transform.GetComponent<Button>().setIsHighlighted(true);
                         hitRef = hit.transform;
                     }
                 }
@@ -81,7 +132,7 @@ public class MenuController : MonoBehaviour
                 if (hitRef != null)
                 {
                     Debug.Log("Stopped Highlighting " + hitRef.name);
-                    hitRef.GetComponent<Button>().isHighlighted = false;
+                    hitRef.GetComponent<Button>().setIsHighlighted(false);
                     hitRef = null;
                     lastHit = "";
                 }
