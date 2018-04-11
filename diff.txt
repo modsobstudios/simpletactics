@@ -1,16 +1,5 @@
-Easy
-	Barbarian
-	Fighter
-	Monk
+Jesse: Up to 10, hard asterisk
+Noel: 28*
+Matt: Up to 10, medium asterisk
 
-Intermediate
-	Sorcerer
-	Paladin
-	Ranger
-	Rogue
-
-Complicated
-	Wizard
-	Bard
-	Druid
-	Cleric
+* = no one actually expects that much work from anyone
