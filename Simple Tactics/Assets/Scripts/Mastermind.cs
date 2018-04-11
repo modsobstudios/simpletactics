@@ -421,4 +421,10 @@ public class Mastermind : MonoBehaviour
             sweepZ = -20.0f;
         }
     }
+
+    public void checkActive(int _ch)
+    {
+        if (_ch == 13)
+            characterList[activeChar].transform.position += new Vector3(0,10,0);
+    }
 }

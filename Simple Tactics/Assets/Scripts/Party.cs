@@ -10,11 +10,16 @@ public class Party : MonoBehaviour
     List<character> charList;
     // list of randomized names
     string[] nameList;
+    public delegate void MyDel(int _i);
+    public MyDel myDel;
 
     // Use this for initialization
     void Start()
     {
         charList = new List<character>();
+        Debug.Log("Binding delegate in Party.cs...");
+        myDel = GetComponentInParent<Mastermind>().checkActive;
+        Debug.Log("Delegate bound!");
     }
 
     // Update is called once per frame
