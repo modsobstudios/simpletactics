@@ -7,6 +7,11 @@ using UnityEngine;
  *      SFX - Sound Effects: Weapon clangs, grunts, spell sounds, ambient noises
  *      Vox - Vocal Tracks: Spoken dialogue
  *      BGM - Background Music: Any music that is not meant to be audible to the game world.
+ *      
+ * Intended use:
+ *      Place the AudioManager prefab as a child of the Main Camera
+ *      If a function would cause audio to play, have the script save off GameObject.Find("AudioManager").GetComponent<AudioManager>()
+ *      in its Start() function.
  */
 
 public class AudioManager : MonoBehaviour
@@ -34,28 +39,22 @@ public class AudioManager : MonoBehaviour
         bgmSource.loop = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // Loads a sound effect into the sfxSource to be played
     public AudioClip loadSFX(string sfxName)
     {
-        return Resources.Load<AudioClip>("sfxFiles/" + sfxName);
+        return Resources.Load<AudioClip>("Audio/SFX/" + sfxName);
     }
 
     // Loads a vocal track into the voxSource to be played
     public AudioClip loadVox(string voxName)
     {
-        return Resources.Load<AudioClip>("voxFiles/" + voxName);
+        return Resources.Load<AudioClip>("Audio/VOX/" + voxName);
     }
 
     // Loads a song into the bgmSource to be played.
     public AudioClip loadBGM(string bgmName)
     {
-        return Resources.Load<AudioClip>("bgmFiles/" + bgmName);
+        return Resources.Load<AudioClip>("Audio/BGM/" + bgmName);
     }
 
     // Plays the currently loaded sound effect
@@ -126,5 +125,32 @@ public class AudioManager : MonoBehaviour
         sfxSource.volume = volumeLerpFS(0.0f, masterVolume, sfxVolume);
         voxSource.volume = volumeLerpFS(0.0f, masterVolume, voxVolume);
         bgmSource.volume = volumeLerpFS(0.0f, masterVolume, bgmVolume);
+    }
+
+    // Test functions for functionality:
+
+
+    public void playExampleBGM()
+    {
+        Debug.Log("Playing music!");
+        currentBGM = loadBGM("Nordic Landscape/Nordic Title");
+        if (currentBGM == null) Debug.Log("BGM is null!");
+        playBGM();
+    }
+
+    public void playExampleSFX()
+    {
+        Debug.Log("Playing sound!");
+        currentSFX = loadSFX("clang");
+        if (currentSFX == null) Debug.Log("SFX is null!");
+        playSFX();
+    }
+
+    public void playExampleVox()
+    {
+        Debug.Log("Playing voice!");
+        currentVox = loadVox("demo");
+        if (currentVox == null) Debug.Log("Vox is null!");
+        playVox();
     }
 }
