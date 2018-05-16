@@ -28,7 +28,7 @@ public class Character : MonoBehaviour
     // Mechanics Values
     private Tile location;
     private Vector3 position;
-    private Vector3 positionOffset = new Vector3(0, 0, 0);
+    private Vector3 positionOffset = new Vector3(0, 0, 0);      // To match the character's feet to the level of the ground.
 
 
     // Use this for initialization
@@ -43,22 +43,26 @@ public class Character : MonoBehaviour
 
     }
 
+    // Raise slightly to indicate interaction
     private void OnMouseEnter()
     {
         transform.position += new Vector3(0, 0.1f, 0);
     }
 
+    // Return to normal position
     private void OnMouseExit()
     {
         transform.position -= new Vector3(0, 0.1f, 0);
     }
 
+    // Manually change character position, independent of tiles
     public void setCharacterPosition(Vector3 _position)
     {
         position = _position;
         this.transform.position = _position + positionOffset;
     }
 
+    // Set character position to the given tile center
     public void setCharacterTile(Tile _tile)
     {
         location = _tile;
