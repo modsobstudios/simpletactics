@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 92c8bd04e6e3b8348b5278ba2bc1c503, type: 2}
+  - {fileID: 2100000, guid: c49127c142a0a8c4383b2e40cd24e392, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -114,5 +114,5 @@ MonoBehaviour:
   gridIndex: 99
   gridW: 10
   gridH: 10
-  thisTileElement: 3
-  thisTileTerrType: 1
+  thisTileElement: 2
+  thisTileTerrType: 0
