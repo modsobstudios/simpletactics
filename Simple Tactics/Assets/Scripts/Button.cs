@@ -24,8 +24,12 @@ public class Button : MonoBehaviour
 
     public GameObject tooltip;
 
+    public GameObject NeighborUp, NeighborDown, NeighborLeft, NeighborRight;
+
     public delegate void ClickAction(GameObject _button);
     public static event ClickAction OnClicked;
+
+    public int buttonIndex = 0;
 
     // Use this for initialization
     void Start()
@@ -36,7 +40,7 @@ public class Button : MonoBehaviour
         {
             is2D = false;
         }
-        else if(gameObject.GetComponent<SpriteRenderer>() != null)
+        else if (gameObject.GetComponent<SpriteRenderer>() != null)
         {
             is2D = true;
         }
@@ -61,7 +65,7 @@ public class Button : MonoBehaviour
             }
 
         }
-        else if(isHeld)
+        else if (isHeld)
         {
             if (is2D)
             {
@@ -105,6 +109,7 @@ public class Button : MonoBehaviour
     {
         return isHighlighted;
     }
+
     public void setIsHighlighted(bool _isHighlighted)
     {
         isHighlighted = _isHighlighted;
@@ -132,8 +137,36 @@ public class Button : MonoBehaviour
     {
         return isClicked;
     }
+
     public void setIsClicked(bool _isClicked)
     {
         isClicked = _isClicked;
+    }
+
+    public GameObject getNeighbor(int _direction)
+    {
+        switch (_direction)
+        {
+            case 0:
+                {
+                    return NeighborUp;
+                }
+            case 1:
+                {
+                    return NeighborDown;
+                }
+            case 2:
+                {
+                    return NeighborLeft;
+                }
+            case 3:
+                {
+                    return NeighborRight;
+                }
+            default:
+                {
+                    return NeighborUp;
+                }
+        }
     }
 }
