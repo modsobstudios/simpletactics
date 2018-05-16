@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class character : MonoBehaviour
 {
-    #region StatusVeriables
+    #region StatusVariables
     public enum STATUS_EFFECT
     {
         SPEED, ARMOR, ATTACK, NONE

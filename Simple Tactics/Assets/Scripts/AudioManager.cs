@@ -13,7 +13,7 @@ using UnityEngine;
  *      If a function would cause audio to play, have the script save off GameObject.Find("AudioManager").GetComponent<AudioManager>()
  *      in its Start() function.
  */
-
+public enum AudioType { BGM = 1, SFX, VOX }
 public class AudioManager : MonoBehaviour
 {
     [SerializeField]
@@ -37,6 +37,36 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         bgmSource.loop = true;
+    }
+
+    public void PlayAudio(string audioName, AudioType audioType)
+    {
+        switch (audioType)
+        {
+            case AudioType.BGM:
+            {
+                currentBGM = loadBGM(audioName);
+                playBGM();
+                break;
+            }
+            case AudioType.SFX:
+            {
+                currentSFX = loadSFX(audioName);
+                playSFX();
+                break;
+            }
+            case AudioType.VOX:
+            {
+                currentVox = loadVox(audioName);
+                playVox();
+                break;
+            }
+            default:
+            {
+                Debug.Log("HOW???");
+                break;
+            }
+        }
     }
 
     // Loads a sound effect into the sfxSource to be played
