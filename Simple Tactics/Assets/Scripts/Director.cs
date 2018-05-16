@@ -35,8 +35,13 @@ public class Director : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out hit);
 
+        // Null check
+        if (hit.collider == null)
+        {
+            deselectObjects();
+        }
         // Parse tags 
-        if (hit.collider.tag == "Character")
+        else if (hit.collider.tag == "Character")
         {
             selectCharacter(hit);
         }
@@ -59,8 +64,10 @@ public class Director : MonoBehaviour
     {
         if (selectedCharacter == null)
         {
+            // Reset color of previously selected tile
             if (selectedTile != null)
                 selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
+
             selectedTile = _hit.transform.gameObject.GetComponent<Tile>();
             selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
         }
@@ -74,8 +81,10 @@ public class Director : MonoBehaviour
     public void selectCharacter(RaycastHit _hit)
     {
         deselectTile();
+        // Reset color of previously selected character
         if (selectedCharacter != null)
             selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.white;
+
         selectedCharacter = _hit.transform.gameObject.GetComponent<Character>();
         selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.magenta;
     }

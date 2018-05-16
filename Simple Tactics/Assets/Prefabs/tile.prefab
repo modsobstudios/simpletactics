@@ -115,4 +115,4 @@ MonoBehaviour:
   gridW: 10
   gridH: 10
   thisTileElement: 1
-  thisTileTerrType: 1
+  thisTileTerrType: 0
