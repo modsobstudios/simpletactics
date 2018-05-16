@@ -21,10 +21,12 @@ public class MenuController : MonoBehaviour
 
     public enum NEIGHBORS { UP, DOWN, LEFT, RIGHT };
 
+    private AudioManager aud;
+
     // Use this for initialization
     void Start()
     {
-
+        aud = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -45,6 +47,7 @@ public class MenuController : MonoBehaviour
                             if (!hit.transform.GetComponent<Button>().getIsClicked())
                             {
                                 hit.transform.GetComponent<Button>().setIsClicked(true);
+                                aud.PlayAudio("Menu_Click", AudioManager.AudioType.SFX);
                             }
 
                             if (Selected == null)
@@ -121,6 +124,12 @@ public class MenuController : MonoBehaviour
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.DOWN).GetComponent<Button>().setIsSelected(true);
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.DOWN).GetComponent<Button>().setIsHighlighted(true);
                         Selected = Selected.GetComponent<Button>().getNeighbor((int)(NEIGHBORS.DOWN));
+                        aud.PlayAudio("Menu_Dink1", AudioManager.AudioType.SFX);
+                    }
+                    else
+                    {
+                        aud.PlayAudio("Menu_Dink2", AudioManager.AudioType.SFX);
+
                     }
                 }
                 else
@@ -142,6 +151,11 @@ public class MenuController : MonoBehaviour
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.UP).GetComponent<Button>().setIsSelected(true);
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.UP).GetComponent<Button>().setIsHighlighted(true);
                         Selected = Selected.GetComponent<Button>().getNeighbor((int)(NEIGHBORS.UP));
+                        aud.PlayAudio("Menu_Dink1", AudioManager.AudioType.SFX);
+                    }
+                    else
+                    {
+                        aud.PlayAudio("Menu_Dink2", AudioManager.AudioType.SFX);
                     }
                 }
                 else
@@ -162,6 +176,11 @@ public class MenuController : MonoBehaviour
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.LEFT).GetComponent<Button>().setIsSelected(true);
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.LEFT).GetComponent<Button>().setIsHighlighted(true);
                         Selected = Selected.GetComponent<Button>().getNeighbor((int)(NEIGHBORS.LEFT));
+                        aud.PlayAudio("Menu_Dink1", AudioManager.AudioType.SFX);
+                    }
+                    else
+                    {
+                        aud.PlayAudio("Menu_Dink2", AudioManager.AudioType.SFX);
                     }
                 }
                 else
@@ -182,6 +201,11 @@ public class MenuController : MonoBehaviour
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.RIGHT).GetComponent<Button>().setIsSelected(true);
                         Selected.GetComponent<Button>().getNeighbor((int)NEIGHBORS.RIGHT).GetComponent<Button>().setIsHighlighted(true);
                         Selected = Selected.GetComponent<Button>().getNeighbor((int)(NEIGHBORS.RIGHT));
+                        aud.PlayAudio("Menu_Dink1", AudioManager.AudioType.SFX);
+                    }
+                    else
+                    {
+                        aud.PlayAudio("Menu_Dink2", AudioManager.AudioType.SFX);
                     }
                 }
                 else
@@ -189,6 +213,14 @@ public class MenuController : MonoBehaviour
                     Selected = FindObjectOfType<Button>().gameObject;
                     Selected.GetComponent<Button>().setIsHighlighted(true);
                     Selected.GetComponent<Button>().setIsSelected(true);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (Selected != null)
+                {
+                    Selected.GetComponent<Button>().setIsClicked(true);
+                    aud.PlayAudio("Menu_Click", AudioManager.AudioType.SFX);
                 }
             }
 
@@ -208,6 +240,7 @@ public class MenuController : MonoBehaviour
                         lastHit = hit.transform.name;
                         hit.transform.GetComponent<Button>().setIsHighlighted(true);
                         hitRef = hit.transform;
+                        aud.PlayAudio("Menu_Dink1", AudioManager.AudioType.SFX);
                     }
                 }
             }
