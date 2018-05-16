@@ -19,7 +19,7 @@ public class godCamScript : MonoBehaviour
     public GameObject currTarget;
 
     //public Grid gridObj;
-    public List<character> charList;
+    public List<oldCharacter> charList;
     public int target = 0;
 
     // Vectors

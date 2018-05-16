@@ -28,6 +28,7 @@ public class Character : MonoBehaviour
     // Mechanics Values
     private Tile location;
     private Vector3 position;
+    private Vector3 positionOffset = new Vector3(0, 0, 0);
 
 
     // Use this for initialization
@@ -40,6 +41,28 @@ public class Character : MonoBehaviour
     void FixedUpdate()
     {
 
+    }
+
+    private void OnMouseEnter()
+    {
+        transform.position += new Vector3(0, 0.1f, 0);
+    }
+
+    private void OnMouseExit()
+    {
+        transform.position -= new Vector3(0, 0.1f, 0);
+    }
+
+    public void setCharacterPosition(Vector3 _position)
+    {
+        position = _position;
+        this.transform.position = _position + positionOffset;
+    }
+
+    public void setCharacterTile(Tile _tile)
+    {
+        location = _tile;
+        setCharacterPosition(_tile.getTileWorldPos());
     }
 
 

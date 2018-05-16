@@ -7,7 +7,7 @@ using System.IO;
 public class Party : MonoBehaviour
 {
     // temporary list of characters
-    List<character> charList;
+    List<oldCharacter> charList;
     // list of randomized names
     string[] nameList;
     public delegate void MyDel(int _i);
@@ -16,7 +16,7 @@ public class Party : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        charList = new List<character>();
+        charList = new List<oldCharacter>();
         Debug.Log("Binding delegate in Party.cs...");
         myDel = GetComponentInParent<Mastermind>().checkActive;
         Debug.Log("Delegate bound!");
@@ -45,18 +45,18 @@ public class Party : MonoBehaviour
     }
 
     // delegate for Sort()
-    static int SortBySpeed(character _c1, character _c2)
+    static int SortBySpeed(oldCharacter _c1, oldCharacter _c2)
     {
         return _c2.getSpeed().CompareTo(_c1.getSpeed());
     }
 
-    public List<character> getCharList()
+    public List<oldCharacter> getCharList()
     {
         return charList;
     }
 
     // clears the party and loads a new random party.
-    public void generateParty(Grid _g, GameObject _player, int _num)
+    public void generateParty(oldGrid _g, GameObject _player, int _num)
     {
         // start from scratch
         // TODO: Cleanup/reset
@@ -67,7 +67,7 @@ public class Party : MonoBehaviour
         for (int i = 0; i < _num; i++)
         {
             // make a character
-            character temp = new character();
+            oldCharacter temp = new oldCharacter();
             // give it stats
             temp.initializeRandom();
             // put it somewhere
@@ -77,11 +77,11 @@ public class Party : MonoBehaviour
             // give it a name
             newP.name = getRandomName();
             // assign relations
-            newP.GetComponent<character>().initializeCopy(temp);
-            newP.GetComponent<character>().setCharMesh(newP);
+            newP.GetComponent<oldCharacter>().initializeCopy(temp);
+            newP.GetComponent<oldCharacter>().setCharMesh(newP);
             newP.transform.SetParent(this.transform);
             // put it in the list
-            charList.Add(newP.GetComponent<character>());
+            charList.Add(newP.GetComponent<oldCharacter>());
         }
         // initiative
         // TODO: abstract

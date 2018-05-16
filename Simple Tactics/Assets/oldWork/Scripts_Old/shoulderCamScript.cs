@@ -12,7 +12,7 @@ public class shoulderCamScript : MonoBehaviour
     // Target character to attach the camera to
     public GameObject currTarget;
 
-    public List<character> charList;
+    public List<oldCharacter> charList;
 
     // Camera vectors
     public Vector3 newCamPosition;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class character : MonoBehaviour
+public class oldCharacter : MonoBehaviour
 {
     #region StatusVariables
     public enum STATUS_EFFECT
@@ -378,7 +378,7 @@ public class character : MonoBehaviour
         worldPos = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
     }
 
-    public void initializeCopy(character _c)
+    public void initializeCopy(oldCharacter _c)
     {
         armor = _c.armor;
         attack = _c.attack;
@@ -412,7 +412,7 @@ public struct DOT
     private int remaining;
     private int damage;
 
-    public DOT(int _damage, int _duration, int _remaining, float _statMod, character.STATUS_EFFECT _status, bool _isCompounding, float _multiplier)
+    public DOT(int _damage, int _duration, int _remaining, float _statMod, oldCharacter.STATUS_EFFECT _status, bool _isCompounding, float _multiplier)
     {
         duration = _duration;
         remaining = _remaining;
@@ -452,24 +452,24 @@ public struct StatusEffect
     private bool isCompounding;
     private float multiplier;
 
-    character.STATUS_EFFECT status;
+    oldCharacter.STATUS_EFFECT status;
 
-    public StatusEffect(int _duration, float _statMod, character.STATUS_EFFECT _type, bool _isCompounding, float _multiplier)
+    public StatusEffect(int _duration, float _statMod, oldCharacter.STATUS_EFFECT _type, bool _isCompounding, float _multiplier)
     {
         duration = _duration;
         switch (_type)
         {
-            case character.STATUS_EFFECT.ARMOR:
+            case oldCharacter.STATUS_EFFECT.ARMOR:
                 armorMod = _statMod;
                 speedMod = 0;
                 attackMod = 0;
                 break;
-            case character.STATUS_EFFECT.SPEED:
+            case oldCharacter.STATUS_EFFECT.SPEED:
                 armorMod = 0;
                 speedMod = _statMod;
                 attackMod = 0;
                 break;
-            case character.STATUS_EFFECT.ATTACK:
+            case oldCharacter.STATUS_EFFECT.ATTACK:
                 armorMod = 0;
                 speedMod = 0;
                 attackMod = _statMod;
@@ -495,13 +495,13 @@ public struct StatusEffect
     {
         switch (status)
         {
-            case character.STATUS_EFFECT.SPEED:
+            case oldCharacter.STATUS_EFFECT.SPEED:
                 speedMod *= multiplier;
                 break;
-            case character.STATUS_EFFECT.ARMOR:
+            case oldCharacter.STATUS_EFFECT.ARMOR:
                 armorMod *= multiplier;
                 break;
-            case character.STATUS_EFFECT.ATTACK:
+            case oldCharacter.STATUS_EFFECT.ATTACK:
                 attackMod *= multiplier;
                 break;
             default:

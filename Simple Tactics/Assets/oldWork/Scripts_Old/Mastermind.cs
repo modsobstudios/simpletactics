@@ -9,7 +9,7 @@ using UnityEngine;
 
 // Mastermind requires the following components:
 [RequireComponent(typeof(Party))]
-[RequireComponent(typeof(Grid))]
+[RequireComponent(typeof(oldGrid))]
 [RequireComponent(typeof(shoulderCamScript))]
 [RequireComponent(typeof(godCamScript))]
 
@@ -17,7 +17,7 @@ public class Mastermind : MonoBehaviour
 {
     // Required components
     Party partyObj;
-    Grid gridObj;
+    oldGrid gridObj;
     shoulderCamScript shoulderCam;
     godCamScript godCam;
     bool sweepTime = false;
@@ -29,8 +29,8 @@ public class Mastermind : MonoBehaviour
     public Camera mainCamera;
 
     // Variables
-    List<character> characterList;
-    List<Tile> mapGrid;
+    List<oldCharacter> characterList;
+    List<oldTile> mapGrid;
 
     int activeChar = -1;
     int activeTile = -1;
@@ -46,7 +46,7 @@ public class Mastermind : MonoBehaviour
     {
         // Required components
         partyObj = GetComponent<Party>();
-        gridObj = GetComponent<Grid>();
+        gridObj = GetComponent<oldGrid>();
         shoulderCam = GetComponent<shoulderCamScript>();
         godCam = GetComponent<godCamScript>();
         godCam.cam = mainCamera;
@@ -88,13 +88,13 @@ public class Mastermind : MonoBehaviour
         // tableflip button
         if (Input.GetKeyDown(KeyCode.B))
         {
-            foreach (Tile t in mapGrid)
+            foreach (oldTile t in mapGrid)
             {
                 t.tileMesh.AddComponent<Rigidbody>();
                 t.tileMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
             }
 
-            foreach (character c in characterList)
+            foreach (oldCharacter c in characterList)
             {
                 c.charMesh.AddComponent<Rigidbody>();
                 c.charMesh.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500)), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5)));
@@ -161,7 +161,7 @@ public class Mastermind : MonoBehaviour
     public void beginMove()
     {
         activeTile = -1;
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             t.selected = false;
         }
@@ -404,7 +404,7 @@ public class Mastermind : MonoBehaviour
 
     void sweepTable()
     {
-        foreach (character c in characterList)
+        foreach (oldCharacter c in characterList)
         {
             if(c.charMesh.transform.position.z < sweepZ)
             {

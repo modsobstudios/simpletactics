@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Pathfinder : MonoBehaviour
 {
-    Grid grid;
-    List<Tile> mapGrid;
+    oldGrid grid;
+    List<oldTile> mapGrid;
     public List<int> path;
     public int bfsStart, bfsGoal;
     float heuristicWeight = 1.2f;
@@ -20,9 +20,9 @@ public class Pathfinder : MonoBehaviour
 
     class SearchNode
     {
-        public Tile t;
+        public oldTile t;
         public List<Edge> edges;
-        public SearchNode(Tile _t) { t = _t; edges = new List<Edge>(); }
+        public SearchNode(oldTile _t) { t = _t; edges = new List<Edge>(); }
     }
 
     class PlannerNode
@@ -33,14 +33,14 @@ public class Pathfinder : MonoBehaviour
         public PlannerNode(SearchNode _s) { vertex = _s; }
     }
 
-    Dictionary<Tile, SearchNode> nodes;
+    Dictionary<oldTile, SearchNode> nodes;
     //SortedList<int, PlannerNode> open;
 
     // Use this for initialization
     void Start()
     {
-        grid = GetComponent<Grid>();
-        nodes = new Dictionary<Tile, SearchNode>();
+        grid = GetComponent<oldGrid>();
+        nodes = new Dictionary<oldTile, SearchNode>();
 
     }
 
@@ -56,7 +56,7 @@ public class Pathfinder : MonoBehaviour
         }
         if (mapGrid != null)
         {
-            foreach (Tile t in mapGrid)
+            foreach (oldTile t in mapGrid)
             {
                 if (t.selected)
                 {
@@ -80,11 +80,11 @@ public class Pathfinder : MonoBehaviour
 
     void buildSearchGraph()
     {
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             nodes[t] = new SearchNode(t);
         }
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             int index = t.getNorthIndex();
             if (index != -1)
@@ -108,7 +108,7 @@ public class Pathfinder : MonoBehaviour
 
     void BFS(SearchNode _start, SearchNode _goal)
     {
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             t.resetColor();
         }
@@ -149,7 +149,7 @@ public class Pathfinder : MonoBehaviour
 
     void greedy(SearchNode _start, SearchNode _goal)
     {
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             t.resetColor();
         }
@@ -195,7 +195,7 @@ public class Pathfinder : MonoBehaviour
 
     void uniformCost(SearchNode _start, SearchNode _goal)
     {
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             t.resetColor();
         }
@@ -255,7 +255,7 @@ public class Pathfinder : MonoBehaviour
 
     void Astar(SearchNode _start, SearchNode _goal)
     {
-        foreach (Tile t in mapGrid)
+        foreach (oldTile t in mapGrid)
         {
             t.resetColor();
         }
