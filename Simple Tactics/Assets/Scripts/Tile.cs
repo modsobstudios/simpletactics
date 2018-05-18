@@ -11,7 +11,9 @@ public class Tile : MonoBehaviour {
     public terrainType thisTileTerrType;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
     MeshRenderer meshRend;
-    Color color, inColor;
+    Color color, baseColor;
+    float ratio = 0.0f;
+    bool lerpBool = false;
 
     //environment is non-passable terrain and playfield is all terrain in which the player can move to or move over
     public enum terrainType
@@ -98,19 +100,24 @@ public class Tile : MonoBehaviour {
     void Start ()
     {
         meshRend = GetComponent<MeshRenderer>();
-        color = meshRend.material.color;
+        color = baseColor = meshRend.material.color;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
         
-        
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            meshRend = GetComponent<MeshRenderer>();
+            color = meshRend.material.color;
+            Debug.Log(color);
+        }
     }
     private void OnMouseEnter()
     {
         // raise slightly to indicate selection
-        this.transform.position += new Vector3(0, 0.15f, 0);
+        //this.transform.position += new Vector3(0, 0.15f, 0);
 
         // capture spot for tooltip
         // Vector3 spot = Input.mousePosition + tileOffset;
@@ -119,13 +126,22 @@ public class Tile : MonoBehaviour {
     // while mouse is hovering
     private void OnMouseOver()
     {
-
+        Debug.Log(ratio);
+        meshRend.material.color = Color.Lerp(color, Color.white, ratio);
+        if (ratio <= 0.01f && lerpBool)
+            lerpBool = false;
+        if (ratio >= 0.99f && !lerpBool)
+            lerpBool = true;
+        if (!lerpBool) ratio += 0.05f;
+        else ratio -= 0.05f;
     }
 
     private void OnMouseExit()
     {
         // reset position
-        this.transform.position -= new Vector3(0, 0.15f, 0);
+        //this.transform.position -= new Vector3(0, 0.15f, 0);
+        meshRend.material.color = color;
+
     }
 
     private void OnMouseDown()
@@ -133,5 +149,70 @@ public class Tile : MonoBehaviour {
        
     }
 
+
+    public int getNorthIndex()
+    {
+        if (rowNum == 0)
+            return -1;
+        else
+            return (rowNum - 1) * gridW + columnNum;
+    }
+
+    public int getEastIndex()
+    {
+        if (columnNum == gridW - 1)
+            return -1;
+        else
+            return rowNum * gridW + (columnNum + 1);
+    }
+
+    public int getSouthIndex()
+    {
+        if (rowNum == gridH - 1)
+            return -1;
+        else
+            return (rowNum + 1) * gridW + columnNum;
+    }
+
+    public int getWestIndex()
+    {
+        if (columnNum == 0)
+            return -1;
+        else
+            return rowNum * gridW + (columnNum - 1);
+    }
+
+    public void enforceColoring()
+    {
+        meshRend = GetComponent<MeshRenderer>();
+        color = meshRend.material.color;
+    }
+
+    public void setSelectedColor()
+    {
+        meshRend.materials[0].color = Color.blue;
+    }
+
+    public void setDefaultColor()
+    {
+        meshRend.materials[0].color = color;
+    }
+
+    public void setTemporaryColor(Color _c)
+    {
+        meshRend.materials[0].color = _c;
+    }
+
+    public void setBaseColor(Color _c)
+    {
+        color = _c;
+        meshRend.materials[0].color = color;
+    }
     
+    public void resetBaseColor()
+    {
+        color = baseColor;
+        meshRend.materials[0].color = color;
+
+    }
 }

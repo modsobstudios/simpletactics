@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour {
+public class Grid : MonoBehaviour
+{
 
     List<Tile> mapGrid;
     int width, height;
@@ -14,8 +15,9 @@ public class Grid : MonoBehaviour {
     void Start()
     {
         mapGrid = new List<Tile>();
-        createGrid(10, 10,tileObj, mats);
-        instantiateTheGrid(tileObj,mats);
+        //createGrid(10, 10, tileObj, mats);
+        //instantiateTheGrid(tileObj, mats);
+        buildGrid(10, 10);
     }
 
     // Update is called once per frame
@@ -104,29 +106,29 @@ public class Grid : MonoBehaviour {
                 switch ((Tile.tileElement)tileEnergy)
                 {
                     case Tile.tileElement.heat:
-                        {
-                            _obj.GetComponent<MeshRenderer>().material = _mats[0];
+                    {
+                        _obj.GetComponent<MeshRenderer>().material = _mats[0];
 
-                            break;
-                        }
+                        break;
+                    }
                     case Tile.tileElement.cold:
-                        {
-                            _obj.GetComponent<MeshRenderer>().material = _mats[1];
+                    {
+                        _obj.GetComponent<MeshRenderer>().material = _mats[1];
 
-                            break;
-                        }
+                        break;
+                    }
                     case Tile.tileElement.death:
-                        {
-                            _obj.GetComponent<MeshRenderer>().material = _mats[2];
+                    {
+                        _obj.GetComponent<MeshRenderer>().material = _mats[2];
 
-                            break;
-                        }
+                        break;
+                    }
                     case Tile.tileElement.life:
-                        {
-                            _obj.GetComponent<MeshRenderer>().material = _mats[3];
+                    {
+                        _obj.GetComponent<MeshRenderer>().material = _mats[3];
 
-                            break;
-                        }
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -136,7 +138,7 @@ public class Grid : MonoBehaviour {
                 tmp.name = "Tile (" + i + ", " + j + ")";
                 tmp.GetComponent<Tile>().copyTile(newTile);
                 mapGrid.Add(tmp.GetComponent<Tile>());
-                Destroy(tmp);
+                //Destroy(tmp);
             }
         }
         for (int i = 0; i < mapGrid.Count; i++)
@@ -175,6 +177,60 @@ public class Grid : MonoBehaviour {
             tmp.name = "Tile (" + mapGrid[i].getTileRowAndColumnNum().x + ", " + mapGrid[i].getTileRowAndColumnNum().y + ")";
         }
 
+    }
+
+    public void buildGrid(int numRows, int numCols)
+    {
+        width = numRows;
+        height = numCols;
+
+        for (int r = 0; r < width; r++)
+        {
+            for (int c = 0; c < height; c++)
+            {
+                Vector3 worldPos = new Vector3(r, 0, c);
+                GameObject tmp = Instantiate(tileObj, worldPos, Quaternion.Euler(90.0f, 0, 0));
+                tmp.transform.SetParent(transform);
+                tmp.name = "Tile (" + r + ", " + c + ")";
+                Tile t = tmp.GetComponent<Tile>();
+                t.setTileRowAndColumnNum(r, c);
+                t.gridH = height;
+                t.gridW = width;
+                t.setTileWorldPos(worldPos);
+                t.setTileElement(Random.Range(0, 4));
+                t.setTileTerrType(Random.Range(0, 2));
+
+                switch (t.getTileElement())
+                {
+                    case Tile.tileElement.heat:
+                    {
+                        tmp.GetComponent<MeshRenderer>().material = mats[0];
+                        break;
+                    }
+                    case Tile.tileElement.cold:
+                    {
+                        tmp.GetComponent<MeshRenderer>().material = mats[1];
+                        break;
+                    }
+                    case Tile.tileElement.death:
+                    {
+                        tmp.GetComponent<MeshRenderer>().material = mats[2];
+                        break;
+                    }
+                    case Tile.tileElement.life:
+                    {
+                        tmp.GetComponent<MeshRenderer>().material = mats[3];
+                        break;
+                    }
+                    default:
+                    {
+                        Debug.Log("Invalid Element.");
+                        break;
+                    }
+                }
+                mapGrid.Add(t);
+            }
+        }
     }
 
     public int Width

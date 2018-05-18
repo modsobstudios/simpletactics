@@ -8,12 +8,16 @@ public class Director : MonoBehaviour
     Grid g;
     Character selectedCharacter;
     Tile selectedTile;
-
+    Pathfinder pf;
+    List<Tile> currentPath;
+    Tile currentPathTile;
+    int currentPathIndex;
+    bool hasPath = false;
 
     // Use this for initialization
     void Start()
     {
-
+        pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
     }
 
     // Update is called once per frame
@@ -22,11 +26,44 @@ public class Director : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
             selectObject();
 
-        if(Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
             deselectObjects();
 
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
+            pf.initializePathfinding();
+        }
     }
 
+    private void FixedUpdate()
+    {
+        if (hasPath)
+        {
+            lerpCharacter();
+        }
+    }
+
+    private void lerpCharacter()
+    {
+        if (selectedCharacter.transform.position == currentPathTile.transform.position)
+        {
+            if (currentPathIndex == currentPath.Count - 1)
+            {
+                selectedCharacter.setCharacterTile(currentPathTile);
+                hasPath = false;
+            }
+            else
+            {
+                currentPathTile = currentPath[++currentPathIndex];
+                selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
+            }
+        }
+        else
+        {
+            selectedCharacter.transform.position += ((currentPathTile.transform.position - selectedCharacter.transform.position) * Time.deltaTime * 25);
+        }
+    }
     // Performs the raycasting to detect objects and place them in selection
     private void selectObject()
     {
@@ -66,15 +103,20 @@ public class Director : MonoBehaviour
         {
             // Reset color of previously selected tile
             if (selectedTile != null)
+            {
                 selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
+                selectedTile.resetBaseColor();
+            }
 
             selectedTile = _hit.transform.gameObject.GetComponent<Tile>();
             selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
+            selectedTile.setBaseColor(Color.blue);
         }
         else
         {
-            selectedCharacter.setCharacterTile(_hit.transform.gameObject.GetComponent<Tile>());
+            moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
+        Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
     }
 
     // Perform character-specific selection logic
@@ -110,5 +152,16 @@ public class Director : MonoBehaviour
         if (selectedTile != null)
             selectedTile.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
         selectedTile = null;
+    }
+
+    public void moveCharacter(Tile goal)
+    {
+        currentPath = pf.getPath(selectedCharacter.Location, goal);
+        currentPath.Reverse();
+        hasPath = true;
+        currentPathTile = currentPath[0];
+        currentPathIndex = 0;
+        selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
+        //selectedCharacter.setCharacterTile(goal);
     }
 }

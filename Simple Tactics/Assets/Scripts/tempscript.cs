@@ -11,7 +11,7 @@ public class tempscript : MonoBehaviour
     void Start()
     {
         Application.runInBackground = true;
-        audioMan = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        // audioMan = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         c = GameObject.Find("Character").GetComponent<Character>();
         g = GameObject.Find("Grid").GetComponent<Grid>();
     }
@@ -31,16 +31,6 @@ public class tempscript : MonoBehaviour
             c = GameObject.Find("Character").GetComponent<Character>();
             g = GameObject.Find("Grid").GetComponent<Grid>();
             c.setCharacterTile(g.getTileByRowCol(0, 0));
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            c.setCharacterTile(g.getTileByRowCol(5, 5));
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            c.setCharacterTile(g.getTileByRowCol(10, 0));
         }
 
         if (Input.GetKeyDown(KeyCode.F))
