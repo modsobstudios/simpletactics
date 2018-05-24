@@ -17,6 +17,9 @@ public class Character : MonoBehaviour
     private int currentDefense;
     private int currentSpeed;
 
+    private int moveRange;
+    private int atkRange;
+
     // Flags
     private bool isDead = false;         // If the character is dead
     private bool canMove = false;        // If the character has their Move action left
@@ -265,6 +268,32 @@ public class Character : MonoBehaviour
         set
         {
             position = value;
+        }
+    }
+
+    public int MoveRange
+    {
+        get
+        {
+            return moveRange;
+        }
+
+        set
+        {
+            moveRange = value;
+        }
+    }
+
+    public int AtkRange
+    {
+        get
+        {
+            return atkRange;
+        }
+
+        set
+        {
+            atkRange = value;
         }
     }
 

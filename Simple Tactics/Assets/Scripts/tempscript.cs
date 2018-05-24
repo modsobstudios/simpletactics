@@ -14,6 +14,8 @@ public class tempscript : MonoBehaviour
         // audioMan = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         c = GameObject.Find("Character").GetComponent<Character>();
         g = GameObject.Find("Grid").GetComponent<Grid>();
+        c.setCharacterTile(g.getTileByRowCol(0, 0));
+
     }
 
     // Update is called once per frame

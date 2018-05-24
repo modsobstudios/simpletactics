@@ -9,7 +9,7 @@ public class Director : MonoBehaviour
     Character selectedCharacter;
     Tile selectedTile;
     Pathfinder pf;
-    List<Tile> currentPath;
+    List<Tile> currentPath, currentAtkRange, currentMoveRange;
     Tile currentPathTile;
     int currentPathIndex;
     bool hasPath = false;
@@ -18,6 +18,8 @@ public class Director : MonoBehaviour
     void Start()
     {
         pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
+        pf.initializePathfinding();
+
     }
 
     // Update is called once per frame
@@ -33,6 +35,39 @@ public class Director : MonoBehaviour
         {
             pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
             pf.initializePathfinding();
+        }
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Getting Range...");
+            pf.MoveRange.Clear();
+            pf.recursivelyAddTilesInMoveRange(6, selectedCharacter.Location);
+            currentMoveRange = pf.MoveRange;
+            foreach(Tile t in currentMoveRange)
+            {
+                t.setTemporaryColor(Color.white);
+            }
+        }
+        if(Input.GetKey(KeyCode.Y))
+        {
+            Debug.Log("Getting full range...");
+            pf.MoveRange.Clear();
+            pf.AtkRange.Clear();
+            pf.moveRangeExtents.Clear();
+            pf.getMoveAndAttackRange(3, 4, selectedCharacter.Location);
+            foreach (Tile t in pf.AtkRange)
+                t.setTemporaryColor(Color.cyan);
+            foreach (Tile t in pf.MoveRange)
+                t.setTemporaryColor(Color.yellow);
+
+        }
+
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("Getting ranged attack range...");
+            pf.AtkRange.Clear();
+            pf.recursivelyAddTilesInAtkRangeFromMinimum(2, 6, selectedCharacter.Location);
+            foreach (Tile t in pf.AtkRange)
+                t.setTemporaryColor(Color.yellow);
         }
     }
 
