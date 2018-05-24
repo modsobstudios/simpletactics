@@ -65,7 +65,7 @@ public class Director : MonoBehaviour
         {
             Debug.Log("Getting ranged attack range...");
             pf.AtkRange.Clear();
-            pf.recursivelyAddTilesInAtkRangeFromMinimum(2, 6, selectedCharacter.Location);
+            pf.getRangedAtkRange(2, 6, selectedCharacter.Location);
             foreach (Tile t in pf.AtkRange)
                 t.setTemporaryColor(Color.yellow);
         }

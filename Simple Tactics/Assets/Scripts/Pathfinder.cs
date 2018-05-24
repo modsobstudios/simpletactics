@@ -8,6 +8,7 @@ public class Pathfinder : MonoBehaviour
     List<Tile> mapGrid;
     public List<Tile> atkRange;
     public List<Tile> innerAtkRange;
+    public List<Tile> innerAtkExtents;
     public List<Tile> moveRangeExtents;
     public List<Tile> path;
     public List<Tile> moveAndAtkRange;
@@ -82,6 +83,8 @@ public class Pathfinder : MonoBehaviour
     void Start()
     {
         atkRange = new List<Tile>();
+        innerAtkRange = new List<Tile>();
+        innerAtkExtents = new List<Tile>();
         moveRange = new List<Tile>();
         moveAndAtkRange = new List<Tile>();
         moveRangeExtents = new List<Tile>();
@@ -319,9 +322,59 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    public void recursivelyAddTilesInAtkRangeFromMinimum(int minRange, int maxRange, Tile current)
+    public void recursivelyGetInnerAtkRange(int minRange, Tile current)
     {
+        if (minRange > 0)
+        {
+            if (current.getNorthIndex() != -1)
+                innerAtkRange.Add(mapGrid[current.getNorthIndex()]);
+            if (current.getEastIndex() != -1)
+                innerAtkRange.Add(mapGrid[current.getEastIndex()]);
+            if (current.getSouthIndex() != -1)
+                innerAtkRange.Add(mapGrid[current.getSouthIndex()]);
+            if (current.getWestIndex() != -1)
+                innerAtkRange.Add(mapGrid[current.getWestIndex()]);
 
+            if (current.getNorthIndex() != -1)
+                recursivelyGetInnerAtkRange(minRange - 1, mapGrid[current.getNorthIndex()]);
+            if (current.getEastIndex() != -1)
+                recursivelyGetInnerAtkRange(minRange - 1, mapGrid[current.getEastIndex()]);
+            if (current.getSouthIndex() != -1)
+                recursivelyGetInnerAtkRange(minRange - 1, mapGrid[current.getSouthIndex()]);
+            if (current.getWestIndex() != -1)
+                recursivelyGetInnerAtkRange(minRange - 1, mapGrid[current.getWestIndex()]);
+        }
+        else
+        {
+            innerAtkExtents.Add(current);
+        }
+    }
+
+    public void getOuterAtkRange(int maxRange, Tile current)
+    {
+        if (maxRange > 0)
+        {
+            if (current.getNorthIndex() != -1)
+                if (!innerAtkRange.Contains(mapGrid[current.getNorthIndex()]))
+                    atkRange.Add(mapGrid[current.getNorthIndex()]);
+            if (current.getEastIndex() != -1)
+                if (!innerAtkRange.Contains(mapGrid[current.getEastIndex()]))
+                    atkRange.Add(mapGrid[current.getEastIndex()]);
+            if (current.getSouthIndex() != -1)
+                if (!innerAtkRange.Contains(mapGrid[current.getSouthIndex()]))
+                    atkRange.Add(mapGrid[current.getSouthIndex()]);
+            if (current.getWestIndex() != -1)
+                if (!innerAtkRange.Contains(mapGrid[current.getWestIndex()]))
+                    atkRange.Add(mapGrid[current.getWestIndex()]);
+            if (current.getNorthIndex() != -1)
+                getOuterAtkRange(maxRange - 1, mapGrid[current.getNorthIndex()]);
+            if (current.getEastIndex() != -1)
+                getOuterAtkRange(maxRange - 1, mapGrid[current.getEastIndex()]);
+            if (current.getSouthIndex() != -1)
+                getOuterAtkRange(maxRange - 1, mapGrid[current.getSouthIndex()]);
+            if (current.getWestIndex() != -1)
+                getOuterAtkRange(maxRange - 1, mapGrid[current.getWestIndex()]);
+        }
     }
 
     public void recursivelyAddTilesInAtkRange(int range, Tile current)
@@ -384,5 +437,13 @@ public class Pathfinder : MonoBehaviour
         }
         moveAndAtkRange.AddRange(moveRange);
         moveAndAtkRange.AddRange(atkRange);
+    }
+
+    public void getRangedAtkRange(int minRange, int maxRange, Tile current)
+    {
+        recursivelyGetInnerAtkRange(minRange, current);
+        foreach (Tile t in innerAtkExtents)
+            getOuterAtkRange(maxRange, current);
+
     }
 }
