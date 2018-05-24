@@ -96,7 +96,9 @@ public class Director : MonoBehaviour
         }
         else
         {
-            selectedCharacter.transform.position += ((currentPathTile.transform.position - selectedCharacter.transform.position) * Time.deltaTime * 25);
+            selectedCharacter.transform.position += ((currentPathTile.transform.position - selectedCharacter.transform.position) * Time.deltaTime * 5);
+            if (Vector3.Distance(currentPathTile.transform.position, selectedCharacter.transform.position) <= 0.25f)
+                selectedCharacter.transform.position = currentPathTile.transform.position;
         }
     }
     // Performs the raycasting to detect objects and place them in selection

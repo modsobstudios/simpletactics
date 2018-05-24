@@ -114,9 +114,13 @@ public class Pathfinder : MonoBehaviour
 
     public List<Tile> getPath(Tile _start, Tile _goal)
     {
-        Astar(nodes[_start], nodes[_goal]);
-        highlightPath();
-        return path;
+        if (_start != _goal)
+        {
+
+            Astar(nodes[_start], nodes[_goal]);
+            highlightPath();
+        }
+            return path;
     }
 
     void buildSearchGraph()
