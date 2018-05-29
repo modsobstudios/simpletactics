@@ -44,20 +44,6 @@ public class Director : MonoBehaviour
         }
     }
 
-    public void getFullRange(Character _c)
-    {
-        Debug.Log("Getting full range...");
-        pf.MoveRange.Clear();
-        pf.AtkRange.Clear();
-        pf.innerAtkExtents.Clear();
-        pf.moveRangeExtents.Clear();
-        pf.getMoveAndRangedAttackRange(_c.MinAtkRange, _c.AtkRange, _c.MoveRange, _c.Location);
-        foreach (Tile t in pf.MoveRange)
-            t.setTemporaryColor(Color.yellow);
-        foreach (Tile t in pf.AtkRange)
-            t.setTemporaryColor(Color.cyan);
-    }
-
     private void lerpCharacter()
     {
         if (moveDir == Vector3.zero)
@@ -136,21 +122,17 @@ public class Director : MonoBehaviour
             // Reset color of previously selected tile
             if (selectedTile != null)
             {
-                //selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
                 selectedTile.setDefaultColor();
             }
 
             selectedTile = _hit.transform.gameObject.GetComponent<Tile>();
-            //selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
             selectedTile.setSelectedColor();
         }
         else if (selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
         {
-
             moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
 
-        //Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
     }
 
     // Perform character-specific selection logic
@@ -207,37 +189,50 @@ public class Director : MonoBehaviour
             currentPathIndex = 0;
             selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
         }
-        //selectedCharacter.setCharacterTile(goal);
     }
 
     public void getAndHighlightMoveRange()
     {
+        // Reset all stored ranges
         pf.resetLists();
+        
+        // Reset the tiles on the grid and clear the stored range
         if (selectedCharacter.MoveRangeTiles != null)
         {
             foreach (Tile t in selectedCharacter.MoveRangeTiles)
                 t.setDefaultColor();
             selectedCharacter.MoveRangeTiles.Clear();
         }
-        pf.recursivelyAddTilesInMoveRange(selectedCharacter.MoveRange, selectedCharacter.Location);
+        // Calculate and store the move range
+        pf.getMoveRange(selectedCharacter.MoveRange, selectedCharacter.Location);
         selectedCharacter.MoveRangeTiles = pf.MoveRange;
+
+        // Highlight move range.
         foreach (Tile t in selectedCharacter.MoveRangeTiles)
             t.setTemporaryColor(Color.yellow);
     }
 
     public void getAndHighlightRangedAtkRange()
     {
+        // Clear the original attack range
         pf.AtkRange.Clear();
+
+        // Reset the tiles on the grid and clear the stored range
         if (selectedCharacter.AtkRangeTiles != null)
         {
             foreach (Tile t in selectedCharacter.AtkRangeTiles)
                 t.setDefaultColor();
             selectedCharacter.AtkRangeTiles.Clear();
         }
+        // Calculate and store the attack range
         pf.getRangedAtkRange(selectedCharacter.MinAtkRange, selectedCharacter.AtkRange + selectedCharacter.MoveRange, selectedCharacter.Location);
         selectedCharacter.AtkRangeTiles = pf.AtkRange;
+
+        // Highlight the attack range
         foreach (Tile t in selectedCharacter.AtkRangeTiles)
             t.setTemporaryColor(Color.cyan);
+
+        // Highlight tiles that can be moved to that are also within attack range
         foreach (Tile t in selectedCharacter.MoveRangeTiles)
             if (selectedCharacter.AtkRangeTiles.Contains(t))
                 t.setTemporaryColor(new Color(0.5f, 1, 1));
