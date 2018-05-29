@@ -116,11 +116,12 @@ public class Pathfinder : MonoBehaviour
     {
         if (_start != _goal)
         {
-
             Astar(nodes[_start], nodes[_goal]);
-            highlightPath();
+            //highlightPath();
         }
-            return path;
+        else
+            path.Clear();
+        return path;
     }
 
     void buildSearchGraph()
@@ -281,11 +282,8 @@ public class Pathfinder : MonoBehaviour
 
     void highlightPath()
     {
-        for (int i = 0; i < path.Count; i++)
-        {
-            float ratio = (float)i / (float)path.Count;
-            path[i].setTemporaryColor(Color.Lerp(new Color(1, 1, 1), new Color(1, 0, 1), ratio));
-        }
+        foreach (Tile t in path)
+            t.setTemporaryColor(Color.yellow);
     }
 
     void deselectPath()
@@ -452,15 +450,29 @@ public class Pathfinder : MonoBehaviour
     public void getRangedAtkRange(int minRange, int maxRange, Tile current)
     {
         recursivelyGetInnerAtkRange(minRange, current);
-        foreach (Tile t in innerAtkExtents)
-            getOuterAtkRange(maxRange, current);
+        getOuterAtkRange(maxRange, current);
+    }
+
+    public void getRangedAttackRange(int minRange, int maxRange, Tile current)
+    {
+        recursivelyGetInnerAtkRange(minRange, current);
+        getOuterAtkRange(maxRange, current);
     }
 
     public void getRangedAtkRangeFromMoveExtents(int minRange, int maxRange, Tile current)
     {
-        foreach(Tile t in moveRangeExtents)
+        foreach (Tile t in moveRangeExtents)
             recursivelyGetInnerAtkRange(minRange, t);
         foreach (Tile t in innerAtkExtents)
             getOuterAtkRange(maxRange, current);
+    }
+
+    public void resetLists()
+    {
+        atkRange.Clear();
+        moveRange.Clear();
+        moveRangeExtents.Clear();
+        innerAtkExtents.Clear();
+        innerAtkRange.Clear();
     }
 }

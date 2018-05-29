@@ -33,7 +33,7 @@ public class Director : MonoBehaviour
             deselectObjects();
 
         if (Input.GetKeyDown(KeyCode.T))
-            getFullRange(selectedCharacter);
+            getAndHighlightRangedAtkRange();
     }
 
     private void FixedUpdate()
@@ -71,6 +71,9 @@ public class Director : MonoBehaviour
                 selectedCharacter.setCharacterTile(currentPathTile);
                 hasPath = false;
                 moveDir = Vector3.zero;
+                foreach (Tile t in currentPath)
+                    t.setDefaultColor();
+                currentPath.Clear();
                 getAndHighlightMoveRange();
             }
             else
@@ -89,29 +92,33 @@ public class Director : MonoBehaviour
     // Performs the raycasting to detect objects and place them in selection
     private void selectObject()
     {
-        // Do raycasting from camera to world mouse point
-        RaycastHit hit = new RaycastHit();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out hit);
+        if (!hasPath)
+        {
 
-        // Null check
-        if (hit.collider == null)
-        {
-            deselectObjects();
-        }
-        // Parse tags 
-        else if (hit.collider.tag == "Character")
-        {
-            selectCharacter(hit);
-        }
-        else if (hit.collider.tag == "Tile")
-        {
-            selectTile(hit);
-        }
-        // If not selectable, deselect any selected objects.
-        else
-        {
-            deselectObjects();
+            // Do raycasting from camera to world mouse point
+            RaycastHit hit = new RaycastHit();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out hit);
+
+            // Null check
+            if (hit.collider == null)
+            {
+                deselectObjects();
+            }
+            // Parse tags 
+            else if (hit.collider.tag == "Character")
+            {
+                selectCharacter(hit);
+            }
+            else if (hit.collider.tag == "Tile")
+            {
+                selectTile(hit);
+            }
+            // If not selectable, deselect any selected objects.
+            else
+            {
+                deselectObjects();
+            }
         }
 
     }
@@ -137,12 +144,12 @@ public class Director : MonoBehaviour
             //selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
             selectedTile.setSelectedColor();
         }
-        else if (!hasPath && selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
+        else if (selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
         {
-            foreach (Tile t in selectedCharacter.MoveRangeTiles)
-                t.setDefaultColor();
+
             moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
+
         //Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
     }
 
@@ -171,6 +178,9 @@ public class Director : MonoBehaviour
     {
         if (selectedCharacter != null)
             selectedCharacter.setDefaultColor();
+        if (selectedCharacter.MoveRangeTiles != null)
+            foreach (Tile t in selectedCharacter.MoveRangeTiles)
+                t.setDefaultColor();
         selectedCharacter = null;
     }
 
@@ -185,26 +195,51 @@ public class Director : MonoBehaviour
     public void moveCharacter(Tile goal)
     {
         currentPath = pf.getPath(selectedCharacter.Location, goal);
-        currentPath.Reverse();
-        hasPath = true;
-        currentPathTile = currentPath[0];
-        currentPathIndex = 0;
-        selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
+        if (currentPath.Count > 0)
+        {
+            foreach (Tile t in selectedCharacter.MoveRangeTiles)
+                t.setDefaultColor();
+            foreach (Tile t in currentPath)
+                t.setTemporaryColor(Color.yellow);
+            currentPath.Reverse();
+            hasPath = true;
+            currentPathTile = currentPath[0];
+            currentPathIndex = 0;
+            selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
+        }
         //selectedCharacter.setCharacterTile(goal);
     }
 
     public void getAndHighlightMoveRange()
     {
+        pf.resetLists();
         if (selectedCharacter.MoveRangeTiles != null)
         {
             foreach (Tile t in selectedCharacter.MoveRangeTiles)
                 t.setDefaultColor();
             selectedCharacter.MoveRangeTiles.Clear();
         }
-        pf.getMoveAndAttackRange(selectedCharacter.MoveRange, selectedCharacter.AtkRange, selectedCharacter.Location);
-        selectedCharacter.AtkRangeTiles = pf.AtkRange;
+        pf.recursivelyAddTilesInMoveRange(selectedCharacter.MoveRange, selectedCharacter.Location);
         selectedCharacter.MoveRangeTiles = pf.MoveRange;
         foreach (Tile t in selectedCharacter.MoveRangeTiles)
             t.setTemporaryColor(Color.yellow);
+    }
+
+    public void getAndHighlightRangedAtkRange()
+    {
+        pf.AtkRange.Clear();
+        if (selectedCharacter.AtkRangeTiles != null)
+        {
+            foreach (Tile t in selectedCharacter.AtkRangeTiles)
+                t.setDefaultColor();
+            selectedCharacter.AtkRangeTiles.Clear();
+        }
+        pf.getRangedAtkRange(selectedCharacter.MinAtkRange, selectedCharacter.AtkRange + selectedCharacter.MoveRange, selectedCharacter.Location);
+        selectedCharacter.AtkRangeTiles = pf.AtkRange;
+        foreach (Tile t in selectedCharacter.AtkRangeTiles)
+            t.setTemporaryColor(Color.cyan);
+        foreach (Tile t in selectedCharacter.MoveRangeTiles)
+            if (selectedCharacter.AtkRangeTiles.Contains(t))
+                t.setTemporaryColor(new Color(0.5f, 1, 1));
     }
 }

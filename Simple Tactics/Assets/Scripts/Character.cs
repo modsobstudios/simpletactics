@@ -42,9 +42,9 @@ public class Character : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        moveRange = 3;
-        atkRange = 3;
+        moveRange = 5;
         minAtkRange = 3;
+        atkRange = 6;
         meshRend = GetComponentInChildren<SkinnedMeshRenderer>();
         defaultColor = currentColor = meshRend.materials[0].color;
     }
