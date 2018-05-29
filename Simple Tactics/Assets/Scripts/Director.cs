@@ -139,6 +139,8 @@ public class Director : MonoBehaviour
         }
         else if (!hasPath && selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
         {
+            foreach (Tile t in selectedCharacter.MoveRangeTiles)
+                t.setDefaultColor();
             moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
         //Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
@@ -150,10 +152,10 @@ public class Director : MonoBehaviour
         deselectTile();
         // Reset color of previously selected character
         if (selectedCharacter != null)
-            selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.white;
+            selectedCharacter.setDefaultColor();
 
         selectedCharacter = _hit.transform.gameObject.GetComponent<Character>();
-        selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.magenta;
+        selectedCharacter.setCurrentColor(Color.magenta);
         getAndHighlightMoveRange();
     }
 
@@ -168,7 +170,7 @@ public class Director : MonoBehaviour
     public void deselectCharacter()
     {
         if (selectedCharacter != null)
-            selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.white;
+            selectedCharacter.setDefaultColor();
         selectedCharacter = null;
     }
 
@@ -194,8 +196,11 @@ public class Director : MonoBehaviour
     public void getAndHighlightMoveRange()
     {
         if (selectedCharacter.MoveRangeTiles != null)
+        {
             foreach (Tile t in selectedCharacter.MoveRangeTiles)
                 t.setDefaultColor();
+            selectedCharacter.MoveRangeTiles.Clear();
+        }
         pf.getMoveAndAttackRange(selectedCharacter.MoveRange, selectedCharacter.AtkRange, selectedCharacter.Location);
         selectedCharacter.AtkRangeTiles = pf.AtkRange;
         selectedCharacter.MoveRangeTiles = pf.MoveRange;

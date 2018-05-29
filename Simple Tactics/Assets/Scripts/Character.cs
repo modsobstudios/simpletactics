@@ -35,13 +35,18 @@ public class Character : MonoBehaviour
     private Vector3 positionOffset = new Vector3(0, 0, 0);      // To match the character's feet to the level of the ground.
     private List<Tile> moveRangeTiles;
     private List<Tile> atkRangeTiles;
-
+    private SkinnedMeshRenderer meshRend;
+    private Color defaultColor, currentColor;
+    private float ratio = 0.0f;
+    private bool lerpBool = false;
     // Use this for initialization
     void Start()
     {
         moveRange = 3;
         atkRange = 3;
         minAtkRange = 3;
+        meshRend = GetComponentInChildren<SkinnedMeshRenderer>();
+        defaultColor = currentColor = meshRend.materials[0].color;
     }
 
     // Update is called once per frame
@@ -50,16 +55,26 @@ public class Character : MonoBehaviour
 
     }
 
-    // Raise slightly to indicate interaction
     private void OnMouseEnter()
     {
-        transform.position += new Vector3(0, 0.1f, 0);
+        Debug.Log(defaultColor);
     }
 
-    // Return to normal position
+    // Indicate interaction
+    private void OnMouseOver()
+    {
+        meshRend.materials[0].color = Color.Lerp(currentColor, Color.black, ratio);
+        if (ratio <= 0.01f && lerpBool)
+            lerpBool = false;
+        if (ratio >= 0.99f && !lerpBool)
+            lerpBool = true;
+        if (!lerpBool) ratio += 0.05f;
+        else ratio -= 0.05f;
+    }
+
     private void OnMouseExit()
     {
-        transform.position -= new Vector3(0, 0.1f, 0);
+        meshRend.materials[0].color = currentColor;
     }
 
     // Manually change character position, independent of tiles
@@ -74,9 +89,20 @@ public class Character : MonoBehaviour
     {
         location = _tile;
         setCharacterPosition(_tile.getTileWorldPos());
-        
+
     }
 
+    public void setCurrentColor(Color _c)
+    {
+        currentColor = _c;
+        meshRend.materials[0].color = currentColor;
+    }
+
+    public void setDefaultColor()
+    {
+        currentColor = defaultColor;
+        meshRend.materials[0].color = defaultColor;
+    }
 
     #region Getters/Setters
 

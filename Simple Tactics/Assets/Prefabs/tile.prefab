@@ -116,3 +116,4 @@ MonoBehaviour:
   gridH: 10
   thisTileElement: 1
   thisTileTerrType: 0
+  selected: 0
