@@ -19,6 +19,7 @@ public class Character : MonoBehaviour
 
     private int moveRange;
     private int atkRange;
+    private int minAtkRange;
 
     // Flags
     private bool isDead = false;         // If the character is dead
@@ -32,12 +33,15 @@ public class Character : MonoBehaviour
     private Tile location;
     private Vector3 position;
     private Vector3 positionOffset = new Vector3(0, 0, 0);      // To match the character's feet to the level of the ground.
-
+    private List<Tile> moveRangeTiles;
+    private List<Tile> atkRangeTiles;
 
     // Use this for initialization
     void Start()
     {
-
+        moveRange = 3;
+        atkRange = 3;
+        minAtkRange = 3;
     }
 
     // Update is called once per frame
@@ -70,6 +74,7 @@ public class Character : MonoBehaviour
     {
         location = _tile;
         setCharacterPosition(_tile.getTileWorldPos());
+        
     }
 
 
@@ -294,6 +299,45 @@ public class Character : MonoBehaviour
         set
         {
             atkRange = value;
+        }
+    }
+
+    public int MinAtkRange
+    {
+        get
+        {
+            return minAtkRange;
+        }
+
+        set
+        {
+            minAtkRange = value;
+        }
+    }
+
+    public List<Tile> MoveRangeTiles
+    {
+        get
+        {
+            return moveRangeTiles;
+        }
+
+        set
+        {
+            moveRangeTiles = value;
+        }
+    }
+
+    public List<Tile> AtkRangeTiles
+    {
+        get
+        {
+            return atkRangeTiles;
+        }
+
+        set
+        {
+            atkRangeTiles = value;
         }
     }
 

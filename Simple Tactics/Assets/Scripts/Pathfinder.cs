@@ -443,11 +443,24 @@ public class Pathfinder : MonoBehaviour
         moveAndAtkRange.AddRange(atkRange);
     }
 
+    public void getMoveAndRangedAttackRange(int minAtkRng, int maxAtkRng, int movRng, Tile current)
+    {
+        recursivelyAddTilesInMoveRange(movRng, current);
+        getRangedAtkRange(minAtkRng, maxAtkRng, current);
+    }
+
     public void getRangedAtkRange(int minRange, int maxRange, Tile current)
     {
         recursivelyGetInnerAtkRange(minRange, current);
         foreach (Tile t in innerAtkExtents)
             getOuterAtkRange(maxRange, current);
+    }
 
+    public void getRangedAtkRangeFromMoveExtents(int minRange, int maxRange, Tile current)
+    {
+        foreach(Tile t in moveRangeExtents)
+            recursivelyGetInnerAtkRange(minRange, t);
+        foreach (Tile t in innerAtkExtents)
+            getOuterAtkRange(maxRange, current);
     }
 }

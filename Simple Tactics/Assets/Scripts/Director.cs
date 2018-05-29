@@ -13,6 +13,7 @@ public class Director : MonoBehaviour
     Tile currentPathTile;
     int currentPathIndex;
     bool hasPath = false;
+    Vector3 moveDir;
 
     // Use this for initialization
     void Start()
@@ -31,44 +32,8 @@ public class Director : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
             deselectObjects();
 
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
-            pf.initializePathfinding();
-        }
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log("Getting Range...");
-            pf.MoveRange.Clear();
-            pf.recursivelyAddTilesInMoveRange(6, selectedCharacter.Location);
-            currentMoveRange = pf.MoveRange;
-            foreach(Tile t in currentMoveRange)
-            {
-                t.setTemporaryColor(Color.white);
-            }
-        }
-        if(Input.GetKey(KeyCode.Y))
-        {
-            Debug.Log("Getting full range...");
-            pf.MoveRange.Clear();
-            pf.AtkRange.Clear();
-            pf.moveRangeExtents.Clear();
-            pf.getMoveAndAttackRange(3, 4, selectedCharacter.Location);
-            foreach (Tile t in pf.AtkRange)
-                t.setTemporaryColor(Color.cyan);
-            foreach (Tile t in pf.MoveRange)
-                t.setTemporaryColor(Color.yellow);
-
-        }
-
-        if(Input.GetKeyDown(KeyCode.U))
-        {
-            Debug.Log("Getting ranged attack range...");
-            pf.AtkRange.Clear();
-            pf.getRangedAtkRange(2, 6, selectedCharacter.Location);
-            foreach (Tile t in pf.AtkRange)
-                t.setTemporaryColor(Color.yellow);
-        }
+        if (Input.GetKeyDown(KeyCode.T))
+            getFullRange(selectedCharacter);
     }
 
     private void FixedUpdate()
@@ -79,25 +44,45 @@ public class Director : MonoBehaviour
         }
     }
 
+    public void getFullRange(Character _c)
+    {
+        Debug.Log("Getting full range...");
+        pf.MoveRange.Clear();
+        pf.AtkRange.Clear();
+        pf.innerAtkExtents.Clear();
+        pf.moveRangeExtents.Clear();
+        pf.getMoveAndRangedAttackRange(_c.MinAtkRange, _c.AtkRange, _c.MoveRange, _c.Location);
+        foreach (Tile t in pf.MoveRange)
+            t.setTemporaryColor(Color.yellow);
+        foreach (Tile t in pf.AtkRange)
+            t.setTemporaryColor(Color.cyan);
+    }
+
     private void lerpCharacter()
     {
+        if (moveDir == Vector3.zero)
+        {
+            moveDir = (currentPathTile.transform.position - selectedCharacter.transform.position).normalized;
+        }
         if (selectedCharacter.transform.position == currentPathTile.transform.position)
         {
             if (currentPathIndex == currentPath.Count - 1)
             {
                 selectedCharacter.setCharacterTile(currentPathTile);
                 hasPath = false;
+                moveDir = Vector3.zero;
+                getAndHighlightMoveRange();
             }
             else
             {
                 currentPathTile = currentPath[++currentPathIndex];
-                selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
+                selectedCharacter.transform.forward = moveDir = (currentPathTile.transform.position - selectedCharacter.transform.position).normalized;
             }
         }
         else
         {
-            selectedCharacter.transform.position += ((currentPathTile.transform.position - selectedCharacter.transform.position) * Time.deltaTime * 5);
-            if (Vector3.Distance(currentPathTile.transform.position, selectedCharacter.transform.position) <= 0.25f)
+            selectedCharacter.transform.position += (moveDir * Time.deltaTime * 3);
+            if (Vector3.Distance(currentPathTile.transform.position, selectedCharacter.transform.position) <= 0.05f)
                 selectedCharacter.transform.position = currentPathTile.transform.position;
         }
     }
@@ -136,24 +121,27 @@ public class Director : MonoBehaviour
     // TODO: Abstract character movement. (Likely to come with UI and combat system)
     public void selectTile(RaycastHit _hit)
     {
+        if (selectedTile != null)
+            selectedTile.selected = false;
+        _hit.transform.gameObject.GetComponent<Tile>().selected = true;
         if (selectedCharacter == null)
         {
             // Reset color of previously selected tile
             if (selectedTile != null)
             {
-                selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
-                selectedTile.resetBaseColor();
+                //selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = selectedTile.getColor();
+                selectedTile.setDefaultColor();
             }
 
             selectedTile = _hit.transform.gameObject.GetComponent<Tile>();
-            selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
-            selectedTile.setBaseColor(Color.blue);
+            //selectedTile.transform.GetComponent<MeshRenderer>().materials[0].color = Color.blue;
+            selectedTile.setSelectedColor();
         }
-        else
+        else if (!hasPath && selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
         {
             moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
-        Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
+        //Debug.Log(_hit.transform.gameObject.GetComponent<Tile>().getColor());
     }
 
     // Perform character-specific selection logic
@@ -166,6 +154,7 @@ public class Director : MonoBehaviour
 
         selectedCharacter = _hit.transform.gameObject.GetComponent<Character>();
         selectedCharacter.GetComponentInChildren<SkinnedMeshRenderer>().materials[0].color = Color.magenta;
+        getAndHighlightMoveRange();
     }
 
     // Deselect all selected objects
@@ -200,5 +189,17 @@ public class Director : MonoBehaviour
         currentPathIndex = 0;
         selectedCharacter.transform.forward = (currentPathTile.transform.position - selectedCharacter.transform.position);
         //selectedCharacter.setCharacterTile(goal);
+    }
+
+    public void getAndHighlightMoveRange()
+    {
+        if (selectedCharacter.MoveRangeTiles != null)
+            foreach (Tile t in selectedCharacter.MoveRangeTiles)
+                t.setDefaultColor();
+        pf.getMoveAndAttackRange(selectedCharacter.MoveRange, selectedCharacter.AtkRange, selectedCharacter.Location);
+        selectedCharacter.AtkRangeTiles = pf.AtkRange;
+        selectedCharacter.MoveRangeTiles = pf.MoveRange;
+        foreach (Tile t in selectedCharacter.MoveRangeTiles)
+            t.setTemporaryColor(Color.yellow);
     }
 }

@@ -179,6 +179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   atkRange: []
   innerAtkRange: []
+  innerAtkExtents: []
   moveRangeExtents: []
   path: []
   moveAndAtkRange: []
@@ -217,7 +218,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: c49127c142a0a8c4383b2e40cd24e392, type: 2}
   - {fileID: 2100000, guid: 92c8bd04e6e3b8348b5278ba2bc1c503, type: 2}
   tileObj: {fileID: 1687573573546366, guid: bc7490ca3beb9eb4d943b27967858841, type: 2}
-  plainMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  plainMat: {fileID: 2100000, guid: d9381d431695aa5468f9caa4b256fce7, type: 2}
 --- !u!4 &552799212
 Transform:
   m_ObjectHideFlags: 0

@@ -11,9 +11,10 @@ public class Tile : MonoBehaviour {
     public terrainType thisTileTerrType;
     Vector3 tileOffset = new Vector3(37.5f, 7.5f, 0);
     MeshRenderer meshRend;
-    Color color, baseColor;
+    Color color, baseColor, tempColor;
     float ratio = 0.0f;
     bool lerpBool = false;
+    public bool selected = false;
 
     //environment is non-passable terrain and playfield is all terrain in which the player can move to or move over
     public enum terrainType
@@ -100,7 +101,7 @@ public class Tile : MonoBehaviour {
     void Start ()
     {
         meshRend = GetComponent<MeshRenderer>();
-        color = baseColor = meshRend.material.color;
+        color = baseColor = tempColor = meshRend.material.color;
     }
 	
 	// Update is called once per frame
@@ -126,21 +127,22 @@ public class Tile : MonoBehaviour {
     // while mouse is hovering
     private void OnMouseOver()
     {
-        Debug.Log(ratio);
-        meshRend.material.color = Color.Lerp(color, Color.white, ratio);
+
+        meshRend.material.color = Color.Lerp(tempColor, Color.white, ratio);
         if (ratio <= 0.01f && lerpBool)
             lerpBool = false;
         if (ratio >= 0.99f && !lerpBool)
             lerpBool = true;
         if (!lerpBool) ratio += 0.05f;
         else ratio -= 0.05f;
+        
     }
 
     private void OnMouseExit()
     {
         // reset position
         //this.transform.position -= new Vector3(0, 0.15f, 0);
-        meshRend.material.color = color;
+        meshRend.material.color = tempColor;
 
     }
 
@@ -191,16 +193,19 @@ public class Tile : MonoBehaviour {
     public void setSelectedColor()
     {
         meshRend.materials[0].color = Color.blue;
+        tempColor = Color.blue;
     }
 
     public void setDefaultColor()
     {
         meshRend.materials[0].color = color;
+        tempColor = color;
     }
 
     public void setTemporaryColor(Color _c)
     {
         meshRend.materials[0].color = _c;
+        tempColor = _c;
     }
 
     public void setBaseColor(Color _c)
