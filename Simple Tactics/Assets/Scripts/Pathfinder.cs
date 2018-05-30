@@ -16,6 +16,9 @@ public class Pathfinder : MonoBehaviour
     public int bfsStart, bfsGoal;
     float heuristicWeight = 1.2f;
     int tileCt;
+    Dictionary<Tile, SearchNode> nodes;
+    Dictionary<Tile, SearchNode> tempNodes;
+
     class Edge
     {
         public int cost;
@@ -38,7 +41,6 @@ public class Pathfinder : MonoBehaviour
         public PlannerNode(SearchNode _s) { vertex = _s; }
     }
 
-    Dictionary<Tile, SearchNode> nodes;
 
     public List<Tile> Path
     {
@@ -152,6 +154,39 @@ public class Pathfinder : MonoBehaviour
         x = x + 1;
     }
 
+    void buildTempSearchGraph(List<Tile> _tiles)
+    {
+        if (tempNodes != null)
+            tempNodes.Clear();
+        tempNodes = new Dictionary<Tile, SearchNode>();
+        foreach (Tile t in _tiles)
+            tempNodes[t] = new SearchNode(t);
+        foreach (Tile t in _tiles)
+        {
+            int index = t.getNorthIndex();
+            if (index != -1 && mapGrid[index].cost != int.MaxValue && _tiles.Contains(mapGrid[index]))
+                tempNodes[t].edges.Add(new Edge(tempNodes[mapGrid[index]], mapGrid[index].cost));
+
+            index = t.getEastIndex();
+            if (index != -1 && mapGrid[index].cost != int.MaxValue && _tiles.Contains(mapGrid[index]))
+                tempNodes[t].edges.Add(new Edge(tempNodes[mapGrid[index]], mapGrid[index].cost));
+
+            index = t.getSouthIndex();
+            if (index != -1 && mapGrid[index].cost != int.MaxValue && _tiles.Contains(mapGrid[index]))
+                tempNodes[t].edges.Add(new Edge(tempNodes[mapGrid[index]], mapGrid[index].cost));
+
+            index = t.getWestIndex();
+            if (index != -1 && mapGrid[index].cost != int.MaxValue && _tiles.Contains(mapGrid[index]))
+                tempNodes[t].edges.Add(new Edge(tempNodes[mapGrid[index]], mapGrid[index].cost));
+        }
+    }
+
+    public List<Tile> runLimitedAStar(List<Tile> _tiles, Tile _start, Tile _goal)
+    {
+        Astar(tempNodes[_start], tempNodes[_goal]);
+        return path;
+    }
+
     // TODO: Needs to be refactored to work only on the tiles returned by moveRange.
     void Astar(SearchNode _start, SearchNode _goal)
     {
@@ -165,33 +200,44 @@ public class Pathfinder : MonoBehaviour
         open.Add(new PlannerNode(_start));
         // We've been to the start node
         visited[_start] = open[0];
-        //
+        // TODO: Figure out which costs are being used and how. Currently functional, but slightly blackboxed.
         visited[_start].givenCost = 0;
         visited[_start].heuristicCost = calculateCost(_start, _goal);
         visited[_start].finalCost = visited[_start].givenCost + visited[_start].heuristicCost * heuristicWeight;
 
+        // While there are tiles left to explore
         while (open.Count != 0)
         {
+            // Prioritize the tile with the lowest cost
             int lowestIndex = getLowestFinal(open);
             PlannerNode current = open[lowestIndex];
+            // Remove it from the open list
             open.Remove(open[lowestIndex]);
+            // If this is where we want to be
             if (current.vertex == _goal)
             {
                 while (current.parent != null)
                 {
+                    // Add every node along this path to the list
                     path.Add(current.vertex.t);
                     current = current.parent;
                 }
+                // Return the list
                 return;
             }
+            // If this isn't the goal, get its neighbors
             foreach (Edge e in current.vertex.edges)
             {
                 SearchNode successor = e.node;
+                // Calculate cost
                 float tempGiven = current.givenCost + e.cost;
+                // If we've been here before
                 if (visited.ContainsKey(successor))
                 {
+                    // If this previously visited tile is now a better choice based on our current path
                     if (tempGiven < visited[successor].givenCost)
                     {
+                        // Remove the old reference, update costs, and return to the list with new priority.
                         PlannerNode successorNode = new PlannerNode(successor);
                         open.Remove(successorNode);
                         successorNode.givenCost = tempGiven;
@@ -202,7 +248,7 @@ public class Pathfinder : MonoBehaviour
                 }
                 else
                 {
-
+                    // If we haven't been here before, add it to the visited list
                     PlannerNode successorNode = new PlannerNode(successor);
                     successorNode.givenCost = tempGiven;
                     successorNode.heuristicCost = calculateCost(successor, _goal);
@@ -212,9 +258,9 @@ public class Pathfinder : MonoBehaviour
 
                     open.Add(successorNode);
                 }
-
             }
         }
+        // The list is empty, return from procedure.
         return;
     }
 
@@ -298,6 +344,21 @@ public class Pathfinder : MonoBehaviour
         path.Clear();
     }
 
+    public void getTestedMoveRange(int range, Tile current)
+    {
+        List<Tile> tempath;
+        getMoveRange(range, current);
+        buildTempSearchGraph(moveRange);
+        foreach (Tile t in moveRange)
+        {
+            t.outOfRange = false;
+            tempath = runLimitedAStar(moveRange, current, t);
+            if (tempath.Count > range || tempath.Count == 0)
+                t.outOfRange = true;
+        }
+        moveRange.RemoveAll(t => (t.outOfRange));
+        moveRange.Remove(current);
+    }
 
     public void getMoveRange(int range, Tile current)
     {
@@ -369,17 +430,17 @@ public class Pathfinder : MonoBehaviour
         if (maxRange > 0)
         {
             if (current.getNorthIndex() != -1)
-         //       if (!innerAtkRange.Contains(mapGrid[current.getNorthIndex()]))
-                    atkRange.Add(mapGrid[current.getNorthIndex()]);
+                //       if (!innerAtkRange.Contains(mapGrid[current.getNorthIndex()]))
+                atkRange.Add(mapGrid[current.getNorthIndex()]);
             if (current.getEastIndex() != -1)
-           //     if (!innerAtkRange.Contains(mapGrid[current.getEastIndex()]))
-                    atkRange.Add(mapGrid[current.getEastIndex()]);
+                //     if (!innerAtkRange.Contains(mapGrid[current.getEastIndex()]))
+                atkRange.Add(mapGrid[current.getEastIndex()]);
             if (current.getSouthIndex() != -1)
-             //   if (!innerAtkRange.Contains(mapGrid[current.getSouthIndex()]))
-                    atkRange.Add(mapGrid[current.getSouthIndex()]);
+                //   if (!innerAtkRange.Contains(mapGrid[current.getSouthIndex()]))
+                atkRange.Add(mapGrid[current.getSouthIndex()]);
             if (current.getWestIndex() != -1)
-               // if (!innerAtkRange.Contains(mapGrid[current.getWestIndex()]))
-                    atkRange.Add(mapGrid[current.getWestIndex()]);
+                // if (!innerAtkRange.Contains(mapGrid[current.getWestIndex()]))
+                atkRange.Add(mapGrid[current.getWestIndex()]);
             if (current.getNorthIndex() != -1)
                 getOuterAtkRange(maxRange - 1, mapGrid[current.getNorthIndex()]);
             if (current.getEastIndex() != -1)

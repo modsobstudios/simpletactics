@@ -178,7 +178,7 @@ public class Director : MonoBehaviour
 
     public void moveCharacter(Tile goal)
     {
-        currentPath = pf.getPath(selectedCharacter.Location, goal);
+        currentPath = pf.runLimitedAStar(selectedCharacter.MoveRangeTiles, selectedCharacter.Location, goal); // getPath(selectedCharacter.Location, goal);
         if (currentPath.Count > 0)
         {
             if (selectedCharacter.AtkRangeTiles != null)
@@ -199,14 +199,14 @@ public class Director : MonoBehaviour
 
     public void getAndHighlightMoveRange()
     {
-
         // Clear the stored range
         if (selectedCharacter.MoveRangeTiles != null)
         {
+            pf.MoveRange.Clear();
             selectedCharacter.MoveRangeTiles.Clear();
         }
         // Calculate and store the move range
-        pf.getMoveRange(selectedCharacter.MoveRange, selectedCharacter.Location);
+        pf.getTestedMoveRange(selectedCharacter.MoveRange, selectedCharacter.Location);
         selectedCharacter.MoveRangeTiles = pf.MoveRange;
 
         // Highlight move range.

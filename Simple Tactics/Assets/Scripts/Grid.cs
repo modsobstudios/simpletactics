@@ -243,7 +243,7 @@ public class Grid : MonoBehaviour
                 {
                     tmp.GetComponent<MeshRenderer>().material = plainMat;
                     t.cost = int.MaxValue;
-                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity);
+                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity).transform.parent = transform;
                 }
                 mapGrid.Add(t);
             }

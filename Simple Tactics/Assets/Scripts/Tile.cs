@@ -16,6 +16,7 @@ public class Tile : MonoBehaviour {
     bool lerpBool = false;
     public bool selected = false;
     public int cost;
+    public bool outOfRange = false;
 
     //environment is non-passable terrain and playfield is all terrain in which the player can move to or move over
     public enum terrainType
@@ -205,7 +206,7 @@ public class Tile : MonoBehaviour {
 
     public void setTemporaryColor(Color _c)
     {
-        tempColor = Color.Lerp(color, _c, 0.7f);
+        tempColor = _c; //Color.Lerp(color, _c, 0.7f);
         meshRend.materials[0].color = tempColor;
     }
 
