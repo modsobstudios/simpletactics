@@ -156,13 +156,19 @@ public class Pathfinder : MonoBehaviour
 
     void buildTempSearchGraph(List<Tile> _tiles)
     {
+        // Start fresh
         if (tempNodes != null)
             tempNodes.Clear();
         tempNodes = new Dictionary<Tile, SearchNode>();
+
+        // Create a node for each tile
         foreach (Tile t in _tiles)
             tempNodes[t] = new SearchNode(t);
+
+        // Create edges for each tile
         foreach (Tile t in _tiles)
         {
+            // If the tile's neighbor exists, is not impassable, and is part of the movement range, add it
             int index = t.getNorthIndex();
             if (index != -1 && mapGrid[index].cost != int.MaxValue && _tiles.Contains(mapGrid[index]))
                 tempNodes[t].edges.Add(new Edge(tempNodes[mapGrid[index]], mapGrid[index].cost));
@@ -183,6 +189,7 @@ public class Pathfinder : MonoBehaviour
 
     public List<Tile> runLimitedAStar(List<Tile> _tiles, Tile _start, Tile _goal)
     {
+        // Run A* on only the tiles in the specific range
         Astar(tempNodes[_start], tempNodes[_goal]);
         return path;
     }
@@ -347,16 +354,26 @@ public class Pathfinder : MonoBehaviour
     public void getTestedMoveRange(int range, Tile current)
     {
         List<Tile> tempath;
+        // Get all tiles within absolute range
         getMoveRange(range, current);
+        // Add these tiles to a pathfinding search graph
         buildTempSearchGraph(moveRange);
+
         foreach (Tile t in moveRange)
         {
+            // Reset any previous out-of-range markers
             t.outOfRange = false;
+            // Find a path to the given tile
             tempath = runLimitedAStar(moveRange, current, t);
+            // If the path to the tile is greater than the character's movement range
+            // OR the path cannot be completed
+            // Mark this tile for removal
             if (tempath.Count > range || tempath.Count == 0)
                 t.outOfRange = true;
         }
+        // Remove all tiles marked for removal
         moveRange.RemoveAll(t => (t.outOfRange));
+        // Remove the tile beneath the character
         moveRange.Remove(current);
     }
 
