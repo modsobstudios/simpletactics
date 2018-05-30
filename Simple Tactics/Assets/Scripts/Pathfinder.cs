@@ -133,33 +133,39 @@ public class Pathfinder : MonoBehaviour
         foreach (Tile t in mapGrid)
         {
             int index = t.getNorthIndex();
-            if (index != -1)
-                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], 1));
+            if (index != -1 && mapGrid[index].cost != int.MaxValue)
+                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], mapGrid[index].cost));
 
             index = t.getEastIndex();
-            if (index != -1)
-                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], 1));
+            if (index != -1 && mapGrid[index].cost != int.MaxValue)
+                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], mapGrid[index].cost));
 
             index = t.getSouthIndex();
-            if (index != -1)
-                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], 1));
+            if (index != -1 && mapGrid[index].cost != int.MaxValue)
+                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], mapGrid[index].cost));
 
             index = t.getWestIndex();
-            if (index != -1)
-                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], 1));
+            if (index != -1 && mapGrid[index].cost != int.MaxValue)
+                nodes[t].edges.Add(new Edge(nodes[mapGrid[index]], mapGrid[index].cost));
         }
         int x = 0;
         x = x + 1;
     }
 
-
+    // TODO: Needs to be refactored to work only on the tiles returned by moveRange.
     void Astar(SearchNode _start, SearchNode _goal)
     {
+        // Start fresh
         deselectPath();
+
         List<PlannerNode> open = new List<PlannerNode>();
         Dictionary<SearchNode, PlannerNode> visited = new Dictionary<SearchNode, PlannerNode>();
+
+        // Start the list with the start node
         open.Add(new PlannerNode(_start));
+        // We've been to the start node
         visited[_start] = open[0];
+        //
         visited[_start].givenCost = 0;
         visited[_start].heuristicCost = calculateCost(_start, _goal);
         visited[_start].finalCost = visited[_start].givenCost + visited[_start].heuristicCost * heuristicWeight;
@@ -171,13 +177,10 @@ public class Pathfinder : MonoBehaviour
             open.Remove(open[lowestIndex]);
             if (current.vertex == _goal)
             {
-                // current.vertex.t.setTemporaryColor(Color.yellow);
-
                 while (current.parent != null)
                 {
                     path.Add(current.vertex.t);
                     current = current.parent;
-                    //  current.vertex.t.setTemporaryColor(Color.yellow);
                 }
                 return;
             }

@@ -209,7 +209,7 @@ public class Grid : MonoBehaviour
                 t.setTileTerrType(Random.Range(0, 2));
                 if (t.getTileTerrType() == Tile.terrainType.playfield)
                 {
-
+                    t.cost = 0;
                     switch (t.getTileElement())
                     {
                         case Tile.tileElement.heat:
@@ -242,6 +242,8 @@ public class Grid : MonoBehaviour
                 else
                 {
                     tmp.GetComponent<MeshRenderer>().material = plainMat;
+                    t.cost = int.MaxValue;
+                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity);
                 }
                 mapGrid.Add(t);
             }

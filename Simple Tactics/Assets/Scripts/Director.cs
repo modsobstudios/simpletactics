@@ -60,6 +60,7 @@ public class Director : MonoBehaviour
                 foreach (Tile t in currentPath)
                     t.setDefaultColor();
                 currentPath.Clear();
+                getAndHighlightRangedAtkRange();
                 getAndHighlightMoveRange();
             }
             else
@@ -145,6 +146,7 @@ public class Director : MonoBehaviour
 
         selectedCharacter = _hit.transform.gameObject.GetComponent<Character>();
         selectedCharacter.setCurrentColor(Color.magenta);
+        getAndHighlightRangedAtkRange();
         getAndHighlightMoveRange();
     }
 
@@ -179,6 +181,10 @@ public class Director : MonoBehaviour
         currentPath = pf.getPath(selectedCharacter.Location, goal);
         if (currentPath.Count > 0)
         {
+            if (selectedCharacter.AtkRangeTiles != null)
+                foreach (Tile t in selectedCharacter.AtkRangeTiles)
+                    t.setDefaultColor();
+            selectedCharacter.AtkRangeTiles.Clear();
             foreach (Tile t in selectedCharacter.MoveRangeTiles)
                 t.setDefaultColor();
             foreach (Tile t in currentPath)
@@ -193,14 +199,10 @@ public class Director : MonoBehaviour
 
     public void getAndHighlightMoveRange()
     {
-        // Reset all stored ranges
-        pf.resetLists();
-        
-        // Reset the tiles on the grid and clear the stored range
+
+        // Clear the stored range
         if (selectedCharacter.MoveRangeTiles != null)
         {
-            foreach (Tile t in selectedCharacter.MoveRangeTiles)
-                t.setDefaultColor();
             selectedCharacter.MoveRangeTiles.Clear();
         }
         // Calculate and store the move range
@@ -214,27 +216,17 @@ public class Director : MonoBehaviour
 
     public void getAndHighlightRangedAtkRange()
     {
-        // Clear the original attack range
-        pf.AtkRange.Clear();
-
-        // Reset the tiles on the grid and clear the stored range
+        // Clear the stored range
         if (selectedCharacter.AtkRangeTiles != null)
         {
-            foreach (Tile t in selectedCharacter.AtkRangeTiles)
-                t.setDefaultColor();
             selectedCharacter.AtkRangeTiles.Clear();
         }
         // Calculate and store the attack range
-        pf.getRangedAtkRange(selectedCharacter.MinAtkRange, selectedCharacter.AtkRange + selectedCharacter.MoveRange, selectedCharacter.Location);
+        pf.getOuterAtkRange(selectedCharacter.AtkRange, selectedCharacter.Location);
         selectedCharacter.AtkRangeTiles = pf.AtkRange;
 
         // Highlight the attack range
         foreach (Tile t in selectedCharacter.AtkRangeTiles)
             t.setTemporaryColor(Color.cyan);
-
-        // Highlight tiles that can be moved to that are also within attack range
-        foreach (Tile t in selectedCharacter.MoveRangeTiles)
-            if (selectedCharacter.AtkRangeTiles.Contains(t))
-                t.setTemporaryColor(new Color(0.5f, 1, 1));
     }
 }
