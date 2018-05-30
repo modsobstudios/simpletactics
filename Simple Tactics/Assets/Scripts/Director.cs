@@ -20,7 +20,7 @@ public class Director : MonoBehaviour
     {
         pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
         pf.initializePathfinding();
-
+        g = GameObject.Find("Grid").GetComponent<Grid>();
     }
 
     // Update is called once per frame
@@ -34,6 +34,14 @@ public class Director : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
             getAndHighlightRangedAtkRange();
+
+        if(Input.GetKeyDown(KeyCode.Delete))
+        {
+            g.destroyGrid();
+            g.buildGrid(20, 20);
+            selectedCharacter.setCharacterTile(g.getTileByRowCol(0, 0));
+            pf.initializePathfinding();
+        }
     }
 
     private void FixedUpdate()

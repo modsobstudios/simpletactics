@@ -23,7 +23,12 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
 
+    public void destroyGrid()
+    {
+        foreach (Tile t in mapGrid)
+            Destroy(t.gameObject);
     }
 
     public List<Tile> getGrid()
@@ -191,7 +196,7 @@ public class Grid : MonoBehaviour
     {
         width = numRows;
         height = numCols;
-
+        mapGrid = new List<Tile>();
         for (int r = 0; r < width; r++)
         {
             for (int c = 0; c < height; c++)
@@ -243,7 +248,7 @@ public class Grid : MonoBehaviour
                 {
                     tmp.GetComponent<MeshRenderer>().material = plainMat;
                     t.cost = int.MaxValue;
-                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity).transform.parent = transform;
+                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity).transform.parent = tmp.transform;
                 }
                 mapGrid.Add(t);
             }

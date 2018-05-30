@@ -331,9 +331,7 @@ public class Pathfinder : MonoBehaviour
         float x2 = _g.t.getTileColumn();
         float y1 = _s.t.getTileRow();
         float y2 = _g.t.getTileRow();
-
         return Mathf.Sqrt(Mathf.Pow((x1 - x2), 2) + Mathf.Pow((y1 - y2), 2));
-
     }
 
     void highlightPath()
