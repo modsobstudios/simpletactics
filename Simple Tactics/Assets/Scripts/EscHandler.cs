@@ -8,10 +8,12 @@ public class EscHandler : MonoBehaviour
     bool shown = false;
     bool showing = false;
     float showCt = 0.0f;
+    Director d;
     // Use this for initialization
     void Start()
     {
         this.transform.localScale = new Vector3(0, 0, 0);
+        d = GameObject.Find("ScriptTester").GetComponent<Director>();
     }
 
     // Update is called once per frame
@@ -19,6 +21,7 @@ public class EscHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            d.paused = !d.paused;
             showing = !showing;
         }
         pauseUnpause();

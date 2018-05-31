@@ -13,6 +13,7 @@ public class Director : MonoBehaviour
     Tile currentPathTile;
     int currentPathIndex;
     bool hasPath = false;
+    public bool paused = false;
     Vector3 moveDir;
     List<Character> party;
 
@@ -45,20 +46,15 @@ public class Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-            selectObject();
-
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-            deselectObjects();
-
-        if (Input.GetKeyDown(KeyCode.T))
-            getAndHighlightAtkRange();
-
-        if (Input.GetKeyDown(KeyCode.Delete))
+        if (!paused)
         {
-            restartGame();
-        }
 
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+                selectObject();
+
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+                deselectObjects();
+        }
     }
 
     private void FixedUpdate()
