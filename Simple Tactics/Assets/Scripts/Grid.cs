@@ -210,8 +210,16 @@ public class Grid : MonoBehaviour
                 t.gridH = height;
                 t.gridW = width;
                 t.setTileWorldPos(worldPos);
-                t.setTileElement(Random.Range(0, 4));
-                t.setTileTerrType(Random.Range(0, 2));
+                int tileElement = Random.Range(-5, 4);
+                if (tileElement < 0)
+                    t.setTileElement(5);
+                else
+                    t.setTileElement(tileElement);
+                int tileType = Random.Range(-2, 2);
+                if (tileType <= 0)
+                    t.setTileTerrType(1);
+                else
+                    t.setTileTerrType(0);
                 if (t.getTileTerrType() == Tile.terrainType.playfield)
                 {
                     t.cost = 0;
@@ -235,6 +243,11 @@ public class Grid : MonoBehaviour
                         case Tile.tileElement.life:
                         {
                             tmp.GetComponent<MeshRenderer>().material = mats[3];
+                            break;
+                        }
+                        case Tile.tileElement.none:
+                        {
+                            tmp.GetComponent<MeshRenderer>().material = mats[4];
                             break;
                         }
                         default:

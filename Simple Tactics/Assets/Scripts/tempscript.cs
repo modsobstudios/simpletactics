@@ -5,16 +5,34 @@ using UnityEngine;
 public class tempscript : MonoBehaviour
 {
     AudioManager audioMan;
-    Character c;
     Grid g;
+    public GameObject c;
+    List<Character> party;
+    int partySize = 4;
+
+    public List<Character> Party
+    {
+        get
+        {
+            return party;
+        }
+
+        set
+        {
+            party = value;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
         Application.runInBackground = true;
         // audioMan = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        c = GameObject.Find("Character").GetComponent<Character>();
-        g = GameObject.Find("Grid").GetComponent<Grid>();
-        c.setCharacterTile(g.getTileByRowCol(0, 0));
+        party = new List<Character>();
+        for(int i = 0; i < partySize; i++)
+        {
+            party.Add(Instantiate(c, transform.position, Quaternion.identity).GetComponent<Character>());
+        }
 
     }
 

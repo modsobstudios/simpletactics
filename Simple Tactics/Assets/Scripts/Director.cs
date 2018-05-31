@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Director : MonoBehaviour
 {
-
+    AudioManager au;
     Grid g;
     Character selectedCharacter;
     Tile selectedTile;
@@ -14,6 +14,20 @@ public class Director : MonoBehaviour
     int currentPathIndex;
     bool hasPath = false;
     Vector3 moveDir;
+    List<Character> party;
+
+    public List<Character> Party
+    {
+        get
+        {
+            return party;
+        }
+
+        set
+        {
+            party = value;
+        }
+    }
 
     // Use this for initialization
     void Start()
@@ -21,6 +35,11 @@ public class Director : MonoBehaviour
         pf = GameObject.Find("ScriptTester").GetComponent<Pathfinder>();
         pf.initializePathfinding();
         g = GameObject.Find("Grid").GetComponent<Grid>();
+        au = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        // au.playExampleBGM();
+        party = GameObject.Find("ScriptTester").GetComponent<tempscript>().Party;
+        for (int i = 0; i < party.Count; i++)
+            party[i].setCharacterTile(g.getTileByRowCol(0, i));
     }
 
     // Update is called once per frame
@@ -33,15 +52,17 @@ public class Director : MonoBehaviour
             deselectObjects();
 
         if (Input.GetKeyDown(KeyCode.T))
-            getAndHighlightRangedAtkRange();
+            getAndHighlightAtkRange();
 
-        if(Input.GetKeyDown(KeyCode.Delete))
+        if (Input.GetKeyDown(KeyCode.Delete))
         {
             g.destroyGrid();
             g.buildGrid(20, 20);
-            selectedCharacter.setCharacterTile(g.getTileByRowCol(0, 0));
+            for (int i = 0; i < party.Count; i++)
+                party[i].setCharacterTile(g.getTileByRowCol(0, i));
             pf.initializePathfinding();
         }
+
     }
 
     private void FixedUpdate()
@@ -68,7 +89,7 @@ public class Director : MonoBehaviour
                 foreach (Tile t in currentPath)
                     t.setDefaultColor();
                 currentPath.Clear();
-                getAndHighlightRangedAtkRange();
+                getAndHighlightAtkRange();
                 getAndHighlightMoveRange();
             }
             else
@@ -147,6 +168,8 @@ public class Director : MonoBehaviour
     // Perform character-specific selection logic
     public void selectCharacter(RaycastHit _hit)
     {
+        if (selectedCharacter != null)
+            deselectCharacter();
         deselectTile();
         // Reset color of previously selected character
         if (selectedCharacter != null)
@@ -154,7 +177,7 @@ public class Director : MonoBehaviour
 
         selectedCharacter = _hit.transform.gameObject.GetComponent<Character>();
         selectedCharacter.setCurrentColor(Color.magenta);
-        getAndHighlightRangedAtkRange();
+        getAndHighlightAtkRange();
         getAndHighlightMoveRange();
     }
 
@@ -173,6 +196,11 @@ public class Director : MonoBehaviour
         if (selectedCharacter.MoveRangeTiles != null)
             foreach (Tile t in selectedCharacter.MoveRangeTiles)
                 t.setDefaultColor();
+        selectedCharacter.MoveRangeTiles.Clear();
+        if (selectedCharacter.AtkRangeTiles != null)
+            foreach (Tile t in selectedCharacter.AtkRangeTiles)
+                t.setDefaultColor();
+        selectedCharacter.AtkRangeTiles.Clear();
         selectedCharacter = null;
     }
 
@@ -222,7 +250,7 @@ public class Director : MonoBehaviour
             t.setTemporaryColor(Color.yellow);
     }
 
-    public void getAndHighlightRangedAtkRange()
+    public void getAndHighlightAtkRange()
     {
         // Clear the stored range
         if (selectedCharacter.AtkRangeTiles != null)
