@@ -183,4 +183,17 @@ public class AudioManager : MonoBehaviour
         if (currentVox == null) Debug.Log("Vox is null!");
         playVox();
     }
+
+    public float getSFXVolume()
+    {
+        return sfxVolume;
+    }
+    public float getVoxVolume()
+    {
+        return voxVolume;
+    }
+    public float getBGMVolume()
+    {
+        return bgmVolume;
+    }
 }
