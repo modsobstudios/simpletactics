@@ -56,11 +56,7 @@ public class Director : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Delete))
         {
-            g.destroyGrid();
-            g.buildGrid(20, 20);
-            for (int i = 0; i < party.Count; i++)
-                party[i].setCharacterTile(g.getTileByRowCol(0, i));
-            pf.initializePathfinding();
+            restartGame();
         }
 
     }
@@ -71,6 +67,16 @@ public class Director : MonoBehaviour
         {
             lerpCharacter();
         }
+    }
+
+    public void restartGame()
+    {
+        g.destroyGrid();
+        g.buildGrid(20, 20);
+        pf.initializePathfinding();
+        party = GameObject.Find("ScriptTester").GetComponent<tempscript>().Party;
+        for (int i = 0; i < party.Count; i++)
+            party[i].setCharacterTile(g.getTileByRowCol(0, i));
     }
 
     private void lerpCharacter()
@@ -192,15 +198,17 @@ public class Director : MonoBehaviour
     public void deselectCharacter()
     {
         if (selectedCharacter != null)
+        {
             selectedCharacter.setDefaultColor();
-        if (selectedCharacter.MoveRangeTiles != null)
-            foreach (Tile t in selectedCharacter.MoveRangeTiles)
-                t.setDefaultColor();
-        selectedCharacter.MoveRangeTiles.Clear();
-        if (selectedCharacter.AtkRangeTiles != null)
-            foreach (Tile t in selectedCharacter.AtkRangeTiles)
-                t.setDefaultColor();
-        selectedCharacter.AtkRangeTiles.Clear();
+            if (selectedCharacter.MoveRangeTiles != null)
+                foreach (Tile t in selectedCharacter.MoveRangeTiles)
+                    t.setDefaultColor();
+            selectedCharacter.MoveRangeTiles.Clear();
+            if (selectedCharacter.AtkRangeTiles != null)
+                foreach (Tile t in selectedCharacter.AtkRangeTiles)
+                    t.setDefaultColor();
+            selectedCharacter.AtkRangeTiles.Clear();
+        }
         selectedCharacter = null;
     }
 
