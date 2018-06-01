@@ -17,6 +17,7 @@ public class Tile : MonoBehaviour {
     public bool selected = false;
     public int cost;
     public bool outOfRange = false;
+    public bool occupied = false;
 
     //environment is non-passable terrain and playfield is all terrain in which the player can move to or move over
     public enum terrainType

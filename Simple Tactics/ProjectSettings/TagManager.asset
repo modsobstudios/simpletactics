@@ -8,6 +8,7 @@ TagManager:
   - Scene
   - Character
   - Tile
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -16,6 +16,8 @@ public class Director : MonoBehaviour
     public bool paused = false;
     Vector3 moveDir;
     List<Character> party;
+    List<Enemy> enemies;
+    Tactician t;
 
     public List<Character> Party
     {
@@ -30,6 +32,19 @@ public class Director : MonoBehaviour
         }
     }
 
+    public List<Enemy> Enemies
+    {
+        get
+        {
+            return enemies;
+        }
+
+        set
+        {
+            enemies = value;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -37,10 +52,24 @@ public class Director : MonoBehaviour
         pf.initializePathfinding();
         g = GameObject.Find("Grid").GetComponent<Grid>();
         au = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        t = GameObject.Find("ScriptTester").GetComponent<Tactician>();
         // au.playExampleBGM();
         party = GameObject.Find("ScriptTester").GetComponent<tempscript>().Party;
+        enemies = GameObject.Find("ScriptTester").GetComponent<tempscript>().Enemies;
         for (int i = 0; i < party.Count; i++)
-            party[i].setCharacterTile(g.getTileByRowCol(0, i));
+        {
+            Tile allyTile = null;
+            do { allyTile = g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)); } while (allyTile.thisTileTerrType == Tile.terrainType.environment);
+            party[i].setCharacterTile(allyTile);
+            party[i].name = "Char " + (i + 1);
+        }
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Tile enemyTile = null;
+            do { enemyTile = g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)); } while (enemyTile.thisTileTerrType == Tile.terrainType.environment);
+            enemies[i].setEnemyTile(g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)));
+            enemies[i].name = "Enemy " + (i + 1);
+        }
     }
 
     // Update is called once per frame
@@ -54,6 +83,12 @@ public class Director : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
                 deselectObjects();
+
+            if (Input.GetKeyDown(KeyCode.E))
+                runEnemyTurn();
+
+            if (Input.GetKeyDown(KeyCode.R))
+                findTargets();
         }
     }
 
@@ -71,8 +106,22 @@ public class Director : MonoBehaviour
         g.buildGrid(20, 20);
         pf.initializePathfinding();
         party = GameObject.Find("ScriptTester").GetComponent<tempscript>().Party;
+        enemies = GameObject.Find("ScriptTester").GetComponent<tempscript>().Enemies;
+
         for (int i = 0; i < party.Count; i++)
-            party[i].setCharacterTile(g.getTileByRowCol(0, i));
+        {
+            Tile allyTile = null;
+            do { allyTile = g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)); } while (allyTile.thisTileTerrType == Tile.terrainType.environment);
+            party[i].setCharacterTile(allyTile);
+            party[i].name = "Char " + (i + 1);
+        }
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Tile enemyTile = null;
+            do { enemyTile = g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)); } while (enemyTile.thisTileTerrType == Tile.terrainType.environment);
+            enemies[i].setEnemyTile(g.getTileByRowCol(Random.Range(0, g.Height), Random.Range(0, g.Width)));
+            enemies[i].name = "Enemy " + (i + 1);
+        }
     }
 
     private void lerpCharacter()
@@ -112,7 +161,6 @@ public class Director : MonoBehaviour
     {
         if (!hasPath)
         {
-
             // Do raycasting from camera to world mouse point
             RaycastHit hit = new RaycastHit();
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -131,6 +179,11 @@ public class Director : MonoBehaviour
             else if (hit.collider.tag == "Tile")
             {
                 selectTile(hit);
+            }
+            else if (hit.collider.tag == "Enemy")
+            {
+                if (selectedCharacter != null)
+                    attackEnemy(selectedCharacter, hit.collider.gameObject.GetComponent<Enemy>());
             }
             // If not selectable, deselect any selected objects.
             else
@@ -160,7 +213,7 @@ public class Director : MonoBehaviour
             selectedTile = _hit.transform.gameObject.GetComponent<Tile>();
             selectedTile.setSelectedColor();
         }
-        else if (selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()))
+        else if (selectedCharacter.MoveRangeTiles.Contains(_hit.transform.gameObject.GetComponent<Tile>()) && !_hit.transform.gameObject.GetComponent<Tile>().occupied)
         {
             moveCharacter(_hit.transform.gameObject.GetComponent<Tile>());
         }
@@ -268,5 +321,56 @@ public class Director : MonoBehaviour
         // Highlight the attack range
         foreach (Tile t in selectedCharacter.AtkRangeTiles)
             t.setTemporaryColor(Color.cyan);
+    }
+
+    public void attackEnemy(Character _c, Enemy _e)
+    {
+        if (_c.AtkRangeTiles.Contains(_e.Location))
+        {
+            _e.CurrentHP -= _c.CurrentAttack;
+        }
+    }
+
+    void runEnemyTurn()
+    {
+        party.RemoveAll(c => c == null);
+        foreach (Enemy e in enemies)
+        {
+            List<Tile> tempath = new List<Tile>();
+            e.Target = t.setTarget(party, e);
+            if (e.Target != null)
+            {
+                tempath = pf.getPath(e.Location, e.Target.Location);
+                if (tempath.Count > e.AtkRange)
+                {
+                    tempath.Reverse();
+                    Debug.Log("Path found!");
+                    tempath.RemoveRange(e.AtkRange, tempath.Count - e.AtkRange);
+                    foreach (Tile t in tempath)
+                        if (!t.occupied)
+                            e.setEnemyTile(t);
+                }
+                else
+                {
+                    pf.getOuterAtkRange(e.AtkRange, e.Location);
+                    e.AtkRangeTiles = pf.AtkRange;
+                    if (e.AtkRangeTiles.Contains(e.Target.Location))
+                        t.attack(e, e.Target);
+                }
+            }
+            else
+            {
+                Debug.Log("Cannot find target!");
+            }
+        }
+    }
+
+    void findTargets()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            //pf.getPath(enemies[i].Location, party[i].Location);
+            enemies[i].Target = t.setTarget(party, enemies[i]);
+        }
     }
 }

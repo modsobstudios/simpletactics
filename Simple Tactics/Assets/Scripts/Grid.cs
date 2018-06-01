@@ -215,7 +215,8 @@ public class Grid : MonoBehaviour
                     t.setTileElement(5);
                 else
                     t.setTileElement(tileElement);
-                int tileType = Random.Range(-2, 2);
+
+                int tileType = Random.Range(-4, 2);
                 if (tileType <= 0)
                     t.setTileTerrType(1);
                 else

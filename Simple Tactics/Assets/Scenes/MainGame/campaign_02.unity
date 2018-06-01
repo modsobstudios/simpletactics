@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 142145515}
   - component: {fileID: 142145517}
   - component: {fileID: 142145518}
+  - component: {fileID: 142145519}
   m_Layer: 0
   m_Name: ScriptTester
   m_TagString: Untagged
@@ -143,6 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   c: {fileID: 1375906977799626, guid: 84ee8c81a8e89314baa05830a7aaf906, type: 2}
+  e: {fileID: 1016956714254322, guid: 1e67e35ab0c2d4b428eb73d682444432, type: 2}
 --- !u!4 &142145516
 Transform:
   m_ObjectHideFlags: 0
@@ -187,6 +189,17 @@ MonoBehaviour:
   moveAndAtkRange: []
   bfsStart: 0
   bfsGoal: 0
+--- !u!114 &142145519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 142145514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d24c7f1f1616cc4b95531f176eeac7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &213087033 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224456404690588804, guid: 5b3b9a0266f868143885f8ad0fec6be1,

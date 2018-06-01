@@ -18,7 +18,8 @@ public class Pathfinder : MonoBehaviour
     int tileCt;
     Dictionary<Tile, SearchNode> nodes;
     Dictionary<Tile, SearchNode> tempNodes;
-
+    List<PlannerNode> stepOpen;
+    Dictionary<SearchNode, PlannerNode> stepVisited;
     class Edge
     {
         public int cost;
@@ -118,11 +119,16 @@ public class Pathfinder : MonoBehaviour
     {
         if (_start != _goal)
         {
+            //Debug.Log("Running A* from " + _start.name + " to " + _goal.name + "!");
             Astar(nodes[_start], nodes[_goal]);
-            //highlightPath();
+            //Debug.Log("Returned a path of size " + path.Count + "!");
+          //  highlightPath();
         }
         else
+        {
+            Debug.Log(_start.name + " and " + _goal.name + " are the same tile!");
             path.Clear();
+        }
         return path;
     }
 
@@ -154,7 +160,7 @@ public class Pathfinder : MonoBehaviour
         x = x + 1;
     }
 
-    void buildTempSearchGraph(List<Tile> _tiles)
+    public void buildTempSearchGraph(List<Tile> _tiles)
     {
         // Start fresh
         if (tempNodes != null)
@@ -482,5 +488,93 @@ public class Pathfinder : MonoBehaviour
         moveRangeExtents.Clear();
         innerAtkExtents.Clear();
         innerAtkRange.Clear();
+    }
+
+
+    IEnumerator stepAstar(SearchNode _start, SearchNode _goal)
+    {
+        // Start fresh
+        deselectPath();
+
+        stepOpen = new List<PlannerNode>();
+        stepVisited = new Dictionary<SearchNode, PlannerNode>();
+
+        // Start the list with the start node
+        stepOpen.Add(new PlannerNode(_start));
+        // We've been to the start node
+        stepVisited[_start] = stepOpen[0];
+        // TODO: Figure out which costs are being used and how. Currently functional, but slightly blackboxed.
+        stepVisited[_start].givenCost = 0;
+        stepVisited[_start].heuristicCost = calculateCost(_start, _goal);
+        stepVisited[_start].finalCost = stepVisited[_start].givenCost + stepVisited[_start].heuristicCost * heuristicWeight;
+
+        // While there are tiles left to explore
+        while (stepOpen.Count != 0)
+        {
+            foreach (PlannerNode s in stepOpen)
+                s.vertex.t.setTemporaryColor(Color.green);
+            foreach (PlannerNode s in stepVisited.Values)
+                s.vertex.t.setTemporaryColor(Color.red);
+
+            ProcessList(_start, _goal);
+            yield return new WaitForSecondsRealtime(1);
+        }
+    }
+
+    IEnumerator ProcessList(SearchNode _start, SearchNode _goal)
+    {
+        // Prioritize the tile with the lowest cost
+        int lowestIndex = getLowestFinal(stepOpen);
+        PlannerNode current = stepOpen[lowestIndex];
+        // Remove it from the stepOpen list
+        stepOpen.Remove(stepOpen[lowestIndex]);
+        // If this is where we want to be
+        if (current.vertex == _goal)
+        {
+            while (current.parent != null)
+            {
+                // Add every node along this path to the list
+                path.Add(current.vertex.t);
+                yield return new WaitForSeconds(1);
+                current.vertex.t.setTemporaryColor(Color.yellow);
+                current = current.parent;
+            }
+            // Return the list
+            yield return "success";
+        }
+        // If this isn't the goal, get its neighbors
+        foreach (Edge e in current.vertex.edges)
+        {
+            SearchNode successor = e.node;
+            // Calculate cost
+            float tempGiven = current.givenCost + e.cost;
+            // If we've been here before
+            if (stepVisited.ContainsKey(successor))
+            {
+                // If this previously stepVisited tile is now a better choice based on our current path
+                if (tempGiven < stepVisited[successor].givenCost)
+                {
+                    // Remove the old reference, update costs, and return to the list with new priority.
+                    PlannerNode successorNode = new PlannerNode(successor);
+                    stepOpen.Remove(successorNode);
+                    successorNode.givenCost = tempGiven;
+                    successorNode.finalCost = successorNode.givenCost + successorNode.heuristicCost * heuristicWeight;
+                    successorNode.parent = current;
+                    stepOpen.Add(successorNode);
+                }
+            }
+            else
+            {
+                // If we haven't been here before, add it to the stepVisited list
+                PlannerNode successorNode = new PlannerNode(successor);
+                successorNode.givenCost = tempGiven;
+                successorNode.heuristicCost = calculateCost(successor, _goal);
+                successorNode.finalCost = successorNode.givenCost + successorNode.heuristicCost * heuristicWeight;
+                successorNode.parent = current;
+                stepVisited[successor] = successorNode;
+
+                stepOpen.Add(successorNode);
+            }
+        }
     }
 }

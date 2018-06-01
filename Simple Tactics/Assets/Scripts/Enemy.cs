@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-
-    // Stats
     protected int maxHP = 100;
     protected int currentHP = 100;
 
@@ -40,6 +38,7 @@ public class Character : MonoBehaviour
     protected float ratio = 0.0f;
     protected bool lerpBool = false;
     protected SpriteRenderer hpBar;
+    public Character target;
     // Use this for initialization
     void Start()
     {
@@ -56,10 +55,12 @@ public class Character : MonoBehaviour
     {
         if (currentHP <= 0)
             Destroy(this.gameObject);
-        hpBar.transform.LookAt(Camera.main.transform.position, Vector3.down);
+
+        hpBar.transform.LookAt(Camera.main.transform.position, -Vector3.up);
         //lookAtMe();
         hpBar.transform.localScale = new Vector3(currentHP * 0.01f, 0.1f, 1);
-        hpBar.color = Color.Lerp(Color.red, Color.green, ((float)currentHP / (float)maxHP));
+        hpBar.color = Color.Lerp(Color.red, Color.yellow, ((float)currentHP / (float)maxHP));
+
     }
 
     void lookAtMe()
@@ -68,10 +69,6 @@ public class Character : MonoBehaviour
         float y = Camera.main.transform.position.y - transform.position.y;
         float th = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
         hpBar.transform.rotation = Quaternion.Euler(new Vector3(th, 0, 0));
-    }
-
-    protected void OnMouseEnter()
-    {
     }
 
     // Indicate interaction
@@ -92,19 +89,19 @@ public class Character : MonoBehaviour
     }
 
     // Manually change character position, independent of tiles
-    public void setCharacterPosition(Vector3 _position)
+    public void setEnemyPosition(Vector3 _position)
     {
         position = _position;
         this.transform.position = _position + positionOffset;
     }
 
     // Set character position to the given tile center
-    public void setCharacterTile(Tile _tile)
+    public void setEnemyTile(Tile _tile)
     {
         if (location != null)
             location.occupied = false;
         location = _tile;
-        setCharacterPosition(_tile.getTileWorldPos());
+        setEnemyPosition(_tile.getTileWorldPos());
         _tile.occupied = true;
     }
 
@@ -380,6 +377,19 @@ public class Character : MonoBehaviour
         set
         {
             atkRangeTiles = value;
+        }
+    }
+
+    public Character Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
         }
     }
 
