@@ -14,9 +14,9 @@ public class OptionsManager : MonoBehaviour
     void Start()
     {
         master.onValueChanged.AddListener(delegate { updateVolumes(); });
-        bgm.onValueChanged.AddListener(delegate { updateVolumes(); });
-        sfx.onValueChanged.AddListener(delegate { updateVolumes(); });
-        vox.onValueChanged.AddListener(delegate { updateVolumes(); });
+        bgm.onValueChanged.AddListener(delegate { updateBGMVolume(); });
+        sfx.onValueChanged.AddListener(delegate { updateSFXVolume(); });
+        vox.onValueChanged.AddListener(delegate { updateVoxVolume(); });
     }
 
     // Update is called once per frame
@@ -24,7 +24,24 @@ public class OptionsManager : MonoBehaviour
     {
         showHide();
     }
-
+    public void updateSFXVolume()
+    {
+        au.setSFXVolume(sfx.value);
+        if(!au.isSFXPlaying())
+            au.PlayAudio("clang", AudioManager.AudioType.SFX);
+    }
+    public void updateBGMVolume()
+    {
+        au.setBGMVolume(bgm.value);
+        if (!au.isBGMPlaying())
+            au.PlayAudio("Nordic Landscape/Nordic Title", AudioManager.AudioType.BGM);
+    }
+    public void updateVoxVolume()
+    {
+        au.setVoxVolume(vox.value);
+        if (!au.isVoxPlaying())
+            au.PlayAudio("awesome", AudioManager.AudioType.VOX);
+    }
     public void updateVolumes()
     {
         au.setMasterVolume(master.value);

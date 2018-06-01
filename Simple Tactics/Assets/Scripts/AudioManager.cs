@@ -39,6 +39,21 @@ public class AudioManager : MonoBehaviour
         bgmSource.loop = true;
     }
 
+    public bool isSFXPlaying()
+    {
+        return sfxSource.isPlaying;
+    }
+
+    public bool isBGMPlaying()
+    {
+        return bgmSource.isPlaying;
+    }
+
+    public bool isVoxPlaying()
+    {
+        return voxSource.isPlaying;
+    }
+
     public void PlayAudio(string audioName, AudioType audioType)
     {
         switch (audioType)
