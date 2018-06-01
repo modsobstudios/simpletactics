@@ -9,6 +9,7 @@ TagManager:
   - Character
   - Tile
   - Enemy
+  - Environment Object
   layers:
   - Default
   - TransparentFX

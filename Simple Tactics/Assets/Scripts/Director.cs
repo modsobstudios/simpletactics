@@ -20,6 +20,8 @@ public class Director : MonoBehaviour
     List<Enemy> enemies;
     Tactician t;
 
+    public Material wall, fade;
+
     public List<Character> Party
     {
         get
@@ -78,6 +80,8 @@ public class Director : MonoBehaviour
     {
         if (!paused)
         {
+
+            setAlphas();
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 selectObject();
@@ -404,6 +408,45 @@ public class Director : MonoBehaviour
         {
             //pf.getPath(enemies[i].Location, party[i].Location);
             enemies[i].Target = t.setTarget(party, enemies[i]);
+        }
+    }
+
+    void setAlphas()
+    {
+        //Debug.Log(g.envObjs.Count);
+        foreach (GameObject o in g.envObjs)
+        {
+            o.GetComponent<MeshRenderer>().material = wall;
+        }
+        //RaycastHit hit = new RaycastHit();
+        foreach (Character c in party)
+        {
+            Ray ray = new Ray(Camera.main.transform.position, (c.Location.transform.position - Camera.main.transform.position).normalized);
+            //Debug.DrawRay(Camera.main.transform.position, c.Location.transform.position - Camera.main.transform.position, Color.magenta, 10.0f, false);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider != null && hit.collider.tag == "Environment Object")
+                {
+                   // Debug.Log("Should be transparentifying " + hit.collider.gameObject.name + "!");
+                    hit.collider.gameObject.GetComponent<MeshRenderer>().material = fade;
+                }
+            }
+        }
+
+        foreach (Enemy e in enemies)
+        {
+            Ray ray = new Ray(Camera.main.transform.position, e.Location.transform.position - Camera.main.transform.position);
+            // Debug.DrawRay(Camera.main.transform.position, e.Location.transform.position - Camera.main.transform.position, Color.magenta, 10.0f, false);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider != null && hit.collider.tag == "Environment Object")
+                {
+                   // Debug.Log("Should be transparentifying " + hit.collider.gameObject.name + "!");
+                    hit.collider.gameObject.GetComponent<MeshRenderer>().material = fade;
+                }
+            }
         }
     }
 }

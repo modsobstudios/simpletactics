@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   paused: 0
+  wall: {fileID: 2100000, guid: d9381d431695aa5468f9caa4b256fce7, type: 2}
+  fade: {fileID: 2100000, guid: 24aeac7e2b18d5b40abffd4bdc0a61d6, type: 2}
 --- !u!114 &142145518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +364,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5f9180f920a2354439b2ebbbd9c0a1aa, type: 2}
   tileObj: {fileID: 1687573573546366, guid: bc7490ca3beb9eb4d943b27967858841, type: 2}
   plainMat: {fileID: 2100000, guid: d9381d431695aa5468f9caa4b256fce7, type: 2}
+  envObjs: []
 --- !u!4 &552799212
 Transform:
   m_ObjectHideFlags: 0

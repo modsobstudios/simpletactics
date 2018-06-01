@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour
     public Material[] mats;
     public GameObject tileObj;
     public Material plainMat;
+    public List<GameObject> envObjs;
 
     // Use this for initialization
     void Start()
@@ -17,18 +18,21 @@ public class Grid : MonoBehaviour
         mapGrid = new List<Tile>();
         //createGrid(10, 10, tileObj, mats);
         //instantiateTheGrid(tileObj, mats);
+        envObjs = new List<GameObject>();
         buildGrid(20, 20);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(envObjs.Count);
     }
 
     public void destroyGrid()
     {
         foreach (Tile t in mapGrid)
             Destroy(t.gameObject);
+        envObjs.Clear();
     }
 
     public List<Tile> getGrid()
@@ -262,7 +266,12 @@ public class Grid : MonoBehaviour
                 {
                     tmp.GetComponent<MeshRenderer>().material = plainMat;
                     t.cost = int.MaxValue;
-                    Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position, Quaternion.identity).transform.parent = tmp.transform;
+                    GameObject x = Instantiate(Resources.Load<GameObject>("Cube"), tmp.transform.position + new Vector3(0,0.5f,0), Quaternion.identity);
+                    x.transform.parent = tmp.transform;
+                    x.tag = "Environment Object";
+                    x.name = "Wall (" + t.rowNum + ", " + t.columnNum + ")";
+                    envObjs.Add(x);
+                    //Debug.Log(envObjs.Count);
                 }
                 mapGrid.Add(t);
             }
