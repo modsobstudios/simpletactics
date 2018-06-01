@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Director : MonoBehaviour
 {
@@ -89,6 +90,9 @@ public class Director : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
                 findTargets();
+
+            if (party.Count == 0 || enemies.Count == 0)
+                SceneManager.LoadScene("mainMenu_01");
         }
     }
 
@@ -103,7 +107,7 @@ public class Director : MonoBehaviour
     public void restartGame()
     {
         g.destroyGrid();
-        g.buildGrid(20, 20);
+        g.buildGrid(g.Width, g.Height);
         pf.initializePathfinding();
         party = GameObject.Find("ScriptTester").GetComponent<tempscript>().Party;
         enemies = GameObject.Find("ScriptTester").GetComponent<tempscript>().Enemies;
@@ -334,35 +338,64 @@ public class Director : MonoBehaviour
     void runEnemyTurn()
     {
         party.RemoveAll(c => c == null);
+        enemies.RemoveAll(e => e == null);
         foreach (Enemy e in enemies)
         {
             List<Tile> tempath = new List<Tile>();
             e.Target = t.setTarget(party, e);
-            if (e.Target != null)
+            if (e.CurrentHP >= e.MaxHP * 0.3f)
             {
-                tempath = pf.getPath(e.Location, e.Target.Location);
-                if (tempath.Count > e.AtkRange)
+
+                if (e.Target != null)
                 {
-                    tempath.Reverse();
-                    Debug.Log("Path found!");
-                    tempath.RemoveRange(e.AtkRange, tempath.Count - e.AtkRange);
-                    foreach (Tile t in tempath)
-                        if (!t.occupied)
-                            e.setEnemyTile(t);
+                    tempath = pf.getPath(e.Location, e.Target.Location);
+                    if (tempath.Count > e.AtkRange)
+                    {
+                        tempath.Reverse();
+                        Debug.Log("Path found!");
+                        tempath.RemoveRange(e.AtkRange, tempath.Count - e.AtkRange);
+                        foreach (Tile t in tempath)
+                            if (!t.occupied)
+                                e.setEnemyTile(t);
+                    }
+                    else
+                    {
+                        pf.getOuterAtkRange(e.AtkRange, e.Location);
+                        e.AtkRangeTiles = pf.AtkRange;
+                        if (e.AtkRangeTiles.Contains(e.Target.Location))
+                            t.attack(e, e.Target);
+                    }
                 }
                 else
                 {
-                    pf.getOuterAtkRange(e.AtkRange, e.Location);
-                    e.AtkRangeTiles = pf.AtkRange;
-                    if (e.AtkRangeTiles.Contains(e.Target.Location))
-                        t.attack(e, e.Target);
+                    Debug.Log("Cannot find target!");
                 }
             }
             else
             {
-                Debug.Log("Cannot find target!");
+                pf.resetLists();
+                pf.getMoveRange(e.MoveRange, e.Location);
+                e.MoveRangeTiles = pf.MoveRange;
+                int distance = 0;
+                Tile target = e.Location;
+                foreach (Tile t in e.MoveRangeTiles)
+                {
+                    if (!t.occupied)
+                    {
+                        tempath = pf.getPath(e.Target.Location, t);
+                        if (tempath.Count > distance)
+                        {
+                            target = t;
+                            distance = tempath.Count;
+                        }
+                    }
+                }
+                e.setEnemyTile(target);
             }
         }
+        party.RemoveAll(c => c == null);
+        enemies.RemoveAll(e => e == null);
+
     }
 
     void findTargets()
