@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class OptionsManager : MonoBehaviour
 {
     public Slider master, bgm, sfx, vox;
+    public Toggle fs;
     public AudioManager au;
     bool showing = false;
     bool shown = false;
+    bool fullScreen = false;
     float showCt = 0.0f;
     // Use this for initialization
     void Start()
@@ -17,6 +19,9 @@ public class OptionsManager : MonoBehaviour
         bgm.onValueChanged.AddListener(delegate { updateBGMVolume(); });
         sfx.onValueChanged.AddListener(delegate { updateSFXVolume(); });
         vox.onValueChanged.AddListener(delegate { updateVoxVolume(); });
+
+        fullScreen = Screen.fullScreen;
+        fs.isOn = fullScreen;
     }
 
     // Update is called once per frame
@@ -86,5 +91,11 @@ public class OptionsManager : MonoBehaviour
     public void toggle()
     {
         showing = !showing;
+    }
+
+    public void toggleFullscreen()
+    {
+        fullScreen = !fullScreen;
+        Screen.SetResolution(Screen.width, Screen.height, fullScreen);
     }
 }
